@@ -84,20 +84,7 @@ export const AuthModal: React.FC = () => {
     } catch (err: unknown) {
       console.warn("Google login error:", err);
       const friendlyError = parseFirebaseError(err);
-      
-      const errStr = String(err);
-      if (errStr.includes('demo') || errStr.includes('api-key')) {
-        setUserSession({
-          uid: 'google-admin-cortado',
-          name: 'مدير كورتادو (Cortado Admin)',
-          email: 'cortado202@gmail.com',
-          photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
-          isAdmin: true
-        });
-        toggleAuthModal(false);
-      } else {
-        setErrorMsg(friendlyError);
-      }
+      setErrorMsg(friendlyError);
     } finally {
       setIsLoading(false);
     }

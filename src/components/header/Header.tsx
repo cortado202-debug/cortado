@@ -51,41 +51,36 @@ export const Header: React.FC = () => {
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const pendingOrdersCount = orders ? orders.filter(o => o.status === 'pending').length : 0;
 
-  // Admin Check Logic: checks if logged-in user email matches admin email
+  // Admin Check Logic: strictly checks if logged-in user email matches admin email
   const isAdminUser = Boolean(
     userSession && 
-    (userSession.email.toLowerCase() === settings.adminEmail.toLowerCase() || 
-     userSession.email.toLowerCase() === 'cortado202@gmail.com' || 
-     userSession.isAdmin)
+    userSession.email &&
+    (userSession.email.toLowerCase() === 'cortado202@gmail.com' || 
+     userSession.email.toLowerCase() === settings.adminEmail.toLowerCase())
   );
 
   const handleGoogleLogin = async () => {
     setIsLoggingIn(true);
     try {
       const user = await loginWithGoogle();
-      if (user) {
+      if (user && user.email) {
+        const userEmail = user.email.toLowerCase();
         const isUserAdmin = Boolean(
-          user.email?.toLowerCase() === settings.adminEmail.toLowerCase() ||
-          user.email?.toLowerCase() === 'cortado202@gmail.com'
+          userEmail === 'cortado202@gmail.com' ||
+          userEmail === settings.adminEmail.toLowerCase()
         );
         setUserSession({
           uid: user.uid,
-          name: user.displayName || 'مدير النظام',
-          email: user.email || 'cortado202@gmail.com',
+          name: user.displayName || user.email.split('@')[0],
+          email: user.email,
           photoURL: user.photoURL || undefined,
           isAdmin: isUserAdmin
         });
       }
     } catch (error) {
-      console.warn("Google login popup attempt handled or running in demo session:", error);
-      // Demo session fallback for cortado202@gmail.com admin account
-      setUserSession({
-        uid: 'demo-admin-1',
-        name: 'مدير كورتادو (Cortado Admin)',
-        email: 'cortado202@gmail.com',
-        photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
-        isAdmin: true
-      });
+      console.warn("Google login error:", error);
+      // Open auth modal if popup closed or error occurred so user can see message or try email login
+      toggleAuthModal(true);
     } finally {
       setIsLoggingIn(false);
     }

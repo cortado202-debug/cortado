@@ -40,7 +40,12 @@ export const AdminOrderNotification: React.FC = () => {
     }
   };
 
-  const isAdmin = userSession?.isAdmin || (userSession?.email && userSession.email.toLowerCase() === settings.adminEmail.toLowerCase());
+  const isAdmin = Boolean(
+    userSession && 
+    userSession.email && 
+    (userSession.email.toLowerCase() === 'cortado202@gmail.com' || 
+     userSession.email.toLowerCase() === settings.adminEmail.toLowerCase())
+  );
 
   useEffect(() => {
     // If initial load, record current IDs without notifying
