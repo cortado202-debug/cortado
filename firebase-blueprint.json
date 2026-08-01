@@ -1,0 +1,60 @@
+{
+  "entities": {
+    "Product": {
+      "title": "Product",
+      "description": "Coffee menu item or dessert in Cortado Coffee store",
+      "type": "object",
+      "properties": {
+        "categoryId": { "type": "string" },
+        "nameAr": { "type": "string" },
+        "nameEn": { "type": "string" },
+        "price": { "type": "number" },
+        "descriptionAr": { "type": "string" },
+        "imageUrl": { "type": "string" }
+      },
+      "required": ["categoryId", "nameAr", "price"]
+    },
+    "Order": {
+      "title": "Order",
+      "description": "Customer store purchase order",
+      "type": "object",
+      "properties": {
+        "customerName": { "type": "string" },
+        "customerPhone": { "type": "string" },
+        "total": { "type": "number" },
+        "status": { "type": "string" },
+        "createdAt": { "type": "string" }
+      },
+      "required": ["customerName", "customerPhone", "total", "status"]
+    },
+    "PromoCode": {
+      "title": "PromoCode",
+      "description": "Discount promo code item",
+      "type": "object",
+      "properties": {
+        "code": { "type": "string" },
+        "type": { "type": "string" },
+        "value": { "type": "number" },
+        "maxUses": { "type": "number" },
+        "usedCount": { "type": "number" },
+        "expiryDate": { "type": "string" },
+        "isActive": { "type": "boolean" }
+      },
+      "required": ["code", "type", "value", "isActive"]
+    }
+  },
+  "firestore": {
+    "/products/{productId}": {
+      "schema": { "$ref": "#/entities/Product" },
+      "description": "Products menu collection"
+    },
+    "/orders/{orderId}": {
+      "schema": { "$ref": "#/entities/Order" },
+      "description": "Store customer orders"
+    },
+    "/promoCodes/{promoId}": {
+      "schema": { "$ref": "#/entities/PromoCode" },
+      "description": "Store promo codes"
+    }
+  }
+}

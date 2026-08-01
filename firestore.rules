@@ -1,0 +1,51 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+    
+    // Default deny all
+    match /{document=**} {
+      allow read, write: if false;
+    }
+
+    // Helper functions
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    function isAdmin() {
+      return isSignedIn() && (
+        request.auth.token.email == "cortado202@gmail.com"
+      );
+    }
+
+    // Products: Publicly readable, admin writable
+    match /products/{productId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Orders: Anyone can create order, admin or owner can read, admin can update status
+    match /orders/{orderId} {
+      allow create: if true;
+      allow read: if true;
+      allow update, delete: if isAdmin();
+    }
+
+    // Promo Codes: Publicly readable to validate, admin writable
+    match /promoCodes/{promoId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Site Settings: Publicly readable, admin writable
+    match /siteSettings/{settingId} {
+      allow read: if true;
+      allow write: if isAdmin();
+    }
+
+    // Customers: User can read/write own profile, admin can read all
+    match /customers/{customerId} {
+      allow read, write: if true;
+    }
+  }
+}

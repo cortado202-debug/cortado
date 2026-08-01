@@ -1,0 +1,6 @@
+{
+  "name": "كورتادو كافيه | Cortado Coffee",
+  "description": "تجربة قهوة فاخرة بلمسة ثلاثية الأبعاد، قائمة مشروبات وحلويات تفاعلية، نظام أكواد خصم، ولوحة تحكم متكاملة للإدارة والطلبات.",
+  "requestFramePermissions": [],
+  "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
+}

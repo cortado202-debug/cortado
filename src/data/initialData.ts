@@ -1,0 +1,3159 @@
+import { Category, Product, PromoCode, SiteSettings } from '../types';
+
+export const INITIAL_CATEGORIES: Category[] = [
+  {
+    "id": "cat-1",
+    "nameAr": "مشروبات ساخنة",
+    "nameEn": "Hot Drinks",
+    "iconName": "Coffee",
+    "descriptionAr": "من قائمة مشروبات ساخنة الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-2",
+    "nameAr": "حلويات ساخنة",
+    "nameEn": "Hot Desserts",
+    "iconName": "Flame",
+    "descriptionAr": "من قائمة حلويات ساخنة الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-3",
+    "nameAr": "كوكتيل",
+    "nameEn": "Cocktails",
+    "iconName": "GlassWater",
+    "descriptionAr": "من قائمة كوكتيل الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-4",
+    "nameAr": "حلويات باردة",
+    "nameEn": "Cold Desserts",
+    "iconName": "Cake",
+    "descriptionAr": "من قائمة حلويات باردة الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-5",
+    "nameAr": "ميلك شيك",
+    "nameEn": "Milkshakes",
+    "iconName": "Milk",
+    "descriptionAr": "من قائمة ميلك شيك الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-6",
+    "nameAr": "مشروبات بالقهوة الباردة",
+    "nameEn": "Cold Coffee Drinks",
+    "iconName": "Snowflake",
+    "descriptionAr": "من قائمة مشروبات بالقهوة الباردة الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-7",
+    "nameAr": "مشروبات غازية",
+    "nameEn": "Soft Drinks",
+    "iconName": "CupSoda",
+    "descriptionAr": "من قائمة مشروبات غازية الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-8",
+    "nameAr": "أيس كريم",
+    "nameEn": "Ice Cream",
+    "iconName": "IceCream",
+    "descriptionAr": "من قائمة أيس كريم الطازجة والشهية في كورتادو كافيه"
+  },
+  {
+    "id": "cat-9",
+    "nameAr": "فطائر و كروسان",
+    "nameEn": "Pastries & Croissants",
+    "iconName": "Utensils",
+    "descriptionAr": "من قائمة فطائر و كروسان الطازجة والشهية في كورتادو كافيه"
+  }
+];
+
+export const INITIAL_PRODUCTS: Product[] = [
+  {
+    "id": "prod-1",
+    "categoryId": "cat-1",
+    "nameAr": "اسبريسو",
+    "nameEn": "اسبريسو",
+    "price": 7000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حبوب بن أرابيكا 100%",
+      "درجة تحميص غامقة",
+      "استخلاص حراري 9 بار",
+      "مياه نقية مفلترة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-292",
+        "name": "عادي",
+        "price": 7000
+      },
+      {
+        "id": "sz-291",
+        "name": "دبل",
+        "price": 10000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530648/ih4tjrbg1ayntnvlz6cv.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-2",
+    "categoryId": "cat-1",
+    "nameAr": "امريكانو",
+    "nameEn": "امريكانو",
+    "price": 8000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حبوب بن أرابيكا 100%",
+      "درجة تحميص غامقة",
+      "استخلاص حراري 9 بار",
+      "مياه نقية مفلترة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-290",
+        "name": "عادي",
+        "price": 8000
+      },
+      {
+        "id": "sz-289",
+        "name": "دبل",
+        "price": 14000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688808/q4ccxjgknnlsfsukufpe.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-3",
+    "categoryId": "cat-1",
+    "nameAr": "قهوة تركية",
+    "nameEn": "قهوة تركية",
+    "price": 7000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-236",
+        "name": "عادي",
+        "price": 7000
+      },
+      {
+        "id": "sz-237",
+        "name": "دبل",
+        "price": 10000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688766/pizcthiafenad5gyigpz.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-4",
+    "categoryId": "cat-1",
+    "nameAr": "نسكافيه",
+    "nameEn": "نسكافيه",
+    "price": 6000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو غنية",
+      "حليب طازج مبخر",
+      "رغوة مخملية ناعمة",
+      "نكهة كورتادو الخاصة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-285",
+        "name": "عادي",
+        "price": 6000
+      },
+      {
+        "id": "sz-286",
+        "name": "دبل",
+        "price": 8000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688901/i7tmx87k5zjknsbu1prp.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-5",
+    "categoryId": "cat-1",
+    "nameAr": "فرنسي",
+    "nameEn": "فرنسي",
+    "price": 10000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو غنية",
+      "حليب طازج مبخر",
+      "رغوة مخملية ناعمة",
+      "نكهة كورتادو الخاصة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-246",
+        "name": "عادي",
+        "price": 10000
+      },
+      {
+        "id": "sz-247",
+        "name": "دبل",
+        "price": 14000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688878/aqni2wqu0egekidvshqu.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-6",
+    "categoryId": "cat-1",
+    "nameAr": "اسبريسو مع نسلة",
+    "nameEn": "اسبريسو مع نسلة",
+    "price": 9500,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حبوب بن أرابيكا 100%",
+      "درجة تحميص غامقة",
+      "استخلاص حراري 9 بار",
+      "مياه نقية مفلترة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-242",
+        "name": "عادي",
+        "price": 9500
+      },
+      {
+        "id": "sz-243",
+        "name": "دبل",
+        "price": 12500
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688842/zgrtcweo0jwqtjmcy16k.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-7",
+    "categoryId": "cat-1",
+    "nameAr": "اسبريسو مع مبيض",
+    "nameEn": "اسبريسو مع مبيض",
+    "price": 9500,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حبوب بن أرابيكا 100%",
+      "درجة تحميص غامقة",
+      "استخلاص حراري 9 بار",
+      "مياه نقية مفلترة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-244",
+        "name": "عادي",
+        "price": 9500
+      },
+      {
+        "id": "sz-245",
+        "name": "دبل",
+        "price": 12500
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688857/cd4c1hvodjhwfvaary8p.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-8",
+    "categoryId": "cat-1",
+    "nameAr": "لاتيه",
+    "nameEn": "لاتيه",
+    "price": 12000,
+    "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
+    "ingredients": [
+      "جرعة إسبريسو غنية",
+      "حليب طازج مبخر",
+      "رغوة مخملية ناعمة",
+      "نكهة كورتادو الخاصة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-240",
+        "name": "عادي",
+        "price": 12000
+      },
+      {
+        "id": "sz-241",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688827/xcpgiqsuc2unzh5kkls2.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-9",
+    "categoryId": "cat-1",
+    "nameAr": "3*1",
+    "nameEn": "3*1",
+    "price": 10000,
+    "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-234",
+        "name": "عادي",
+        "price": 10000
+      },
+      {
+        "id": "sz-235",
+        "name": "دبل",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688714/keo3gt71orgidzaqdlfe.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-10",
+    "categoryId": "cat-1",
+    "nameAr": "هوت شوكلت",
+    "nameEn": "هوت شوكلت",
+    "price": 12000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بودرة كاكاو سويسري 100%",
+      "حليب طازج مبخر",
+      "قطع شوكولاتة داكنة",
+      "كريمة مخفوقة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-216",
+        "name": "عادي",
+        "price": 12000
+      },
+      {
+        "id": "sz-217",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688358/v5adlpsmjbxl2vt9zj5q.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-11",
+    "categoryId": "cat-1",
+    "nameAr": "موكا شوكولا",
+    "nameEn": "موكا شوكولا",
+    "price": 14000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بودرة كاكاو سويسري 100%",
+      "حليب طازج مبخر",
+      "قطع شوكولاتة داكنة",
+      "كريمة مخفوقة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-182",
+        "name": "عادي",
+        "price": 14000
+      },
+      {
+        "id": "sz-183",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531301/sahcplsbuv94qxmee9k3.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-12",
+    "categoryId": "cat-1",
+    "nameAr": "موكا وايت",
+    "nameEn": "موكا وايت",
+    "price": 14000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-218",
+        "name": "عادي",
+        "price": 14000
+      },
+      {
+        "id": "sz-219",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688422/mho1snnexfdsdirqcfpj.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-13",
+    "categoryId": "cat-1",
+    "nameAr": "أعشاب ساخنة",
+    "nameEn": "أعشاب ساخنة",
+    "price": 5000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "أوراق طبيعية أصلية",
+      "أعشاب عطرة مجففة",
+      "مياه مغلية صافية",
+      "لمسة عسل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-232",
+        "name": "عادي",
+        "price": 5000
+      },
+      {
+        "id": "sz-233",
+        "name": "دبل",
+        "price": 10000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688580/bkovvlmm26ud7o8dfynj.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-14",
+    "categoryId": "cat-1",
+    "nameAr": "كابتشينو",
+    "nameEn": "كابتشينو",
+    "price": 10000,
+    "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
+    "ingredients": [
+      "جرعة إسبريسو غنية",
+      "حليب طازج مبخر",
+      "رغوة مخملية ناعمة",
+      "نكهة كورتادو الخاصة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-164",
+        "name": "عادي",
+        "price": 10000
+      },
+      {
+        "id": "sz-165",
+        "name": "دبل",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530881/ayjj3acy3dhnvvtmquvi.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-15",
+    "categoryId": "cat-1",
+    "nameAr": "ميكاتو",
+    "nameEn": "ميكاتو",
+    "price": 14000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-230",
+        "name": "عادي",
+        "price": 14000
+      },
+      {
+        "id": "sz-231",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688558/kbqvk9ml37dig6p7fj7u.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-16",
+    "categoryId": "cat-1",
+    "nameAr": "شاي",
+    "nameEn": "شاي",
+    "price": 5000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "أوراق طبيعية أصلية",
+      "أعشاب عطرة مجففة",
+      "مياه مغلية صافية",
+      "لمسة عسل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-220",
+        "name": "عادي",
+        "price": 5000
+      },
+      {
+        "id": "sz-221",
+        "name": "دبل",
+        "price": 8000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688464/glbkkrmqkm6dipqmw6jv.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-17",
+    "categoryId": "cat-1",
+    "nameAr": "شاي حليب",
+    "nameEn": "شاي حليب",
+    "price": 10000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "أوراق طبيعية أصلية",
+      "أعشاب عطرة مجففة",
+      "مياه مغلية صافية",
+      "لمسة عسل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-228",
+        "name": "عادي",
+        "price": 10000
+      },
+      {
+        "id": "sz-229",
+        "name": "دبل",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688540/xzt6i8epw0uvrewhwled.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-18",
+    "categoryId": "cat-1",
+    "nameAr": "ميلو حليب",
+    "nameEn": "ميلو حليب",
+    "price": 14000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-226",
+        "name": "عادي",
+        "price": 14000
+      },
+      {
+        "id": "sz-227",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688523/jcqadc8r2ifjaa1cx6fo.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-19",
+    "categoryId": "cat-1",
+    "nameAr": "نسكافيه حليب",
+    "nameEn": "نسكافيه حليب",
+    "price": 10000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو غنية",
+      "حليب طازج مبخر",
+      "رغوة مخملية ناعمة",
+      "نكهة كورتادو الخاصة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-224",
+        "name": "عادي",
+        "price": 10000
+      },
+      {
+        "id": "sz-225",
+        "name": "دبل",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688502/bxurkd0ebp8htjri0gms.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-20",
+    "categoryId": "cat-1",
+    "nameAr": "موكاتشينو",
+    "nameEn": "موكاتشينو",
+    "price": 14000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-222",
+        "name": "عادي",
+        "price": 14000
+      },
+      {
+        "id": "sz-223",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688482/rsdgjn6vd6fbipxwomzv.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-21",
+    "categoryId": "cat-1",
+    "nameAr": "كورتادو",
+    "nameEn": "كورتادو",
+    "price": 14000,
+    "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-214",
+        "name": "عادي",
+        "price": 14000
+      },
+      {
+        "id": "sz-215",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688339/tzwsuvlmi7p2jft4qw4q.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-22",
+    "categoryId": "cat-1",
+    "nameAr": "هوت لوتس",
+    "nameEn": "هوت لوتس",
+    "price": 12000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بودرة كاكاو سويسري 100%",
+      "حليب طازج مبخر",
+      "قطع شوكولاتة داكنة",
+      "كريمة مخفوقة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-213",
+        "name": "عادي",
+        "price": 12000
+      },
+      {
+        "id": "sz-212",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688319/kvlwnmaha1pcxkxnv3tx.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-23",
+    "categoryId": "cat-1",
+    "nameAr": "فلات وايت",
+    "nameEn": "فلات وايت",
+    "price": 12000,
+    "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-210",
+        "name": "عادي",
+        "price": 12000
+      },
+      {
+        "id": "sz-211",
+        "name": "دبل",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688295/lqlc9wpfg3zfwbtvhqwy.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-24",
+    "categoryId": "cat-2",
+    "nameAr": "كريب شوكولا",
+    "nameEn": "كريب شوكولا",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-293",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294259/aqxsgxgvl2wmtxyregh7.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": true
+  },
+  {
+    "id": "prod-25",
+    "categoryId": "cat-2",
+    "nameAr": "كريب نوتيلا",
+    "nameEn": "كريب نوتيلا",
+    "price": 45000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-294",
+        "name": "عادي",
+        "price": 45000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294274/rq1aa60kowdmdfttlkxd.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-26",
+    "categoryId": "cat-2",
+    "nameAr": "كريب لوتس",
+    "nameEn": "كريب لوتس",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-295",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294284/l7ulax5vgukfzyymshwi.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-27",
+    "categoryId": "cat-2",
+    "nameAr": "كريب دبي",
+    "nameEn": "كريب دبي",
+    "price": 45000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-296",
+        "name": "عادي",
+        "price": 45000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294298/bwuqvp21gmbvji73ho09.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-28",
+    "categoryId": "cat-2",
+    "nameAr": "كريب رول",
+    "nameEn": "كريب رول",
+    "price": 45000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-297",
+        "name": "عادي",
+        "price": 45000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294312/fplvh3x1nkn2nam1crs7.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-29",
+    "categoryId": "cat-2",
+    "nameAr": "كريب سوشي",
+    "nameEn": "كريب سوشي",
+    "price": 50000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-298",
+        "name": "عادي",
+        "price": 50000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294334/zhqdukjg7jntxdxnkj4d.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-30",
+    "categoryId": "cat-2",
+    "nameAr": "كريب بيستاشيو",
+    "nameEn": "كريب بيستاشيو",
+    "price": 40000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-299",
+        "name": "عادي",
+        "price": 40000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294350/oczmy2nn5lxmw33036lh.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-31",
+    "categoryId": "cat-2",
+    "nameAr": "كريب فيتوتشيني",
+    "nameEn": "كريب فيتوتشيني",
+    "price": 45000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "عجين كريب طازج وخفيف",
+      "شوكولاتة بلجيكية فاخرة",
+      "مكسرات محمصة",
+      "بودرة سكر ناعمة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-300",
+        "name": "عادي",
+        "price": 45000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294370/wwowanr8uvyswq6hd2he.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-32",
+    "categoryId": "cat-2",
+    "nameAr": "بان كيك",
+    "nameEn": "بان كيك",
+    "price": 45000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "شوكولاتة ذائبة 70%",
+      "دقيق فاخر",
+      "زبدة طبيعية 100%",
+      "فستق مفروم أو مكسرات"
+    ],
+    "sizes": [
+      {
+        "id": "sz-304",
+        "name": "عادي",
+        "price": 45000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294450/aye1ls8v0lkipbnlrw23.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-33",
+    "categoryId": "cat-2",
+    "nameAr": "ميني بان كيك",
+    "nameEn": "ميني بان كيك",
+    "price": 30000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "شوكولاتة ذائبة 70%",
+      "دقيق فاخر",
+      "زبدة طبيعية 100%",
+      "فستق مفروم أو مكسرات"
+    ],
+    "sizes": [
+      {
+        "id": "sz-305",
+        "name": "عادي",
+        "price": 30000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294460/rji0mibzw1mbobmwdaqy.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-34",
+    "categoryId": "cat-3",
+    "nameAr": "موز و حليب",
+    "nameEn": "موز و حليب",
+    "price": 16000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-209",
+        "name": "عادي",
+        "price": 16000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688278/qa43ou5oedozlwuin6sr.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-35",
+    "categoryId": "cat-3",
+    "nameAr": "موز و حليب و شوكولا",
+    "nameEn": "موز و حليب و شوكولا",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-208",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688261/hjiewnb1lvfsbhj9tgyn.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": true
+  },
+  {
+    "id": "prod-36",
+    "categoryId": "cat-3",
+    "nameAr": "موز و حليب و فريز",
+    "nameEn": "موز و حليب و فريز",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-207",
+        "name": "عادي",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688244/orj7f9dwktlnsnuiutay.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-37",
+    "categoryId": "cat-3",
+    "nameAr": "عصير قريز",
+    "nameEn": "عصير قريز",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-205",
+        "name": "عادي",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688203/exx5ipev6zrnh54cf6xr.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-38",
+    "categoryId": "cat-3",
+    "nameAr": "كوكتيل فواكه",
+    "nameEn": "كوكتيل فواكه",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-206",
+        "name": "عادي",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688224/irjpxhjewite0fvpnmxm.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-39",
+    "categoryId": "cat-3",
+    "nameAr": "عصير رمان",
+    "nameEn": "عصير رمان",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-203",
+        "name": "عادي",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688164/ovqnbyqkwsjg8405uexa.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-40",
+    "categoryId": "cat-3",
+    "nameAr": "عصير اناناس",
+    "nameEn": "عصير اناناس",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-202",
+        "name": "عادي",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688151/hzgstkazb1em87hx5dfs.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-41",
+    "categoryId": "cat-3",
+    "nameAr": "عصير بولو",
+    "nameEn": "عصير بولو",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-204",
+        "name": "عادي",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688180/qi3jyinxtmkyzn3sm1og.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-42",
+    "categoryId": "cat-3",
+    "nameAr": "عصير مانجو",
+    "nameEn": "عصير مانجو",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "قطع فواكه طبيعية طازجة",
+      "عصير طبيعي 100%",
+      "عسل سدر طبيعي",
+      "آيس كريم فانيليا غني",
+      "مكسرات وفستق حلبي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-201",
+        "name": "عادي",
+        "price": 18000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688134/y9psqsirnihdkjojeild.jpg",
+    "cupColor": "#2B1E1A",
+    "accentColor": "#FFB703",
+    "isPopular": false
+  },
+  {
+    "id": "prod-43",
+    "categoryId": "cat-4",
+    "nameAr": "تشيز براونيز",
+    "nameEn": "تشيز براونيز",
+    "price": 17000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جبنة كريمية فاخرة",
+      "قاعدة بسكويت مقرمشة بالزبدة",
+      "صوص التوت أو الكراميل الطازج"
+    ],
+    "sizes": [
+      {
+        "id": "sz-301",
+        "name": "عادي",
+        "price": 17000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294386/ndwzmzabqecwp4xpzjr1.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-44",
+    "categoryId": "cat-4",
+    "nameAr": "كاسترد اوريو",
+    "nameEn": "كاسترد اوريو",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "كريمة خفق طازجة",
+      "شوكولاتة وفانيليا فاخرة",
+      "مكونات تبريد طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-302",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294407/xi9cptztz3hw5aesrpe4.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-45",
+    "categoryId": "cat-4",
+    "nameAr": "كاسترد لوتس",
+    "nameEn": "كاسترد لوتس",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "كريمة خفق طازجة",
+      "شوكولاتة وفانيليا فاخرة",
+      "مكونات تبريد طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-306",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294489/xes3yxoxouczrwoed9ng.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-46",
+    "categoryId": "cat-4",
+    "nameAr": "سان سباستيان",
+    "nameEn": "سان سباستيان",
+    "price": 30000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "كريمة خفق طازجة",
+      "شوكولاتة وفانيليا فاخرة",
+      "مكونات تبريد طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-303",
+        "name": "عادي",
+        "price": 30000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294431/roow4je3mlzuq6pmytef.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-47",
+    "categoryId": "cat-4",
+    "nameAr": "قشطوطة",
+    "nameEn": "قشطوطة",
+    "price": 27000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "كريمة خفق طازجة",
+      "شوكولاتة وفانيليا فاخرة",
+      "مكونات تبريد طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-308",
+        "name": "عادي",
+        "price": 27000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294548/jn3yxk27aoa01p63ixid.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": true
+  },
+  {
+    "id": "prod-48",
+    "categoryId": "cat-4",
+    "nameAr": "براونيز",
+    "nameEn": "براونيز",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "كريمة خفق طازجة",
+      "شوكولاتة وفانيليا فاخرة",
+      "مكونات تبريد طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-307",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294519/nevdmbc8ar3eenxz7cru.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-49",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك كورتادو",
+    "nameEn": "ميلك شيك كورتادو",
+    "price": 30000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-197",
+        "name": "وسط",
+        "price": 30000
+      },
+      {
+        "id": "sz-198",
+        "name": "كبير",
+        "price": 40000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688096/sfhhcu0enqkbkqe8uio4.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-50",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك اوريو",
+    "nameEn": "ميلك شيك اوريو",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-171",
+        "name": "وسط",
+        "price": 20000
+      },
+      {
+        "id": "sz-172",
+        "name": "كبير",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530998/cndq7noq2l4nurow1cmn.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-51",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك فريز",
+    "nameEn": "ميلك شيك فريز",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-169",
+        "name": "وسط",
+        "price": 20000
+      },
+      {
+        "id": "sz-170",
+        "name": "كبير",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530982/q3vxj3lwasfnx1jjdgie.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-52",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك فانيلا",
+    "nameEn": "ميلك شيك فانيلا",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-174",
+        "name": "وسط",
+        "price": 20000
+      },
+      {
+        "id": "sz-173",
+        "name": "كبير",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531013/ez2zrrs1d7yzwxzmroeh.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-53",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك مانجو",
+    "nameEn": "ميلك شيك مانجو",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-200",
+        "name": "وسط",
+        "price": 20000
+      },
+      {
+        "id": "sz-199",
+        "name": "كبير",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688108/bkmrfaxtuyz0hqyif9nu.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-54",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك سنيكرز",
+    "nameEn": "ميلك شيك سنيكرز",
+    "price": 22000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-178",
+        "name": "وسط",
+        "price": 22000
+      },
+      {
+        "id": "sz-177",
+        "name": "كبير",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531078/m3aa7hjwychaz1iaofzt.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-55",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك باونتي",
+    "nameEn": "ميلك شيك باونتي",
+    "price": 22000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-195",
+        "name": "وسط",
+        "price": 22000
+      },
+      {
+        "id": "sz-196",
+        "name": "كبير",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688080/fl2gulo3zgjs7ee744xp.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-56",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك كندر",
+    "nameEn": "ميلك شيك كندر",
+    "price": 22000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-194",
+        "name": "وسط",
+        "price": 22000
+      },
+      {
+        "id": "sz-193",
+        "name": "كبير",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781687870/dmo7cmdltuf3oc1fqpth.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-57",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك لوتس",
+    "nameEn": "ميلك شيك لوتس",
+    "price": 22000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-192",
+        "name": "وسط",
+        "price": 22000
+      },
+      {
+        "id": "sz-191",
+        "name": "كبير",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781687828/ehgyf1bgrfnokvmfoony.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-58",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك شوكولا",
+    "nameEn": "ميلك شيك شوكولا",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-309",
+        "name": "وسط",
+        "price": 20000
+      },
+      {
+        "id": "sz-310",
+        "name": "كبير",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294584/e2gizijszcsphtcvjeyw.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-59",
+    "categoryId": "cat-7",
+    "nameAr": "سفن أب",
+    "nameEn": "سفن أب",
+    "price": 14000,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +4000 ل.س",
+    "ingredients": [
+      "مياه غازية منعشة",
+      "أوراق نعناع طازجة",
+      "شرائح ليمون حامض طبيعي",
+      "سيروب فواكه طبيعي",
+      "ثلج مجروش"
+    ],
+    "sizes": [
+      {
+        "id": "sz-280",
+        "name": "عادي",
+        "price": 14000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689483/fj7adljsuspvy4vdm4fq.jpg",
+    "cupColor": "#2B2D42",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-60",
+    "categoryId": "cat-7",
+    "nameAr": "جاك",
+    "nameEn": "جاك",
+    "price": 80000,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "ingredients": [
+      "مياه غازية منعشة",
+      "أوراق نعناع طازجة",
+      "شرائح ليمون حامض طبيعي",
+      "سيروب فواكه طبيعي",
+      "ثلج مجروش"
+    ],
+    "sizes": [
+      {
+        "id": "sz-277",
+        "name": "عادي",
+        "price": 80000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689450/degfm1hx2kktgtsxjl8o.jpg",
+    "cupColor": "#2B2D42",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-61",
+    "categoryId": "cat-7",
+    "nameAr": "ميرندا",
+    "nameEn": "ميرندا",
+    "price": 5000,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +4000 ل.س",
+    "ingredients": [
+      "مياه غازية منعشة",
+      "أوراق نعناع طازجة",
+      "شرائح ليمون حامض طبيعي",
+      "سيروب فواكه طبيعي",
+      "ثلج مجروش"
+    ],
+    "sizes": [
+      {
+        "id": "sz-276",
+        "name": "عادي",
+        "price": 5000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689438/vz0s619wyl8d5hmpqrvr.jpg",
+    "cupColor": "#2B2D42",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-62",
+    "categoryId": "cat-7",
+    "nameAr": "ريد بول",
+    "nameEn": "ريد بول",
+    "price": 20000,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "ingredients": [
+      "مياه غازية منعشة",
+      "أوراق نعناع طازجة",
+      "شرائح ليمون حامض طبيعي",
+      "سيروب فواكه طبيعي",
+      "ثلج مجروش"
+    ],
+    "sizes": [
+      {
+        "id": "sz-279",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689474/lucbiblp8cv99liwyho1.jpg",
+    "cupColor": "#2B2D42",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-63",
+    "categoryId": "cat-7",
+    "nameAr": "بايسن",
+    "nameEn": "بايسن",
+    "price": 16000,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "ingredients": [
+      "مياه غازية منعشة",
+      "أوراق نعناع طازجة",
+      "شرائح ليمون حامض طبيعي",
+      "سيروب فواكه طبيعي",
+      "ثلج مجروش"
+    ],
+    "sizes": [
+      {
+        "id": "sz-278",
+        "name": "عادي",
+        "price": 16000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689462/d4r7ilshyfomra9ptlkk.jpg",
+    "cupColor": "#2B2D42",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-64",
+    "categoryId": "cat-7",
+    "nameAr": "زويا",
+    "nameEn": "زويا",
+    "price": 7000,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "ingredients": [
+      "مياه غازية منعشة",
+      "أوراق نعناع طازجة",
+      "شرائح ليمون حامض طبيعي",
+      "سيروب فواكه طبيعي",
+      "ثلج مجروش"
+    ],
+    "sizes": [
+      {
+        "id": "sz-275",
+        "name": "عادي",
+        "price": 7000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689428/bs1dksnyfm1pjvucviit.jpg",
+    "cupColor": "#2B2D42",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-67",
+    "categoryId": "cat-9",
+    "nameAr": "كرواسان فرنسي",
+    "nameEn": "كرواسان فرنسي",
+    "price": 7000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-190",
+        "name": "عادي",
+        "price": 7000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531510/xcqzlftfsjb8sbctsqgl.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": true
+  },
+  {
+    "id": "prod-68",
+    "categoryId": "cat-9",
+    "nameAr": "سينابون وايت",
+    "nameEn": "سينابون وايت",
+    "price": 10000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-187",
+        "name": "عادي",
+        "price": 10000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531453/t79jxfiixkpoyov03qsw.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-69",
+    "categoryId": "cat-9",
+    "nameAr": "سينابون لوتس",
+    "nameEn": "سينابون لوتس",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-269",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689321/nvwk1cytgtj5vnwqumvi.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-70",
+    "categoryId": "cat-6",
+    "nameAr": "ايس موكا كراميل",
+    "nameEn": "ايس موكا كراميل",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-152",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530509/gqd90d9kwha2evbhyijd.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-71",
+    "categoryId": "cat-6",
+    "nameAr": "ايس موكا كيندر",
+    "nameEn": "ايس موكا كيندر",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-153",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530536/vp55b2xzfwplf3lix6ns.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-72",
+    "categoryId": "cat-6",
+    "nameAr": "ايس موكا لوتس",
+    "nameEn": "ايس موكا لوتس",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-154",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530556/tvnxzvmtilezzy1i0rvd.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-73",
+    "categoryId": "cat-6",
+    "nameAr": "ايس موكا باونتي",
+    "nameEn": "ايس موكا باونتي",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-273",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689396/tacvm0uujeejts1hhkjg.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-74",
+    "categoryId": "cat-6",
+    "nameAr": "ايس موكا وايت",
+    "nameEn": "ايس موكا وايت",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-155",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530611/trvg8r32b0icns5qpq7s.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-75",
+    "categoryId": "cat-6",
+    "nameAr": "ايس موكا شوكولا",
+    "nameEn": "ايس موكا شوكولا",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-156",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530630/y4lem6nu4yhp11j3enuh.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-76",
+    "categoryId": "cat-6",
+    "nameAr": "ايس موكا سنيكرز",
+    "nameEn": "ايس موكا سنيكرز",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-159",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530682/iaps5r21qhj8sjleu0gj.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-77",
+    "categoryId": "cat-6",
+    "nameAr": "ايس شيكن وايت موكا",
+    "nameEn": "ايس شيكن وايت موكا",
+    "price": 25000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-274",
+        "name": "عادي",
+        "price": 25000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689413/yga6swsoborom9kx7sj0.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-78",
+    "categoryId": "cat-6",
+    "nameAr": "ايس امريكانو",
+    "nameEn": "ايس امريكانو",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-168",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530956/lfomg4saea3v8dy8pgbj.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-79",
+    "categoryId": "cat-6",
+    "nameAr": "ايس لاتيه",
+    "nameEn": "ايس لاتيه",
+    "price": 20000,
+    "descriptionAr": "يمكن اضافة نكهات (كراميل-فريز-فانيليا-بيستاشيو-لوتس)",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-163",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530854/zdgkz0iocni1a7dm278y.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-80",
+    "categoryId": "cat-6",
+    "nameAr": "ايس تي",
+    "nameEn": "ايس تي",
+    "price": 20000,
+    "descriptionAr": "يمكن اضافة نكهات (دراق-باشن فروت-فريز-روز بيري)",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-167",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530941/escelgteojjfkr4ibotq.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-81",
+    "categoryId": "cat-6",
+    "nameAr": "سبانش لاتيه",
+    "nameEn": "سبانش لاتيه",
+    "price": 22000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-161",
+        "name": "عادي",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530739/niioc56joh34pknh5jr2.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-82",
+    "categoryId": "cat-6",
+    "nameAr": "فراب كراميل",
+    "nameEn": "فراب كراميل",
+    "price": 22000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-271",
+        "name": "عادي",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689356/iy8ztu9zb1ikc13ayhai.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-83",
+    "categoryId": "cat-6",
+    "nameAr": "فرابتشينو",
+    "nameEn": "فرابتشينو",
+    "price": 22000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-160",
+        "name": "عادي",
+        "price": 22000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530710/nnszamoeukhnwj6t3f43.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-84",
+    "categoryId": "cat-6",
+    "nameAr": "ماتشا",
+    "nameEn": "ماتشا",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-162",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530778/dh3zcpkcljnlldqrexkk.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-85",
+    "categoryId": "cat-6",
+    "nameAr": "آيس شوكلت",
+    "nameEn": "آيس شوكلت",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-166",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530916/acyyddavgwauihef6xo1.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-86",
+    "categoryId": "cat-6",
+    "nameAr": "ايس ميلو",
+    "nameEn": "ايس ميلو",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-272",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689373/zgt2bqboac3jza6l23jw.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-87",
+    "categoryId": "cat-8",
+    "nameAr": "رول عربي فستق حلبي",
+    "nameEn": "رول عربي فستق حلبي",
+    "price": 80000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حليب طازج كامل الدسم",
+      "قشطة بلدية ثقيلة",
+      "فستق حلبي مفروم",
+      "مستكة طبيعية",
+      "نكهات فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-267",
+        "name": "عادي",
+        "price": 80000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689291/tuxwefk1erydyevlu6rp.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-88",
+    "categoryId": "cat-8",
+    "nameAr": "رول بوظة فواكه",
+    "nameEn": "رول بوظة فواكه",
+    "price": 55000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حليب طازج كامل الدسم",
+      "قشطة بلدية ثقيلة",
+      "فستق حلبي مفروم",
+      "مستكة طبيعية",
+      "نكهات فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-266",
+        "name": "عادي",
+        "price": 55000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689279/rnce8wvqrwfkoq12amm8.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-89",
+    "categoryId": "cat-8",
+    "nameAr": "رول بوظة مكسرات",
+    "nameEn": "رول بوظة مكسرات",
+    "price": 60000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حليب طازج كامل الدسم",
+      "قشطة بلدية ثقيلة",
+      "فستق حلبي مفروم",
+      "مستكة طبيعية",
+      "نكهات فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-268",
+        "name": "عادي",
+        "price": 60000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689304/dkm3fnwxgroku9vayrvy.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-90",
+    "categoryId": "cat-8",
+    "nameAr": "رول بوظة شوكولا و مكسرات",
+    "nameEn": "رول بوظة شوكولا و مكسرات",
+    "price": 70000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حليب طازج كامل الدسم",
+      "قشطة بلدية ثقيلة",
+      "فستق حلبي مفروم",
+      "مستكة طبيعية",
+      "نكهات فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-265",
+        "name": "عادي",
+        "price": 70000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689268/mvrnhbyvme3rzs3k3nig.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-91",
+    "categoryId": "cat-8",
+    "nameAr": "كورنيه سبيشل",
+    "nameEn": "كورنيه سبيشل",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حليب طازج كامل الدسم",
+      "قشطة بلدية ثقيلة",
+      "فستق حلبي مفروم",
+      "مستكة طبيعية",
+      "نكهات فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-261",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689176/slcdfqqu7lcsne1basst.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-92",
+    "categoryId": "cat-8",
+    "nameAr": "بوظة كرات",
+    "nameEn": "بوظة كرات",
+    "price": 5000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "حليب طازج كامل الدسم",
+      "قشطة بلدية ثقيلة",
+      "فستق حلبي مفروم",
+      "مستكة طبيعية",
+      "نكهات فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-263",
+        "name": "عادي",
+        "price": 5000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689228/couxuid5yuq6dps3k6ve.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-98",
+    "categoryId": "cat-1",
+    "nameAr": "V60 ساخن",
+    "nameEn": "V60 ساخن",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بن أصلية فاخرة",
+      "حليب طازج مبخر",
+      "تحضير حراري متوازن",
+      "مياه مفلترة نقية"
+    ],
+    "sizes": [
+      {
+        "id": "sz-259",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689124/soyd4jpmpzieqqvzhtsr.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-99",
+    "categoryId": "cat-1",
+    "nameAr": "ماتشا لاتيه",
+    "nameEn": "ماتشا لاتيه",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو غنية",
+      "حليب طازج مبخر",
+      "رغوة مخملية ناعمة",
+      "نكهة كورتادو الخاصة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-264",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689246/rwqzhif3tkcdtlv8mvtn.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-100",
+    "categoryId": "cat-1",
+    "nameAr": "سبانش لاتيه",
+    "nameEn": "سبانش لاتيه",
+    "price": 14000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو غنية",
+      "حليب طازج مبخر",
+      "رغوة مخملية ناعمة",
+      "نكهة كورتادو الخاصة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-262",
+        "name": "عادي",
+        "price": 14000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689198/zlkevutvemvyjsgv90is.jpg",
+    "cupColor": "#3D2314",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-101",
+    "categoryId": "cat-2",
+    "nameAr": "وافل شوكولا",
+    "nameEn": "وافل شوكولا",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-258",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689108/xuzjbpsknpt2agvpcsjw.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-102",
+    "categoryId": "cat-2",
+    "nameAr": "وافل سنكرز",
+    "nameEn": "وافل سنكرز",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-253",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689032/t17sxqnc6cwxiuxqlj1m.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-103",
+    "categoryId": "cat-2",
+    "nameAr": "وافل فواكه",
+    "nameEn": "وافل فواكه",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-257",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689085/xz6vmnuji1qmpn9umnuh.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-104",
+    "categoryId": "cat-2",
+    "nameAr": "وافل لوتس",
+    "nameEn": "وافل لوتس",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-256",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689072/bxeubeiznq9sjmln71q1.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-105",
+    "categoryId": "cat-2",
+    "nameAr": "وافل بستاشيو",
+    "nameEn": "وافل بستاشيو",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-255",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689061/aifipgajg8ncq52celwf.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-106",
+    "categoryId": "cat-2",
+    "nameAr": "وافل نوتيلا",
+    "nameEn": "وافل نوتيلا",
+    "price": 40000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-140",
+        "name": "عادي",
+        "price": 40000
+      }
+    ],
+    "imageUrl": ".",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-107",
+    "categoryId": "cat-2",
+    "nameAr": "وافل فريز",
+    "nameEn": "وافل فريز",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-252",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688988/wgbtmv9yf9ucmugturun.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-108",
+    "categoryId": "cat-2",
+    "nameAr": "وافل كاب",
+    "nameEn": "وافل كاب",
+    "price": 35000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-254",
+        "name": "عادي",
+        "price": 35000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689047/gjujfrt3r7efizdilegx.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-109",
+    "categoryId": "cat-2",
+    "nameAr": "وافل مارس",
+    "nameEn": "وافل مارس",
+    "price": 30000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "وافل مقرمش طازج",
+      "زبدة فرنسية طبيعية",
+      "صوص شوكولاتة داكنة أو بيضاء",
+      "قطع فواكه طازجة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-251",
+        "name": "عادي",
+        "price": 30000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688973/bz8ehf5slls2dpecxfvv.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#E63946",
+    "isPopular": false
+  },
+  {
+    "id": "prod-110",
+    "categoryId": "cat-6",
+    "nameAr": "V60 ايس",
+    "nameEn": "V60 ايس",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جرعة إسبريسو مركزة (Double Shot)",
+      "حليب بارد طازج",
+      "مكعبات ثلج نقية",
+      "صوص سبانيش أو كراميل طبيعي"
+    ],
+    "sizes": [
+      {
+        "id": "sz-260",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689156/ifqdxrdnpi5ok3c1kqyn.jpg",
+    "cupColor": "#1A120B",
+    "accentColor": "#00A859",
+    "isPopular": false
+  },
+  {
+    "id": "prod-111",
+    "categoryId": "cat-9",
+    "nameAr": "معروك كبير",
+    "nameEn": "معروك كبير",
+    "price": 60000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-250",
+        "name": "عادي",
+        "price": 60000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688953/pmaatwept19lwtlxqibp.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-112",
+    "categoryId": "cat-9",
+    "nameAr": "معروك صغير",
+    "nameEn": "معروك صغير",
+    "price": 30000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-315",
+        "name": "عادي",
+        "price": 30000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294856/igehqnw1nvdm8mdh2rzt.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-122",
+    "categoryId": "cat-4",
+    "nameAr": "تيراميسو",
+    "nameEn": "تيراميسو",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "بسكويت ليدي فينجر إيطالي",
+      "قهوة إسبريسو مركزة",
+      "كريمة ماسكاربوني فاخرة",
+      "بودرة كاكاو مر"
+    ],
+    "sizes": [
+      {
+        "id": "sz-184",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531331/ccoqrxzh8mon9mfejrjm.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-123",
+    "categoryId": "cat-5",
+    "nameAr": "ميلك شيك مانجو",
+    "nameEn": "ميلك شيك مانجو",
+    "price": 18000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "آيس كريم طبيعي فاخر",
+      "حليب طازج كامل الدسم",
+      "صوص نكهة غنية طازجة",
+      "كريمة مخفوقة ثقيلة"
+    ],
+    "sizes": [
+      {
+        "id": "sz-175",
+        "name": "وسط",
+        "price": 18000
+      },
+      {
+        "id": "sz-176",
+        "name": "كبير",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531061/xsgvmypu9btfw80enfcu.jpg",
+    "cupColor": "#2A2118",
+    "accentColor": "#A8DADC",
+    "isPopular": false
+  },
+  {
+    "id": "prod-124",
+    "categoryId": "cat-4",
+    "nameAr": "تشيز كيك اوريو",
+    "nameEn": "تشيز كيك اوريو",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جبنة كريمية فاخرة",
+      "قاعدة بسكويت مقرمشة بالزبدة",
+      "صوص التوت أو الكراميل الطازج"
+    ],
+    "sizes": [
+      {
+        "id": "sz-179",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531206/uiauagkbr5gqxy4kwqa0.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-125",
+    "categoryId": "cat-4",
+    "nameAr": "تشيز كيك لوتس",
+    "nameEn": "تشيز كيك لوتس",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جبنة كريمية فاخرة",
+      "قاعدة بسكويت مقرمشة بالزبدة",
+      "صوص التوت أو الكراميل الطازج"
+    ],
+    "sizes": [
+      {
+        "id": "sz-180",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531225/qkw7mumm7guh7ku6u04t.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-126",
+    "categoryId": "cat-4",
+    "nameAr": "تشيز كيك فريز",
+    "nameEn": "تشيز كيك فريز",
+    "price": 15000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "جبنة كريمية فاخرة",
+      "قاعدة بسكويت مقرمشة بالزبدة",
+      "صوص التوت أو الكراميل الطازج"
+    ],
+    "sizes": [
+      {
+        "id": "sz-181",
+        "name": "عادي",
+        "price": 15000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531281/rwfndxkhm65f5edrfjvd.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-127",
+    "categoryId": "cat-4",
+    "nameAr": "ريد فلفيت",
+    "nameEn": "ريد فلفيت",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "كريمة خفق طازجة",
+      "شوكولاتة وفانيليا فاخرة",
+      "مكونات تبريد طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-185",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531388/bs2ujgbdxzobvcgodfmm.jpg",
+    "cupColor": "#1D3557",
+    "accentColor": "#F4A261",
+    "isPopular": false
+  },
+  {
+    "id": "prod-128",
+    "categoryId": "cat-9",
+    "nameAr": "سينابون سادة",
+    "nameEn": "سينابون سادة",
+    "price": 6000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-186",
+        "name": "عادي",
+        "price": 6000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531439/gpafvevp7zmpsdtd4mz1.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-129",
+    "categoryId": "cat-9",
+    "nameAr": "سينابون بالجوز",
+    "nameEn": "سينابون بالجوز",
+    "price": 8000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-188",
+        "name": "عادي",
+        "price": 8000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531469/wtabxppvsaxlm2atftqi.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  },
+  {
+    "id": "prod-130",
+    "categoryId": "cat-9",
+    "nameAr": "افوكادو",
+    "nameEn": "افوكادو",
+    "price": 20000,
+    "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
+    "ingredients": [
+      "دقيق قمح صلب ممتاز",
+      "زبدة فرنسية طبيعية 100%",
+      "عجين هادئ التخمير",
+      "حشوات طازجة يومياً"
+    ],
+    "sizes": [
+      {
+        "id": "sz-189",
+        "name": "عادي",
+        "price": 20000
+      }
+    ],
+    "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531498/fnideweji3niyleyo03k.jpg",
+    "cupColor": "#4A2E1B",
+    "accentColor": "#D4A373",
+    "isPopular": false
+  }
+];
+
+export const INITIAL_PROMO_CODES: PromoCode[] = [];
+
+export const INITIAL_SETTINGS: SiteSettings = {
+  logoUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><circle cx="250" cy="250" r="240" fill="%2300A859"/><g transform="rotate(-5 250 240)"><path d="M125 110 C125 100, 150 90, 250 90 C350 90, 375 100, 375 110 L395 135 C400 142, 395 152, 375 152 L125 152 C105 152, 100 142, 105 135 Z" fill="white"/><path d="M140 162 L360 162 L335 370 L165 370 Z" fill="white"/><path d="M135 200 L365 210 L350 310 L150 300 Z" fill="none" stroke="%2300A859" stroke-width="12"/><text x="250" y="278" text-anchor="middle" fill="%2300A859" font-family="\'Brush Script MT\', \'Dancing Script\', cursive, sans-serif" font-size="78" font-weight="bold" transform="rotate(-4 250 278)">Cortado</text><text x="250" y="352" text-anchor="middle" fill="%2300A859" font-family="\'Cairo\', sans-serif" font-size="36" font-weight="900" letter-spacing="4">CAFÉ</text><path d="M220 370 L245 415 L270 370 Z" fill="white"/></g></svg>',
+  siteTitle: 'كورتادو كافيه',
+  siteSubtitle: 'Cortado CAFÉ',
+  phone: '+963 33 123 4567',
+  address: 'سوريا - حماة - الشريعة',
+  openingHours: 'يومياً: من 6:00 صباحاً حتى 12:00 منتصف الليل',
+  branches: [
+    {
+      id: 'b-1',
+      name: 'فرع حماة الرئيسي',
+      address: 'سوريا - حماة - الشريعة',
+      phone: '+963 33 123 4567',
+      isMain: true
+    },
+    {
+      id: 'b-2',
+      name: 'فرع الشام الجديد',
+      address: 'سوريا - دمشق - المزة',
+      phone: '+963 11 987 6543',
+      isMain: false
+    }
+  ],
+  socials: {
+    instagram: 'https://instagram.com/cortado_coffee',
+    facebook: 'https://facebook.com/cortadocafee',
+    whatsapp: 'https://wa.me/963331234567',
+    locationMap: 'https://maps.google.com/?q=Cortado+Coffee'
+  },
+  adminEmail: 'cortado202@gmail.com',
+  deliveryFee: 15,
+  paymentMethods: [
+    {
+      id: 'pm-1',
+      name: 'شام كاش (Sham Cash)',
+      details: 'رقم الحساب: 0912345678 — باسم: كافيه كورتادو',
+      imageUrl: 'https://images.unsplash.com/photo-1618005182384-a83a8bd57fbe?auto=format&fit=crop&w=200&q=80',
+      isActive: true
+    },
+    {
+      id: 'pm-2',
+      name: 'سيريتل كاش (Syriatel Cash)',
+      details: 'رمز الدفع أو الرقم: 0933123456 — كورتادو كافيه',
+      imageUrl: 'https://images.unsplash.com/photo-1563013544-824ae1b704d3?auto=format&fit=crop&w=200&q=80',
+      isActive: true
+    },
+    {
+      id: 'pm-3',
+      name: 'الدفع عند الاستلام / في الصالة',
+      details: 'دفع نقدي مباشر عند استلام الطلب أو عند الطاولة',
+      imageUrl: 'https://images.unsplash.com/photo-1559526324-4b87b5e36e44?auto=format&fit=crop&w=200&q=80',
+      isActive: true
+    }
+  ]
+};
