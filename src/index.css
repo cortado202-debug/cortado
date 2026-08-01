@@ -113,9 +113,10 @@
 }
 
 .animated-wave-bg {
-  background: linear-gradient(-45deg, #FFFFFF, #E8F7EE, #F4FCF7, #D5F2E1, #FFFFFF, #DCF4E7);
-  background-size: 400% 400%;
-  animation: waveBg 14s ease-in-out infinite;
+  background: #FAF8F5;
+  background-image: radial-gradient(at 0% 0%, rgba(0, 168, 89, 0.08) 0px, transparent 50%),
+                    radial-gradient(at 100% 100%, rgba(230, 246, 237, 0.7) 0px, transparent 50%);
+  background-attachment: fixed;
 }
 
 @keyframes pulseGlow {

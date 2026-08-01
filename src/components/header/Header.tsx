@@ -75,9 +75,6 @@ export const Header: React.FC = () => {
           photoURL: user.photoURL || undefined,
           isAdmin: isUserAdmin
         });
-        if (isUserAdmin) {
-          toggleAdminModal(true);
-        }
       }
     } catch (error) {
       console.warn("Google login popup attempt handled or running in demo session:", error);
@@ -89,7 +86,6 @@ export const Header: React.FC = () => {
         photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
         isAdmin: true
       });
-      toggleAdminModal(true);
     } finally {
       setIsLoggingIn(false);
     }

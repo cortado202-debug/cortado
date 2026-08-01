@@ -39,9 +39,6 @@ export const AuthModal: React.FC = () => {
           isAdmin: isUserAdmin
         });
         toggleAuthModal(false);
-        if (isUserAdmin) {
-          toggleAdminModal(true);
-        }
       }
     } catch (err: unknown) {
       console.warn("Google login popup fallback to Cortado Admin:", err);
@@ -53,7 +50,6 @@ export const AuthModal: React.FC = () => {
         isAdmin: true
       });
       toggleAuthModal(false);
-      toggleAdminModal(true);
     } finally {
       setIsLoading(false);
     }
@@ -90,7 +86,6 @@ export const AuthModal: React.FC = () => {
       setSuccessMsg('تم تسجيل الدخول كمدير للنظام بنجاح');
       setTimeout(() => {
         toggleAuthModal(false);
-        toggleAdminModal(true);
       }, 700);
       return;
     }
@@ -118,7 +113,6 @@ export const AuthModal: React.FC = () => {
             setSuccessMsg('تم الدخول كمدير بنجاح');
             setTimeout(() => {
               toggleAuthModal(false);
-              toggleAdminModal(true);
             }, 700);
             return;
           }
@@ -140,9 +134,6 @@ export const AuthModal: React.FC = () => {
           setSuccessMsg('تم تسجيل الدخول بنجاح');
           setTimeout(() => {
             toggleAuthModal(false);
-            if (isUserAdmin) {
-              toggleAdminModal(true);
-            }
           }, 800);
         }
       } else {
@@ -162,9 +153,6 @@ export const AuthModal: React.FC = () => {
           setSuccessMsg('تم إنشاء حسابك بنجاح');
           setTimeout(() => {
             toggleAuthModal(false);
-            if (isUserAdmin) {
-              toggleAdminModal(true);
-            }
           }, 900);
         }
       }

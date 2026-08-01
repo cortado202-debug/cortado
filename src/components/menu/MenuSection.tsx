@@ -197,15 +197,15 @@ export const MenuSection: React.FC = () => {
         </div>
 
         {/* --- CATEGORY ITEMS SLIDE-DOWN SECTION (ONLY SHOWS ON CATEGORY CLICK) --- */}
-        <AnimatePresence mode="wait">
+        <AnimatePresence>
           {isCategoryOpen && (
             <motion.div 
               id="category-items-section"
-              initial={{ opacity: 0, y: -10 }}
-              animate={{ opacity: 1, y: 0 }}
-              exit={{ opacity: 0, y: -10 }}
+              initial={{ opacity: 0, height: 0, y: -8 }}
+              animate={{ opacity: 1, height: 'auto', y: 0 }}
+              exit={{ opacity: 0, height: 0, y: -8 }}
               transition={{ duration: 0.2, ease: "easeOut" }}
-              className="mb-8 max-w-5xl mx-auto pt-2"
+              className="mb-8 max-w-5xl mx-auto pt-2 overflow-hidden"
             >
               <div className="flex items-center justify-between mb-3 px-1">
                 <span className="text-xs sm:text-sm font-extrabold text-[#2A2118] flex items-center gap-2 font-['Cairo']">
@@ -242,9 +242,9 @@ export const MenuSection: React.FC = () => {
               <motion.div
                 key={activeCategoryId}
                 ref={scrollRef}
-                initial={{ opacity: 0, x: 15 }}
-                animate={{ opacity: 1, x: 0 }}
-                transition={{ duration: 0.2 }}
+                initial={{ opacity: 0.8 }}
+                animate={{ opacity: 1 }}
+                transition={{ duration: 0.15 }}
                 onMouseDown={handleMouseDown}
                 onMouseLeave={handleMouseLeaveOrUp}
                 onMouseUp={handleMouseLeaveOrUp}
@@ -257,7 +257,7 @@ export const MenuSection: React.FC = () => {
                     <button
                       key={prod.id}
                       onClick={() => setActive3DIndex(idx)}
-                      className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl border transition-all duration-200 text-right cursor-pointer select-none shadow-xs ${
+                      className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl border transition-all duration-150 text-right cursor-pointer select-none shadow-xs ${
                         isSelected 
                           ? 'bg-[#00A859] text-white border-[#00A859] shadow-md scale-[1.02]' 
                           : 'bg-white/90 hover:bg-[#E6F6ED] text-[#2A2118] border-[#E8E2D8] hover:border-[#00A859]'
@@ -266,6 +266,8 @@ export const MenuSection: React.FC = () => {
                       <img 
                         src={prod.imageUrl} 
                         alt={prod.nameAr} 
+                        loading="eager"
+                        decoding="async"
                         className="w-13 h-15 sm:w-15 sm:h-17 rounded-xl object-cover shadow-xs flex-shrink-0 border border-white/80 pointer-events-none" 
                       />
                       <div className="flex flex-col min-w-[100px] max-w-[135px] overflow-hidden pointer-events-none">
@@ -314,35 +316,29 @@ export const MenuSection: React.FC = () => {
                   <ChevronLeft className="w-7 h-7 sm:w-8 sm:h-8" />
                 </button>
 
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={`${currentProduct.id}-${use3dView}`}
-                    initial={{ opacity: 0, scale: 0.95 }}
-                    animate={{ opacity: 1, scale: 1 }}
-                    exit={{ opacity: 0, scale: 0.95 }}
-                    transition={{ duration: 0.25 }}
-                    className="w-full flex items-center justify-center"
-                  >
-                    {!use3dView ? (
-                      /* LARGE TALL VERTICAL PORTRAIT IMAGE */
-                      <div className="relative group max-w-sm sm:max-w-md w-full">
-                        <div className="relative h-[420px] sm:h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-[#FAF8F5]">
-                          <img 
-                            src={currentProduct.imageUrl} 
-                            alt={currentProduct.nameAr} 
-                            className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500" 
-                          />
-                          <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 pointer-events-none" />
-                        </div>
+                <div className="w-full flex items-center justify-center">
+                  {!use3dView ? (
+                    /* LARGE TALL VERTICAL PORTRAIT IMAGE */
+                    <div className="relative group max-w-sm sm:max-w-md w-full">
+                      <div className="relative h-[420px] sm:h-[500px] w-full rounded-3xl overflow-hidden shadow-2xl border-4 border-white bg-[#FAF8F5]">
+                        <img 
+                          key={currentProduct.id}
+                          src={currentProduct.imageUrl} 
+                          alt={currentProduct.nameAr} 
+                          loading="eager"
+                          decoding="async"
+                          className="w-full h-full object-cover group-hover:scale-105 transition-all duration-300" 
+                        />
+                        <div className="absolute inset-0 bg-gradient-to-t from-black/40 via-transparent to-transparent opacity-60 pointer-events-none" />
                       </div>
-                    ) : (
-                      /* 3D Canvas View Option */
-                      <div className="w-full max-w-md h-[400px]">
-                        <SimpleStageCanvas product={currentProduct} />
-                      </div>
-                    )}
-                  </motion.div>
-                </AnimatePresence>
+                    </div>
+                  ) : (
+                    /* 3D Canvas View Option */
+                    <div className="w-full max-w-md h-[400px]">
+                      <SimpleStageCanvas product={currentProduct} />
+                    </div>
+                  )}
+                </div>
 
                 {/* Category Indicator Dots */}
                 <div className="flex items-center justify-center gap-1.5 mt-4">
@@ -362,15 +358,8 @@ export const MenuSection: React.FC = () => {
               {/* ITEM DETAILS SIDE PANEL */}
               <div className="lg:col-span-5 flex flex-col justify-between space-y-6 text-right bg-[#FAF8F5] p-6 sm:p-8 rounded-3xl border border-[#E8E2D8] shadow-sm">
                 
-                <AnimatePresence mode="wait">
-                  <motion.div
-                    key={currentProduct.id}
-                    initial={{ opacity: 0, y: 10 }}
-                    animate={{ opacity: 1, y: 0 }}
-                    exit={{ opacity: 0, y: -10 }}
-                    transition={{ duration: 0.2 }}
-                  >
-                    {/* Category Tag & Popular Badge */}
+                <div className="transition-all duration-200">
+                  {/* Category Tag & Popular Badge */}
                     <div className="flex items-center justify-between mb-3">
                       <span className="text-xs font-bold text-[#00733B] bg-[#E6F6ED] px-3.5 py-1 rounded-full">
                         {categories.find(c => c.id === activeCategoryId)?.nameAr}
@@ -483,8 +472,7 @@ export const MenuSection: React.FC = () => {
                         </div>
                       </div>
                     )}
-                  </motion.div>
-                </AnimatePresence>
+                </div>
 
                 {/* Add to Cart Button */}
                 <div className="pt-2 border-t border-[#E8E2D8]">
