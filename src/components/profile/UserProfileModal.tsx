@@ -19,7 +19,8 @@ import {
   Sparkles,
   Coffee,
   ChevronDown,
-  ChevronUp
+  ChevronUp,
+  LogOut
 } from 'lucide-react';
 import { Order, OrderStatus } from '../../types';
 
@@ -28,6 +29,7 @@ export const UserProfileModal: React.FC = () => {
     isProfileModalOpen, 
     toggleProfileModal, 
     userSession, 
+    setUserSession,
     orders, 
     reorderPastOrder,
     settings
@@ -171,7 +173,7 @@ export const UserProfileModal: React.FC = () => {
 
         {/* PROFILE BANNER & USER STATS */}
         <div className="p-4 sm:p-5 bg-white border-b border-[#E8E2D8] space-y-4">
-          <div className="flex items-center justify-between bg-[#FAF8F5] p-3.5 rounded-2xl border border-[#E8E2D8]">
+          <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between bg-[#FAF8F5] p-3.5 rounded-2xl border border-[#E8E2D8] gap-3">
             <div className="flex items-center gap-3">
               {userSession?.photoURL ? (
                 <img 
@@ -185,7 +187,7 @@ export const UserProfileModal: React.FC = () => {
                 </div>
               )}
               <div>
-                <h3 className="font-bold text-sm sm:text-base text-[#2A2118] flex items-center gap-1.5">
+                <h3 className="font-bold text-sm sm:text-base text-[#2A2118] flex items-center gap-1.5 flex-wrap">
                   <span>{userSession?.name || 'مُستخدم كورتادو'}</span>
                   <span className="text-[10px] bg-[#00A859]/10 text-[#00A859] border border-[#00A859]/30 px-2 py-0.5 rounded-full font-bold">
                     {userSession?.isAdmin ? 'إداري 🛡️' : 'عميل متميز ☕'}
@@ -197,9 +199,24 @@ export const UserProfileModal: React.FC = () => {
               </div>
             </div>
 
-            <div className="hidden sm:block text-left pl-2">
-              <span className="text-[10px] text-[#523621] block">متجر كورتادو</span>
-              <span className="text-xs font-bold text-[#00A859]">Cortado CAFÉ</span>
+            <div className="flex items-center gap-2 self-end sm:self-center">
+              {userSession && (
+                <button
+                  onClick={() => {
+                    setUserSession(null);
+                    toggleProfileModal(false);
+                  }}
+                  className="px-3.5 py-2 text-xs font-bold text-rose-600 hover:text-white bg-rose-50 hover:bg-rose-600 border border-rose-200 hover:border-rose-600 rounded-xl transition-all flex items-center gap-1.5 cursor-pointer shadow-2xs active:scale-95"
+                  title="تسجيل الخروج من الحساب الحساب"
+                >
+                  <LogOut className="w-4 h-4" />
+                  <span>تسجيل الخروج</span>
+                </button>
+              )}
+              <div className="hidden sm:block text-left pl-2">
+                <span className="text-[10px] text-[#523621] block">متجر كورتادو</span>
+                <span className="text-xs font-bold text-[#00A859]">Cortado CAFÉ</span>
+              </div>
             </div>
           </div>
 
@@ -432,12 +449,26 @@ export const UserProfileModal: React.FC = () => {
             <Sparkles className="w-3.5 h-3.5 text-[#00A859]" />
             <span>كورتادو CAFÉ - طلب مباشر وسريع</span>
           </div>
-          <button
-            onClick={() => toggleProfileModal(false)}
-            className="bg-[#2A2118] hover:bg-[#00A859] text-white font-bold px-4 py-2 rounded-xl cursor-pointer transition-colors"
-          >
-            إغلاق
-          </button>
+          <div className="flex items-center gap-2">
+            {userSession && (
+              <button
+                onClick={() => {
+                  setUserSession(null);
+                  toggleProfileModal(false);
+                }}
+                className="bg-rose-50 hover:bg-rose-600 text-rose-600 hover:text-white border border-rose-200 hover:border-rose-600 font-bold px-3 py-2 rounded-xl cursor-pointer transition-all flex items-center gap-1 text-xs"
+              >
+                <LogOut className="w-3.5 h-3.5" />
+                <span>تسجيل الخروج</span>
+              </button>
+            )}
+            <button
+              onClick={() => toggleProfileModal(false)}
+              className="bg-[#2A2118] hover:bg-[#00A859] text-white font-bold px-4 py-2 rounded-xl cursor-pointer transition-colors"
+            >
+              إغلاق
+            </button>
+          </div>
         </div>
 
       </motion.div>

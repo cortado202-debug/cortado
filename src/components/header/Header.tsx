@@ -140,14 +140,16 @@ export const Header: React.FC = () => {
             <span>المنتجات</span>
           </a>
 
-          <button 
-            onClick={() => toggleCouponModal(true)}
-            className="hover:text-[#00A859] text-[#00A859] font-bold transition-all flex items-center gap-1.5 bg-[#E6F6ED] px-3 py-1.5 rounded-full border border-[#00A859]/30 active:scale-95 cursor-pointer shadow-xs"
-            title="فحص وحرق أكواد الخصم"
-          >
-            <Ticket className="w-4 h-4 text-[#00A859]" />
-            <span>أكواد الخصم 🏷️</span>
-          </button>
+          {isAdminUser && (
+            <button 
+              onClick={() => toggleCouponModal(true)}
+              className="hover:text-[#00A859] text-[#00A859] font-bold transition-all flex items-center gap-1.5 bg-[#E6F6ED] px-3 py-1.5 rounded-full border border-[#00A859]/30 active:scale-95 cursor-pointer shadow-xs"
+              title="فحص وحرق أكواد الخصم"
+            >
+              <Ticket className="w-4 h-4 text-[#00A859]" />
+              <span>أكواد الخصم 🏷️</span>
+            </button>
+          )}
 
           <a href="#about" className="hover:text-[#00A859] transition-colors active:scale-95">عن كورتادو</a>
         </nav>
@@ -155,31 +157,27 @@ export const Header: React.FC = () => {
         {/* LEFT: USER ACTIONS & CART */}
         <div className="flex items-center gap-2.5">
           
-          {/* Admin Dashboard Button */}
-          <button
-            id="admin-dashboard-btn"
-            onClick={() => {
-              if (isAdminUser) {
-                toggleAdminModal(true);
-              } else {
-                handleGoogleLogin();
-              }
-            }}
-            className={`px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs border rounded-full transition-all font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 relative ${
-              isAdminUser && pendingOrdersCount > 0
-                ? 'border-[#00A859] text-white bg-[#00A859] animate-pulse ring-2 ring-[#00A859]/50'
-                : 'border-[#00A859] text-[#00A859] bg-[#E6F6ED] hover:bg-[#00A859] hover:text-white'
-            }`}
-            title="لوحة التحكم الإدارية"
-          >
-            <ShieldCheck className="w-4 h-4" />
-            <span className="hidden sm:inline">لوحة التحكم (Admin)</span>
-            {isAdminUser && pendingOrdersCount > 0 && (
-              <span className="bg-red-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full border border-white animate-bounce">
-                {pendingOrdersCount} جديد
-              </span>
-            )}
-          </button>
+          {/* Admin Dashboard Button - Visible ONLY for Admin User */}
+          {isAdminUser && (
+            <button
+              id="admin-dashboard-btn"
+              onClick={() => toggleAdminModal(true)}
+              className={`px-3 py-1.5 sm:px-3.5 sm:py-2 text-xs border rounded-full transition-all font-bold flex items-center gap-1.5 shadow-xs cursor-pointer active:scale-95 relative ${
+                pendingOrdersCount > 0
+                  ? 'border-[#00A859] text-white bg-[#00A859] animate-pulse ring-2 ring-[#00A859]/50'
+                  : 'border-[#00A859] text-[#00A859] bg-[#E6F6ED] hover:bg-[#00A859] hover:text-white'
+              }`}
+              title="لوحة التحكم الإدارية"
+            >
+              <ShieldCheck className="w-4 h-4" />
+              <span className="hidden sm:inline">لوحة التحكم (Admin)</span>
+              {pendingOrdersCount > 0 && (
+                <span className="bg-red-500 text-white text-[10px] font-black px-1.5 py-0.2 rounded-full border border-white animate-bounce">
+                  {pendingOrdersCount} جديد
+                </span>
+              )}
+            </button>
+          )}
 
           {/* Cart Drawer Trigger */}
           <motion.button
@@ -297,16 +295,18 @@ export const Header: React.FC = () => {
             <span>طلباتي والملف الشخصي 📦</span>
           </button>
 
-          <button 
-            onClick={() => {
-              setMobileMenuOpen(false);
-              toggleCouponModal(true);
-            }}
-            className="w-full text-right text-[#00A859] font-bold text-sm flex items-center gap-2 py-1 active:scale-95 cursor-pointer"
-          >
-            <Ticket className="w-4 h-4" />
-            <span>أكواد الخصم 🏷️</span>
-          </button>
+          {isAdminUser && (
+            <button 
+              onClick={() => {
+                setMobileMenuOpen(false);
+                toggleCouponModal(true);
+              }}
+              className="w-full text-right text-[#00A859] font-bold text-sm flex items-center gap-2 py-1 active:scale-95 cursor-pointer"
+            >
+              <Ticket className="w-4 h-4" />
+              <span>أكواد الخصم 🏷️</span>
+            </button>
+          )}
 
           <a 
             href="#about" 
