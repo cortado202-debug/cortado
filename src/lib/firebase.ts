@@ -97,18 +97,8 @@ export async function loginWithGoogle() {
       photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
     } as unknown as User;
   }
-  try {
-    const result = await signInWithPopup(auth, googleProvider);
-    return result.user;
-  } catch (error) {
-    console.info('Google Auth running in demo fallback mode:', error instanceof Error ? error.message : error);
-    return {
-      uid: 'demo-admin-cortado',
-      displayName: 'مدير كورتادو',
-      email: 'cortado202@gmail.com',
-      photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
-    } as unknown as User;
-  }
+  const result = await signInWithPopup(auth, googleProvider);
+  return result.user;
 }
 
 export async function loginWithEmail(email: string, pass: string) {

@@ -21,15 +21,53 @@ export const AuthModal: React.FC = () => {
   const [successMsg, setSuccessMsg] = useState('');
   const [isLoading, setIsLoading] = useState(false);
 
+  const parseFirebaseError = (err: unknown): string => {
+    const code = (err as { code?: string })?.code || (err instanceof Error ? err.message : String(err));
+    
+    if (code.includes('auth/popup-closed-by-user')) {
+      return 'تم إغلاق نافذة تسجيل الدخول بـ Google قبل إكمال العملية.';
+    }
+    if (code.includes('auth/popup-blocked')) {
+      return 'تم حجب النافذة المنبثقة بواسطة المتصفح! يرجى السماح بالنووافذ المنبثقة (Popups) ثم إعادة المحاولة.';
+    }
+    if (code.includes('auth/unauthorized-domain')) {
+      return 'هذا الدومين غير مصرح به في Firebase Console. يرجى إضافته إلى Authorized Domains.';
+    }
+    if (code.includes('auth/operation-not-allowed')) {
+      return 'طريقة تسجيل الدخول هذه غير مفعلة في حساب Firebase Console.';
+    }
+    if (code.includes('auth/user-not-found') || code.includes('auth/wrong-password') || code.includes('auth/invalid-credential')) {
+      return 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
+    }
+    if (code.includes('auth/email-already-in-use')) {
+      return 'هذا البريد الإلكتروني مسجل بالفعل! يمكنك تسجيل الدخول بدلاً من ذلك.';
+    }
+    if (code.includes('auth/weak-password')) {
+      return 'كلمة المرور ضعيفة جداً! يجب أن تكون 6 أحرف أو أكثر.';
+    }
+    if (code.includes('auth/invalid-email')) {
+      return 'صيغة البريد الإلكتروني غير صالحة';
+    }
+    if (code.includes('auth/too-many-requests')) {
+      return 'تم حظر المحاولات مؤقتاً لكثرة المحاولات الخاطئة. يرجى المحاولة لاحقاً.';
+    }
+    if (code.includes('auth/network-request-failed')) {
+      return 'فشل الاتصال بالشبكة! يرجى التحقق من اتصال الإنترنت وإعادة المحاولة.';
+    }
+    return 'تعذر إكمال العملية، يرجى المحاولة لاحقاً';
+  };
+
   const handleGoogleSignIn = async () => {
     setIsLoading(true);
     setErrorMsg('');
+    setSuccessMsg('');
     try {
       const user = await loginWithGoogle();
       if (user) {
+        const userEmail = (user.email || '').toLowerCase();
         const isUserAdmin = Boolean(
-          user.email?.toLowerCase() === settings.adminEmail.toLowerCase() ||
-          user.email?.toLowerCase() === 'cortado202@gmail.com'
+          userEmail === 'cortado202@gmail.com' ||
+          userEmail === settings.adminEmail.toLowerCase()
         );
         setUserSession({
           uid: user.uid,
@@ -38,18 +76,28 @@ export const AuthModal: React.FC = () => {
           photoURL: user.photoURL || undefined,
           isAdmin: isUserAdmin
         });
-        toggleAuthModal(false);
+        setSuccessMsg(isUserAdmin ? 'تم تسجيل الدخول كمدير للنظام بنجاح ☕' : 'تم تسجيل الدخول بنجاح');
+        setTimeout(() => {
+          toggleAuthModal(false);
+        }, 700);
       }
     } catch (err: unknown) {
-      console.warn("Google login popup fallback to Cortado Admin:", err);
-      setUserSession({
-        uid: 'google-admin-cortado',
-        name: 'مدير كورتادو (Cortado Admin)',
-        email: 'cortado202@gmail.com',
-        photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
-        isAdmin: true
-      });
-      toggleAuthModal(false);
+      console.warn("Google login error:", err);
+      const friendlyError = parseFirebaseError(err);
+      
+      const errStr = String(err);
+      if (errStr.includes('demo') || errStr.includes('api-key')) {
+        setUserSession({
+          uid: 'google-admin-cortado',
+          name: 'مدير كورتادو (Cortado Admin)',
+          email: 'cortado202@gmail.com',
+          photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
+          isAdmin: true
+        });
+        toggleAuthModal(false);
+      } else {
+        setErrorMsg(friendlyError);
+      }
     } finally {
       setIsLoading(false);
     }
@@ -79,11 +127,11 @@ export const AuthModal: React.FC = () => {
     if (isTargetAdmin && (password === 'Amd123456@' || password === 'Cor2026@admn' || password === '123456')) {
       setUserSession({
         uid: 'admin-cortado-direct',
-        name: name || 'مدير النظام',
+        name: name || 'مدير النظام (Cortado Admin)',
         email: 'cortado202@gmail.com',
         isAdmin: true
       });
-      setSuccessMsg('تم تسجيل الدخول كمدير للنظام بنجاح');
+      setSuccessMsg('تم تسجيل الدخول كمدير للنظام بنجاح ☕');
       setTimeout(() => {
         toggleAuthModal(false);
       }, 700);
@@ -103,14 +151,14 @@ export const AuthModal: React.FC = () => {
         try {
           user = await loginWithEmail(cleanEmail, password);
         } catch (firebaseErr) {
-          if (isTargetAdmin) {
+          if (isTargetAdmin && (password === 'Amd123456@' || password === 'Cor2026@admn' || password === '123456')) {
             setUserSession({
               uid: 'admin-cortado-fallback',
               name: 'مدير النظام',
               email: 'cortado202@gmail.com',
               isAdmin: true
             });
-            setSuccessMsg('تم الدخول كمدير بنجاح');
+            setSuccessMsg('تم الدخول كمدير بنجاح ☕');
             setTimeout(() => {
               toggleAuthModal(false);
             }, 700);
@@ -120,9 +168,10 @@ export const AuthModal: React.FC = () => {
         }
 
         if (user) {
+          const userEmail = (user.email || '').toLowerCase();
           const isUserAdmin = Boolean(
-            user.email?.toLowerCase() === settings.adminEmail.toLowerCase() ||
-            user.email?.toLowerCase() === 'cortado202@gmail.com'
+            userEmail === settings.adminEmail.toLowerCase() ||
+            userEmail === 'cortado202@gmail.com'
           );
           setUserSession({
             uid: user.uid,
@@ -131,7 +180,7 @@ export const AuthModal: React.FC = () => {
             photoURL: user.photoURL || undefined,
             isAdmin: isUserAdmin
           });
-          setSuccessMsg('تم تسجيل الدخول بنجاح');
+          setSuccessMsg(isUserAdmin ? 'تم تسجيل الدخول كمدير للنظام بنجاح ☕' : 'تم تسجيل الدخول بنجاح');
           setTimeout(() => {
             toggleAuthModal(false);
           }, 800);
@@ -139,9 +188,10 @@ export const AuthModal: React.FC = () => {
       } else {
         const user = await registerWithEmail(cleanEmail, password, name.trim());
         if (user) {
+          const userEmail = (user.email || '').toLowerCase();
           const isUserAdmin = Boolean(
-            user.email?.toLowerCase() === settings.adminEmail.toLowerCase() ||
-            user.email?.toLowerCase() === 'cortado202@gmail.com'
+            userEmail === settings.adminEmail.toLowerCase() ||
+            userEmail === 'cortado202@gmail.com'
           );
           setUserSession({
             uid: user.uid,
@@ -150,23 +200,14 @@ export const AuthModal: React.FC = () => {
             photoURL: user.photoURL || undefined,
             isAdmin: isUserAdmin
           });
-          setSuccessMsg('تم إنشاء حسابك بنجاح');
+          setSuccessMsg('تم إنشاء حسابك بنجاح ✨');
           setTimeout(() => {
             toggleAuthModal(false);
           }, 900);
         }
       }
     } catch (err: unknown) {
-      const msg = err instanceof Error ? err.message : String(err);
-      if (msg.includes('user-not-found') || msg.includes('wrong-password') || msg.includes('invalid-credential')) {
-        setErrorMsg('البريد الإلكتروني أو كلمة المرور غير صحيحة');
-      } else if (msg.includes('email-already-in-use')) {
-        setErrorMsg('هذا البريد الإلكتروني مسجل بالفعل! يمكنك تسجيل الدخول بدلاً من ذلك.');
-      } else if (msg.includes('invalid-email')) {
-        setErrorMsg('صيغة البريد الإلكتروني غير صالحة');
-      } else {
-        setErrorMsg('تعذر إكمال العملية، يرجى المحاولة لاحقاً');
-      }
+      setErrorMsg(parseFirebaseError(err));
     } finally {
       setIsLoading(false);
     }
