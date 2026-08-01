@@ -39,9 +39,12 @@ import {
   Truck,
   Wallet,
   CreditCard,
-  Zap
+  Zap,
+  Volume2,
+  Bell
 } from 'lucide-react';
 
+import { playOrderAlertSound } from '../../lib/sound';
 import { CategoryModal } from './CategoryModal';
 import { BulkPromoModal } from './BulkPromoModal';
 
@@ -632,6 +635,20 @@ export const AdminDashboard: React.FC = () => {
           </div>
 
           <div className="flex items-center gap-2">
+            {/* SOUND ALERT TEST BUTTON */}
+            <button
+              onClick={() => playOrderAlertSound()}
+              className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border shadow-xs active:scale-95 ${
+                isLightAdmin
+                  ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300'
+                  : 'bg-[#00A859]/20 hover:bg-[#00A859]/30 text-emerald-300 border-[#00A859]/40'
+              }`}
+              title="اختبار التنبيه الصوتي للطلبات الجديدة"
+            >
+              <Volume2 className="w-4 h-4 text-[#00A859]" />
+              <span className="hidden sm:inline">اختبار الصوت 🔔</span>
+            </button>
+
             {/* THEME SWITCHER BUTTON */}
             <button
               onClick={() => setAdminTheme(adminTheme === 'dark' ? 'light' : 'dark')}
@@ -1493,7 +1510,30 @@ export const AdminDashboard: React.FC = () => {
           {/* TAB 4: ORDERS MANAGEMENT */}
           {activeAdminTab === 'orders' && (
             <div className="space-y-4">
-              <h3 className="font-bold text-base text-[#FAEDCD]">طلبات المتجر الواردة</h3>
+              <div className={`flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl border transition-colors ${
+                isLightAdmin 
+                  ? 'bg-emerald-50/80 border-emerald-200 text-slate-800' 
+                  : 'bg-[#00A859]/10 border-[#00A859]/30 text-[#FAEDCD]'
+              }`}>
+                <div className="flex items-center gap-2.5">
+                  <div className="w-9 h-9 rounded-xl bg-[#00A859] text-white flex items-center justify-center shrink-0 shadow-sm">
+                    <Bell className="w-5 h-5 animate-bounce" />
+                  </div>
+                  <div>
+                    <h3 className="font-bold text-sm">طلبات المتجر الواردة</h3>
+                    <p className="text-xs text-[#00A859] font-medium">نظام التنبيه الصوتي مفعل تلقائياً لإصدار جرس عند وصول أي طلب جديد 🔔</p>
+                  </div>
+                </div>
+
+                <button
+                  type="button"
+                  onClick={() => playOrderAlertSound()}
+                  className="bg-[#00A859] hover:bg-[#008A48] text-white text-xs font-bold px-3.5 py-2.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
+                >
+                  <Volume2 className="w-4 h-4" />
+                  <span>اختبار التنبيه الصوتي 🔊</span>
+                </button>
+              </div>
               <div className="space-y-3">
                 {orders.map((ord) => (
                   <div key={ord.id} className="bg-[#221C17] p-4 rounded-2xl border border-[#2D2721] space-y-3">

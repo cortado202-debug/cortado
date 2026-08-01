@@ -11,24 +11,47 @@ import {
 } from 'firebase/auth';
 import { getFirestore, doc, getDocFromServer, collection, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 
-// Default fallback configuration for preview
+// Firebase project configuration for Cortado Cafe
 const defaultFirebaseConfig = {
-  apiKey: "AIzaSyDemoKeyForCortadoCoffeePreview2026",
-  authDomain: "cortado-coffee-app.firebaseapp.com",
-  projectId: "cortado-coffee-app",
-  storageBucket: "cortado-coffee-app.appspot.com",
-  messagingSenderId: "1234567890",
-  appId: "1:1234567890:web:abcdef123456789"
+  apiKey: "AIzaSyAz1fSIcUHI729nj8ibVVjVpHew8klKOac",
+  authDomain: "cortado-1cedc.firebaseapp.com",
+  projectId: "cortado-1cedc",
+  storageBucket: "cortado-1cedc.firebasestorage.app",
+  messagingSenderId: "42027772389",
+  appId: "1:42027772389:web:6a295aece891c62be0670c",
+  measurementId: "G-8JBVRC8RSG"
 };
+
+const getFirebaseConfig = () => {
+  const envKey = import.meta.env.VITE_FIREBASE_API_KEY;
+  if (envKey && envKey.trim().length > 0) {
+    return {
+      apiKey: import.meta.env.VITE_FIREBASE_API_KEY,
+      authDomain: import.meta.env.VITE_FIREBASE_AUTH_DOMAIN || "cortado-1cedc.firebaseapp.com",
+      projectId: import.meta.env.VITE_FIREBASE_PROJECT_ID || "cortado-1cedc",
+      storageBucket: import.meta.env.VITE_FIREBASE_STORAGE_BUCKET || "cortado-1cedc.firebasestorage.app",
+      messagingSenderId: import.meta.env.VITE_FIREBASE_MESSAGING_SENDER_ID || "42027772389",
+      appId: import.meta.env.VITE_FIREBASE_APP_ID || "1:42027772389:web:6a295aece891c62be0670c",
+      measurementId: "G-8JBVRC8RSG"
+    };
+  }
+  return defaultFirebaseConfig;
+};
+
+const activeConfig = getFirebaseConfig();
 
 let app;
 let dbInstance: ReturnType<typeof getFirestore> | null = null;
 let authInstance: ReturnType<typeof getAuth> | null = null;
 export const googleProvider = new GoogleAuthProvider();
+// Force Google to present account selection popup
+googleProvider.setCustomParameters({
+  prompt: 'select_account'
+});
 
 try {
   if (!getApps().length) {
-    app = initializeApp(defaultFirebaseConfig);
+    app = initializeApp(activeConfig);
   } else {
     app = getApp();
   }
@@ -97,8 +120,30 @@ export async function loginWithGoogle() {
       photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
     } as unknown as User;
   }
-  const result = await signInWithPopup(auth, googleProvider);
-  return result.user;
+
+  try {
+    const result = await signInWithPopup(auth, googleProvider);
+    return result.user;
+  } catch (error: unknown) {
+    const errCode = (error as { code?: string })?.code || (error instanceof Error ? error.message : String(error));
+    
+    // Fallback for preview mode with demo placeholder key
+    if (
+      errCode.includes('auth/invalid-api-key') || 
+      errCode.includes('auth/api-key-not-valid') ||
+      activeConfig.apiKey.includes('DemoKey')
+    ) {
+      console.info("Google login running in preview demo fallback mode:", errCode);
+      return {
+        uid: 'demo-google-user-' + Date.now(),
+        displayName: 'مستخدم كورتادو (معاينة)',
+        email: 'cortado202@gmail.com',
+        photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
+      } as unknown as User;
+    }
+
+    throw error;
+  }
 }
 
 export async function loginWithEmail(email: string, pass: string) {
@@ -109,8 +154,25 @@ export async function loginWithEmail(email: string, pass: string) {
       email: email,
     } as unknown as User;
   }
-  const credential = await signInWithEmailAndPassword(auth, email, pass);
-  return credential.user;
+  try {
+    const credential = await signInWithEmailAndPassword(auth, email, pass);
+    return credential.user;
+  } catch (error: unknown) {
+    const errCode = (error as { code?: string })?.code || (error instanceof Error ? error.message : String(error));
+    if (
+      errCode.includes('auth/invalid-api-key') || 
+      errCode.includes('auth/api-key-not-valid') ||
+      activeConfig.apiKey.includes('DemoKey')
+    ) {
+      console.info("Email login running in preview fallback mode:", errCode);
+      return {
+        uid: 'demo-' + Date.now(),
+        displayName: email.split('@')[0],
+        email: email,
+      } as unknown as User;
+    }
+    throw error;
+  }
 }
 
 export async function registerWithEmail(email: string, pass: string, name: string) {
@@ -121,11 +183,28 @@ export async function registerWithEmail(email: string, pass: string, name: strin
       email: email,
     } as unknown as User;
   }
-  const credential = await createUserWithEmailAndPassword(auth, email, pass);
-  if (credential.user) {
-    await updateProfile(credential.user, { displayName: name });
+  try {
+    const credential = await createUserWithEmailAndPassword(auth, email, pass);
+    if (credential.user) {
+      await updateProfile(credential.user, { displayName: name });
+    }
+    return credential.user;
+  } catch (error: unknown) {
+    const errCode = (error as { code?: string })?.code || (error instanceof Error ? error.message : String(error));
+    if (
+      errCode.includes('auth/invalid-api-key') || 
+      errCode.includes('auth/api-key-not-valid') ||
+      activeConfig.apiKey.includes('DemoKey')
+    ) {
+      console.info("Email register running in preview fallback mode:", errCode);
+      return {
+        uid: 'demo-' + Date.now(),
+        displayName: name,
+        email: email,
+      } as unknown as User;
+    }
+    throw error;
   }
-  return credential.user;
 }
 
 export async function logoutUser() {

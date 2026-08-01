@@ -1,44 +1,14 @@
 import React, { useEffect, useState, useRef } from 'react';
 import { useStore } from '../../lib/store';
-import { Bell, ShoppingBag, Truck, Utensils, X, ArrowLeft, Sparkles, Volume2 } from 'lucide-react';
+import { Bell, ShoppingBag, Truck, Utensils, X, ArrowLeft, Volume2 } from 'lucide-react';
 import { Order } from '../../types';
+import { playOrderAlertSound } from '../../lib/sound';
 
 export const AdminOrderNotification: React.FC = () => {
   const { orders, userSession, settings, toggleAdminModal, setActiveAdminTab } = useStore();
   const [activeNotification, setActiveNotification] = useState<Order | null>(null);
   const previousOrderIdsRef = useRef<Set<string>>(new Set(orders.map(o => o.id)));
   const isInitialMount = useRef(true);
-
-  // Audio Chime Generator using Web Audio API
-  const playChimeSound = () => {
-    try {
-      const AudioCtx = window.AudioContext || (window as any).webkitAudioContext;
-      if (!AudioCtx) return;
-      const ctx = new AudioCtx();
-      
-      const playTone = (freq: number, startTime: number, duration: number) => {
-        const osc = ctx.createOscillator();
-        const gain = ctx.createGain();
-        osc.type = 'sine';
-        osc.frequency.setValueAtTime(freq, ctx.currentTime + startTime);
-        
-        gain.gain.setValueAtTime(0.3, ctx.currentTime + startTime);
-        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + startTime + duration);
-        
-        osc.connect(gain);
-        gain.connect(ctx.destination);
-        
-        osc.start(ctx.currentTime + startTime);
-        osc.stop(ctx.currentTime + startTime + duration);
-      };
-
-      // Play pleasant dual-tone chime (A5 -> D6)
-      playTone(880, 0, 0.25);
-      playTone(1174.66, 0.2, 0.4);
-    } catch (e) {
-      // Audio playback quiet fallback
-    }
-  };
 
   const isAdmin = Boolean(
     userSession && 
@@ -61,7 +31,7 @@ export const AdminOrderNotification: React.FC = () => {
 
     if (newOrder && isAdmin) {
       setActiveNotification(newOrder);
-      playChimeSound();
+      playOrderAlertSound();
     }
 
     // Update set of order IDs
@@ -109,13 +79,23 @@ export const AdminOrderNotification: React.FC = () => {
             </span>
           </div>
 
-          <button
-            onClick={() => setActiveNotification(null)}
-            className="text-white/60 hover:text-white p-1 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
-            title="إغلاق الإشعار"
-          >
-            <X className="w-4 h-4" />
-          </button>
+          <div className="flex items-center gap-1.5">
+            <button
+              onClick={() => playOrderAlertSound()}
+              className="text-emerald-400 hover:text-emerald-300 px-2 py-1 hover:bg-emerald-500/20 rounded-lg transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-bold border border-emerald-500/30"
+              title="إعادة إعادة تشغيل التنبيه الصوتي"
+            >
+              <Volume2 className="w-3.5 h-3.5" />
+              <span>إعادة الصوت 🔔</span>
+            </button>
+            <button
+              onClick={() => setActiveNotification(null)}
+              className="text-white/60 hover:text-white p-1 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+              title="إغلاق الإشعار"
+            >
+              <X className="w-4 h-4" />
+            </button>
+          </div>
         </div>
 
         {/* ORDER CONTENT */}

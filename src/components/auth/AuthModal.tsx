@@ -28,13 +28,13 @@ export const AuthModal: React.FC = () => {
       return 'تم إغلاق نافذة تسجيل الدخول بـ Google قبل إكمال العملية.';
     }
     if (code.includes('auth/popup-blocked')) {
-      return 'تم حجب النافذة المنبثقة بواسطة المتصفح! يرجى السماح بالنووافذ المنبثقة (Popups) ثم إعادة المحاولة.';
+      return 'تم حجب النافذة المنبثقة بواسطة المتصفح! يرجى السماح بالنوافذ المنبثقة (Popups) ثم إعادة المحاولة.';
     }
     if (code.includes('auth/unauthorized-domain')) {
       return 'هذا الدومين غير مصرح به في Firebase Console. يرجى إضافته إلى Authorized Domains.';
     }
     if (code.includes('auth/operation-not-allowed')) {
-      return 'طريقة تسجيل الدخول هذه غير مفعلة في حساب Firebase Console.';
+      return 'تسجيل الدخول بـ Google غير مفعل في حساب Firebase Console.';
     }
     if (code.includes('auth/user-not-found') || code.includes('auth/wrong-password') || code.includes('auth/invalid-credential')) {
       return 'البريد الإلكتروني أو كلمة المرور غير صحيحة';
@@ -53,6 +53,9 @@ export const AuthModal: React.FC = () => {
     }
     if (code.includes('auth/network-request-failed')) {
       return 'فشل الاتصال بالشبكة! يرجى التحقق من اتصال الإنترنت وإعادة المحاولة.';
+    }
+    if (code.includes('auth/invalid-api-key') || code.includes('auth/api-key-not-valid')) {
+      return 'مفتاح Firebase غير صالح. يرجى إضافة مفتاح VITE_FIREBASE_API_KEY الصحيح.';
     }
     return 'تعذر إكمال العملية، يرجى المحاولة لاحقاً';
   };
