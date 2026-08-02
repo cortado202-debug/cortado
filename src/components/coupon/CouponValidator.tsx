@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../../lib/store';
@@ -9,6 +9,22 @@ export const CouponValidator: React.FC = () => {
   const [inputCode, setInputCode] = useState('');
   const [checkedPromo, setCheckedPromo] = useState<any | null>(null);
   const [feedback, setFeedback] = useState<{ success: boolean; text: string } | null>(null);
+
+  // Automatically clear input & previous results whenever modal is opened or closed
+  useEffect(() => {
+    if (!isCouponModalOpen) {
+      setInputCode('');
+      setCheckedPromo(null);
+      setFeedback(null);
+    }
+  }, [isCouponModalOpen]);
+
+  const handleClose = () => {
+    setInputCode('');
+    setCheckedPromo(null);
+    setFeedback(null);
+    toggleCouponModal(false);
+  };
 
   const triggerConfetti = () => {
     confetti({
@@ -75,7 +91,7 @@ export const CouponValidator: React.FC = () => {
             animate={{ opacity: 1 }}
             exit={{ opacity: 0 }}
             className="fixed inset-0" 
-            onClick={() => toggleCouponModal(false)} 
+            onClick={handleClose} 
           />
 
           {/* MAIN MODAL CONTENT */}
@@ -103,7 +119,7 @@ export const CouponValidator: React.FC = () => {
               </div>
               
               <button
-                onClick={() => toggleCouponModal(false)}
+                onClick={handleClose}
                 className="w-9 h-9 rounded-full bg-[#FAF8F5] hover:bg-rose-50 text-[#2A2118] hover:text-rose-600 flex items-center justify-center transition-all cursor-pointer border border-[#E8E2D8] active:scale-90"
                 title="إغلاق النافذة"
               >
