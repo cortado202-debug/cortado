@@ -153,7 +153,14 @@ export const useStore = create<StoreState>()(
   },
 
   addToCart: (product, quantity = 1, selectedSize?: ProductSize) => {
-    const { cart } = get();
+    const { cart, settings } = get();
+
+    // Prevent adding to cart if store is closed by admin
+    if (settings.isStoreOpen === false) {
+      window.dispatchEvent(new CustomEvent('show-closed-store-modal'));
+      return;
+    }
+
     const activeSize = selectedSize || (product.sizes && product.sizes.length > 0 ? product.sizes[0] : undefined);
     
     const effectiveProduct = activeSize 

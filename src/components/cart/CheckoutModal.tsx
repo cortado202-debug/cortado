@@ -57,6 +57,10 @@ export const CheckoutModal: React.FC = () => {
 
   const handleSubmitOrder = (e: React.FormEvent) => {
     e.preventDefault();
+    if (settings.isStoreOpen === false) {
+      alert('عذراً، المتجر مغلق حالياً ولا استقبال للطلبات في الوقت الحالي.');
+      return;
+    }
     if (!customerName.trim() || !customerPhone.trim()) return;
 
     const selectedBranch = settings.branches?.find(b => b.id === selectedBranchId);

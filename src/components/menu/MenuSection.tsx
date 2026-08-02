@@ -24,7 +24,8 @@ export const MenuSection: React.FC = () => {
     setActive3DIndex,
     next3DItem, 
     prev3DItem, 
-    addToCart 
+    addToCart,
+    settings
   } = useStore();
 
   const [use3dView, setUse3dView] = React.useState(false);
@@ -60,6 +61,12 @@ export const MenuSection: React.FC = () => {
 
   const handleAddToCartWithFly = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!currentProduct) return;
+
+    if (settings.isStoreOpen === false) {
+      window.dispatchEvent(new CustomEvent('show-closed-store-modal'));
+      return;
+    }
+
     const rect = e.currentTarget.getBoundingClientRect();
     const startX = rect.left + rect.width / 2;
     const startY = rect.top + rect.height / 2;
@@ -145,20 +152,22 @@ export const MenuSection: React.FC = () => {
     }, 100);
   };
 
+  const isAnimatedBg = settings.isAnimatedBackgroundEnabled !== false;
+
   return (
-    <section id="menu" className="py-12 sm:py-16 bg-white relative overflow-hidden text-[#2A2118]">
+    <section id="menu" className="py-12 sm:py-16 relative overflow-hidden bg-transparent text-[#2A2118]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         
         {/* SECTION HEADER */}
         <div className="text-center max-w-2xl mx-auto mb-8">
-          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-[#E6F6ED] border border-[#00A859]/30 text-[#00733B] text-xs font-bold mb-3 shadow-xs">
+          <div className="inline-flex items-center gap-2 px-4 py-1.5 rounded-full bg-white/90 border border-[#00A859]/30 text-[#00733B] text-xs font-bold mb-3 shadow-xs backdrop-blur-xs">
             <Coffee className="w-4 h-4 text-[#00A859]" />
             <span>قائمة كورتادو | Menu</span>
           </div>
           <h2 className="font-['Cairo'] font-extrabold text-3xl sm:text-4xl text-[#2A2118] mb-2 tracking-tight">
             المشروبات والحلويات
           </h2>
-          <p className="text-xs sm:text-sm text-[#523621]/80">
+          <p className="text-xs sm:text-sm font-medium text-[#523621]/80">
             اختر صنفاً لعرض جميع مشروباته وحلوياته
           </p>
         </div>
@@ -479,10 +488,18 @@ export const MenuSection: React.FC = () => {
                   <button
                     id={`add-to-cart-${currentProduct.id}`}
                     onClick={handleAddToCartWithFly}
-                    className="w-full bg-[#00A859] hover:bg-[#008A48] active:scale-[0.98] text-white font-black text-base py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg shadow-[#00A859]/25 transition-all cursor-pointer relative overflow-hidden"
+                    className={`w-full font-black text-base py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer relative overflow-hidden active:scale-[0.98] ${
+                      settings.isStoreOpen === false
+                        ? 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-600/20 ring-2 ring-rose-400'
+                        : 'bg-[#00A859] hover:bg-[#008A48] text-white shadow-[#00A859]/25'
+                    }`}
                   >
                     <ShoppingBag className="w-5 h-5" />
-                    <span>إضافة للسلة ({currentPrice} ل.س){activeSize ? ` - ${activeSize.name}` : ''}</span>
+                    {settings.isStoreOpen === false ? (
+                      <span>المتجر مغلق حالياً ☕ (انقر لمزيد من التفاصيل)</span>
+                    ) : (
+                      <span>إضافة للسلة ({currentPrice} ل.س){activeSize ? ` - ${activeSize.name}` : ''}</span>
+                    )}
                   </button>
                 </div>
 

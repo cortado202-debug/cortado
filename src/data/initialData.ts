@@ -3133,6 +3133,9 @@ export const INITIAL_SETTINGS: SiteSettings = {
   },
   adminEmail: 'cortado202@gmail.com',
   deliveryFee: 15,
+  isStoreOpen: true,
+  isAnimatedBackgroundEnabled: true,
+  closedStoreNotice: 'المتجر مغلق حالياً، لا نتلقى طلبات جديدة في الوقت الحالي. نعتذر منك ونسعد بخدمتك فور إعادة فتح المتجر! ☕',
   paymentMethods: [
     {
       id: 'pm-1',

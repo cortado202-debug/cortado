@@ -93,6 +93,22 @@ export const Header: React.FC = () => {
 
   return (
     <header className="sticky top-0 z-40 bg-white/95 backdrop-blur-md border-b border-[#E8E2D8] transition-all shadow-xs">
+      {/* CLOSED STORE NOTIFICATION BANNER */}
+      {settings.isStoreOpen === false && (
+        <div className="bg-gradient-to-r from-rose-700 via-red-600 to-rose-800 text-white text-xs sm:text-sm font-bold py-2 px-4 text-center shadow-md flex items-center justify-center gap-2 border-b border-rose-900/40">
+          <span className="w-2.5 h-2.5 rounded-full bg-white animate-ping shrink-0" />
+          <span>🔴 المتجر مغلق حالياً ولا يستقبل طلبات جديدة في الوقت الحالي ☕</span>
+          {isAdminUser && (
+            <button
+              onClick={() => toggleAdminModal(true)}
+              className="mr-2 bg-white/20 hover:bg-white/30 text-white text-[11px] font-bold px-2.5 py-0.5 rounded-lg transition-colors cursor-pointer border border-white/40"
+            >
+              [إعادة فتح المتجر 🟢]
+            </button>
+          )}
+        </div>
+      )}
+
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-20 flex items-center justify-between">
         
         {/* RIGHT: BRAND & LOGO */}

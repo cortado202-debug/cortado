@@ -13,7 +13,8 @@ export const CartDrawer: React.FC = () => {
     clearCart,
     appliedPromo,
     removePromoCode,
-    toggleCheckout 
+    toggleCheckout,
+    settings 
   } = useStore();
 
   const subtotal = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
@@ -63,6 +64,17 @@ export const CartDrawer: React.FC = () => {
               <X className="w-6 h-6" />
             </button>
           </div>
+
+          {/* CLOSED STORE ALERT BANNER INSIDE CART */}
+          {settings.isStoreOpen === false && (
+            <div className="bg-rose-50 border-b border-rose-200 p-3.5 text-xs text-rose-800 flex items-start gap-2">
+              <span className="w-2.5 h-2.5 rounded-full bg-rose-600 animate-ping mt-1 shrink-0" />
+              <div>
+                <p className="font-bold text-rose-900">🔴 المتجر مغلق حالياً:</p>
+                <p>{settings.closedStoreNotice || 'استقبال الطلبات موقوف مؤقتاً. لا يمكن إتمام الطلب الآن.'}</p>
+              </div>
+            </div>
+          )}
 
           {/* CART ITEMS LIST */}
           <div className="flex-1 overflow-y-auto p-5 space-y-3">
@@ -183,14 +195,29 @@ export const CartDrawer: React.FC = () => {
               {/* Proceed to Checkout Button */}
               <button
                 id="checkout-proceed-btn"
+                disabled={settings.isStoreOpen === false}
                 onClick={() => {
+                  if (settings.isStoreOpen === false) {
+                    window.dispatchEvent(new CustomEvent('show-closed-store-modal'));
+                    return;
+                  }
                   toggleCart(false);
                   toggleCheckout(true);
                 }}
-                className="w-full bg-[#00A859] hover:bg-[#008A48] text-white font-bold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all cursor-pointer"
+                className={`w-full font-bold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 shadow-md transition-all ${
+                  settings.isStoreOpen === false
+                    ? 'bg-gray-300 text-gray-600 cursor-not-allowed border border-gray-400/30'
+                    : 'bg-[#00A859] hover:bg-[#008A48] text-white cursor-pointer'
+                }`}
               >
-                <span>متابعة الشراء وتأكيد الطلب</span>
-                <ArrowLeft className="w-4 h-4" />
+                {settings.isStoreOpen === false ? (
+                  <span>المتجر مغلق حالياً (الطلبات متوقفة)</span>
+                ) : (
+                  <>
+                    <span>متابعة الشراء وتأكيد الطلب</span>
+                    <ArrowLeft className="w-4 h-4" />
+                  </>
+                )}
               </button>
 
             </div>

@@ -14,12 +14,13 @@ import { AdminDashboard } from './components/admin/AdminDashboard';
 import { AdminOrderNotification } from './components/admin/AdminOrderNotification';
 import { UserProfileModal } from './components/profile/UserProfileModal';
 import { AuthModal } from './components/auth/AuthModal';
+import { ClosedStoreModal } from './components/common/ClosedStoreModal';
 import { FloatingBeans } from './components/common/FloatingBeans';
 import { FlyToCartParticle } from './components/common/FlyToCartParticle';
 
 export default function App() {
   return (
-    <div className="min-h-screen animated-wave-bg text-[#2A2118] flex flex-col font-['Tajawal',sans-serif] selection:bg-[#00A859] selection:text-white relative overflow-x-hidden">
+    <div className="min-h-screen bg-white text-[#2A2118] flex flex-col font-['Tajawal',sans-serif] selection:bg-[#00A859] selection:text-white relative overflow-x-hidden">
       {/* Flying Particle Animation */}
       <FlyToCartParticle />
 
@@ -46,6 +47,7 @@ export default function App() {
       <CouponValidator />
       <UserProfileModal />
       <AuthModal />
+      <ClosedStoreModal />
     </div>
   );
 }

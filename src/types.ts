@@ -124,6 +124,9 @@ export interface SiteSettings {
   adminEmail: string;
   deliveryFee?: number; // Delivery fee when customer chooses delivery
   paymentMethods?: PaymentMethod[]; // Configurable payment options
+  isStoreOpen?: boolean; // Toggle store status (open/closed)
+  closedStoreNotice?: string; // Custom message displayed when store is closed
+  isAnimatedBackgroundEnabled?: boolean; // Toggle animated green gradient background
 }
 
 export interface UserSession {

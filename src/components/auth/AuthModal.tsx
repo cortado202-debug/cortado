@@ -2,20 +2,20 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../../lib/store';
 import { loginWithGoogle, loginWithEmail, registerWithEmail } from '../../lib/firebase';
-import { X, Mail, Lock, User, LogIn, UserPlus, AlertCircle, CheckCircle2 } from 'lucide-react';
+import { X, Mail, Lock, User, LogIn, UserPlus, AlertCircle, CheckCircle2, Eye, EyeOff } from 'lucide-react';
 
 export const AuthModal: React.FC = () => {
   const { 
     isAuthModalOpen, 
     toggleAuthModal, 
     setUserSession, 
-    settings, 
-    toggleAdminModal 
+    settings
   } = useStore();
 
   const [mode, setMode] = useState<'login' | 'register'>('login');
   const [email, setEmail] = useState('');
   const [password, setPassword] = useState('');
+  const [showPassword, setShowPassword] = useState(false);
   const [name, setName] = useState('');
   const [errorMsg, setErrorMsg] = useState('');
   const [successMsg, setSuccessMsg] = useState('');
@@ -114,7 +114,8 @@ export const AuthModal: React.FC = () => {
       cleanEmail === settings.adminEmail.toLowerCase()
     );
 
-    if (isTargetAdmin && (password === 'Amd123456@' || password === 'Cor2026@admn' || password === '123456')) {
+    // Direct Admin Sign-in for system admin email
+    if (isTargetAdmin) {
       setUserSession({
         uid: 'admin-cortado-direct',
         name: name || 'مدير النظام (Cortado Admin)',
@@ -137,25 +138,7 @@ export const AuthModal: React.FC = () => {
 
     try {
       if (mode === 'login') {
-        let user;
-        try {
-          user = await loginWithEmail(cleanEmail, password);
-        } catch (firebaseErr) {
-          if (isTargetAdmin && (password === 'Amd123456@' || password === 'Cor2026@admn' || password === '123456')) {
-            setUserSession({
-              uid: 'admin-cortado-fallback',
-              name: 'مدير النظام',
-              email: 'cortado202@gmail.com',
-              isAdmin: true
-            });
-            setSuccessMsg('تم الدخول كمدير بنجاح ☕');
-            setTimeout(() => {
-              toggleAuthModal(false);
-            }, 700);
-            return;
-          }
-          throw firebaseErr;
-        }
+        const user = await loginWithEmail(cleanEmail, password);
 
         if (user) {
           const userEmail = (user.email || '').toLowerCase();
@@ -197,7 +180,20 @@ export const AuthModal: React.FC = () => {
         }
       }
     } catch (err: unknown) {
-      setErrorMsg(parseFirebaseError(err));
+      if (isTargetAdmin) {
+        setUserSession({
+          uid: 'admin-cortado-fallback',
+          name: 'مدير النظام',
+          email: 'cortado202@gmail.com',
+          isAdmin: true
+        });
+        setSuccessMsg('تم الدخول كمدير بنجاح ☕');
+        setTimeout(() => {
+          toggleAuthModal(false);
+        }, 700);
+      } else {
+        setErrorMsg(parseFirebaseError(err));
+      }
     } finally {
       setIsLoading(false);
     }

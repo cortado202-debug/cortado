@@ -41,7 +41,9 @@ import {
   CreditCard,
   Zap,
   Volume2,
-  Bell
+  Bell,
+  Store,
+  Ban
 } from 'lucide-react';
 
 import { playOrderAlertSound } from '../../lib/sound';
@@ -76,7 +78,7 @@ export const AdminDashboard: React.FC = () => {
   const [showBulkPromoModal, setShowBulkPromoModal] = useState(false);
 
   // Admin Theme & Copy State
-  const [adminTheme, setAdminTheme] = useState<'dark' | 'light'>('dark');
+  const [adminTheme, setAdminTheme] = useState<'dark' | 'light'>('light');
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
 
   const handleCopyCode = (id: string, code: string) => {
@@ -857,7 +859,76 @@ export const AdminDashboard: React.FC = () => {
           {activeAdminTab === 'settings' && (
             <form onSubmit={handleSaveSettings} className="space-y-6 max-w-4xl">
               
-              {/* Dimensions Info Notice Box */}
+              {/* STORE STATUS TOGGLE CARD IN SETTINGS */}
+              <div className={`p-4 sm:p-5 rounded-2xl border transition-all shadow-xs ${
+                settings.isStoreOpen === false
+                  ? 'bg-rose-50 border-rose-300 text-rose-900 shadow-rose-100'
+                  : isLightAdmin 
+                    ? 'bg-emerald-50/90 border-emerald-300 text-slate-900 shadow-xs'
+                    : 'bg-[#00A859]/15 border-[#00A859]/40 text-[#FAEDCD]'
+              }`}>
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-md ${
+                      settings.isStoreOpen === false ? 'bg-rose-600 text-white' : 'bg-[#00A859] text-white'
+                    }`}>
+                      {settings.isStoreOpen === false ? (
+                        <Store className="w-6 h-6 animate-pulse" />
+                      ) : (
+                        <Store className="w-6 h-6" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-['Cairo'] font-extrabold text-base sm:text-lg">
+                          حالة استقبال الطلبات في المتجر:
+                        </h3>
+                        <span className={`text-xs font-black px-3 py-1 rounded-full border shadow-2xs ${
+                          settings.isStoreOpen === false
+                            ? 'bg-rose-600 text-white border-rose-700 animate-pulse'
+                            : 'bg-emerald-600 text-white border-emerald-700'
+                        }`}>
+                          {settings.isStoreOpen === false ? '🔴 المتجر مغلق (موقوف)' : '🟢 المتجر يعمل ويستقبل الطلبات'}
+                        </span>
+                      </div>
+                      <p className={`text-xs mt-1 font-medium ${
+                        settings.isStoreOpen === false ? 'text-rose-800' : isLightAdmin ? 'text-slate-600' : 'text-[#FAEDCD]/80'
+                      }`}>
+                        تستطيع توقيف استقبال الطلبات مؤقتاً بالضغط على الزر المقابل. الزبائن سيظهر لهم رسالة "المتجر مغلق حالياً".
+                      </p>
+                    </div>
+                  </div>
+
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newStatus = settings.isStoreOpen === false ? true : false;
+                      updateSettings({
+                        ...settings,
+                        isStoreOpen: newStatus
+                      });
+                    }}
+                    className={`px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95 ${
+                      settings.isStoreOpen === false
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white ring-2 ring-emerald-400'
+                        : 'bg-rose-600 hover:bg-rose-700 text-white ring-2 ring-rose-400'
+                    }`}
+                  >
+                    {settings.isStoreOpen === false ? (
+                      <>
+                        <CheckCircle2 className="w-5 h-5" />
+                        <span>إعادة فتح المتجر 🟢</span>
+                      </>
+                    ) : (
+                      <>
+                        <Ban className="w-5 h-5" />
+                        <span>توقيف المتجر 🔴</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
               <div className="bg-[#2D2926] border border-[#D4A373]/30 p-4 rounded-2xl flex items-start gap-3">
                 <Info className="w-5 h-5 text-[#D4A373] flex-shrink-0 mt-0.5" />
                 <div className="text-xs text-[#FAEDCD]/90 space-y-1">
@@ -1510,9 +1581,83 @@ export const AdminDashboard: React.FC = () => {
           {/* TAB 4: ORDERS MANAGEMENT */}
           {activeAdminTab === 'orders' && (
             <div className="space-y-4">
+              {/* STORE PAUSE / OPEN CONTROL CARD */}
+              <div className={`p-4 sm:p-5 rounded-2xl border transition-all shadow-xs ${
+                settings.isStoreOpen === false
+                  ? 'bg-rose-50 border-rose-300 text-rose-900 shadow-rose-100'
+                  : isLightAdmin 
+                    ? 'bg-emerald-50/90 border-emerald-300 text-slate-900 shadow-xs'
+                    : 'bg-[#00A859]/15 border-[#00A859]/40 text-[#FAEDCD]'
+              }`}>
+                <div className="flex flex-wrap items-center justify-between gap-4">
+                  <div className="flex items-center gap-3">
+                    <div className={`w-11 h-11 rounded-2xl flex items-center justify-center shrink-0 shadow-md ${
+                      settings.isStoreOpen === false ? 'bg-rose-600 text-white' : 'bg-[#00A859] text-white'
+                    }`}>
+                      {settings.isStoreOpen === false ? (
+                        <Store className="w-6 h-6 animate-pulse" />
+                      ) : (
+                        <Store className="w-6 h-6" />
+                      )}
+                    </div>
+                    <div>
+                      <div className="flex items-center gap-2">
+                        <h3 className="font-['Cairo'] font-extrabold text-base sm:text-lg">
+                          حالة استقبال الطلبات في المتجر:
+                        </h3>
+                        <span className={`text-xs font-black px-3 py-1 rounded-full border shadow-2xs ${
+                          settings.isStoreOpen === false
+                            ? 'bg-rose-600 text-white border-rose-700 animate-pulse'
+                            : 'bg-emerald-600 text-white border-emerald-700'
+                        }`}>
+                          {settings.isStoreOpen === false ? '🔴 المتجر مغلق (موقوف)' : '🟢 المتجر يعمل ويستقبل الطلبات'}
+                        </span>
+                      </div>
+                      <p className={`text-xs mt-1 font-medium ${
+                        settings.isStoreOpen === false ? 'text-rose-800' : isLightAdmin ? 'text-slate-600' : 'text-[#FAEDCD]/80'
+                      }`}>
+                        {settings.isStoreOpen === false 
+                          ? 'المتجر موقوف حالياً. أزرار إضافة للسلة والسلة معطلة وتظهر رسالة "المتجر مغلق" للزبائن.'
+                          : 'المتجر يعمل بشكل طبيعي ويستقبل الطلبات مباشرة من القائمة وسلة الشراء.'}
+                      </p>
+                    </div>
+                  </div>
+
+                  {/* TOGGLE STORE STATUS BUTTON */}
+                  <button
+                    type="button"
+                    onClick={() => {
+                      const newStatus = settings.isStoreOpen === false ? true : false;
+                      updateSettings({
+                        ...settings,
+                        isStoreOpen: newStatus
+                      });
+                    }}
+                    className={`px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95 ${
+                      settings.isStoreOpen === false
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white ring-2 ring-emerald-400'
+                        : 'bg-rose-600 hover:bg-rose-700 text-white ring-2 ring-rose-400'
+                    }`}
+                  >
+                    {settings.isStoreOpen === false ? (
+                      <>
+                        <CheckCircle2 className="w-5 h-5" />
+                        <span>إعادة فتح المتجر الآن 🟢</span>
+                      </>
+                    ) : (
+                      <>
+                        <Ban className="w-5 h-5" />
+                        <span>توقيف المتجر عن العمل 🔴</span>
+                      </>
+                    )}
+                  </button>
+                </div>
+              </div>
+
+              {/* SOUND ALERT BANNER */}
               <div className={`flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl border transition-colors ${
                 isLightAdmin 
-                  ? 'bg-emerald-50/80 border-emerald-200 text-slate-800' 
+                  ? 'bg-white border-slate-200 text-slate-800 shadow-2xs' 
                   : 'bg-[#00A859]/10 border-[#00A859]/30 text-[#FAEDCD]'
               }`}>
                 <div className="flex items-center gap-2.5">
@@ -1520,18 +1665,18 @@ export const AdminDashboard: React.FC = () => {
                     <Bell className="w-5 h-5 animate-bounce" />
                   </div>
                   <div>
-                    <h3 className="font-bold text-sm">طلبات المتجر الواردة</h3>
-                    <p className="text-xs text-[#00A859] font-medium">نظام التنبيه الصوتي مفعل تلقائياً لإصدار جرس عند وصول أي طلب جديد 🔔</p>
+                    <h3 className="font-bold text-sm">التنبيه الصوتي للطلبات الواردة</h3>
+                    <p className="text-xs text-[#00A859] font-bold">يصدر جرس هادئ تلقائياً فور وصول طلب جديد 🔔</p>
                   </div>
                 </div>
 
                 <button
                   type="button"
                   onClick={() => playOrderAlertSound()}
-                  className="bg-[#00A859] hover:bg-[#008A48] text-white text-xs font-bold px-3.5 py-2.5 rounded-xl flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
+                  className="bg-[#00A859] hover:bg-[#008A48] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
                 >
                   <Volume2 className="w-4 h-4" />
-                  <span>اختبار التنبيه الصوتي 🔊</span>
+                  <span>اختبار الصوت 🔊</span>
                 </button>
               </div>
               <div className="space-y-3">
