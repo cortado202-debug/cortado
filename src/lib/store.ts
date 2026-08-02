@@ -18,6 +18,14 @@ import {
   INITIAL_PROMO_CODES, 
   INITIAL_SETTINGS 
 } from '../data/initialData';
+import {
+  pushSettingsToCloud,
+  pushCategoriesToCloud,
+  pushProductsToCloud,
+  pushPromoCodesToCloud,
+  pushOrdersToCloud,
+  pushCustomersToCloud
+} from './firestoreSync';
 
 interface StoreState {
   // Navigation & Category State
@@ -391,13 +399,16 @@ export const useStore = create<StoreState>()(
       isCartOpen: false
     });
 
+    pushOrdersToCloud(get().orders);
+    pushCustomersToCloud(get().customers);
+
     return newOrder;
   },
 
   updateOrderStatus: (orderId, status) => {
-    set({
-      orders: get().orders.map(ord => ord.id === orderId ? { ...ord, status } : ord)
-    });
+    const updated = get().orders.map(ord => ord.id === orderId ? { ...ord, status } : ord);
+    set({ orders: updated });
+    pushOrdersToCloud(updated);
   },
 
   reorderPastOrder: (order) => {
@@ -428,25 +439,27 @@ export const useStore = create<StoreState>()(
       descriptionAr: catData.descriptionAr || '',
       isHidden: false
     };
-    set({ categories: [...get().categories, newCat] });
+    const updated = [...get().categories, newCat];
+    set({ categories: updated });
+    pushCategoriesToCloud(updated);
   },
 
   updateCategory: (catData) => {
-    set({
-      categories: get().categories.map(c => c.id === catData.id ? { ...c, ...catData } : c)
-    });
+    const updated = get().categories.map(c => c.id === catData.id ? { ...c, ...catData } : c);
+    set({ categories: updated });
+    pushCategoriesToCloud(updated);
   },
 
   deleteCategory: (id) => {
-    set({
-      categories: get().categories.filter(c => c.id !== id)
-    });
+    const updated = get().categories.filter(c => c.id !== id);
+    set({ categories: updated });
+    pushCategoriesToCloud(updated);
   },
 
   toggleCategoryHidden: (id) => {
-    set({
-      categories: get().categories.map(c => c.id === id ? { ...c, isHidden: !c.isHidden } : c)
-    });
+    const updated = get().categories.map(c => c.id === id ? { ...c, isHidden: !c.isHidden } : c);
+    set({ categories: updated });
+    pushCategoriesToCloud(updated);
   },
 
   addProduct: (productData) => {
@@ -454,7 +467,9 @@ export const useStore = create<StoreState>()(
       ...productData,
       id: `prod-${Date.now()}-${Math.floor(Math.random() * 1000)}`
     };
-    set({ products: [newProduct, ...get().products] });
+    const updated = [newProduct, ...get().products];
+    set({ products: updated });
+    pushProductsToCloud(updated);
   },
 
   addProductsBulk: (productsData) => {
@@ -462,17 +477,21 @@ export const useStore = create<StoreState>()(
       ...p,
       id: `prod-${Date.now()}-${i}-${Math.floor(Math.random() * 1000)}`
     }));
-    set({ products: [...newProducts, ...get().products] });
+    const updated = [...newProducts, ...get().products];
+    set({ products: updated });
+    pushProductsToCloud(updated);
   },
 
   updateProduct: (product) => {
-    set({
-      products: get().products.map(p => p.id === product.id ? product : p)
-    });
+    const updated = get().products.map(p => p.id === product.id ? product : p);
+    set({ products: updated });
+    pushProductsToCloud(updated);
   },
 
   deleteProduct: (id) => {
-    set({ products: get().products.filter(p => p.id !== id) });
+    const updated = get().products.filter(p => p.id !== id);
+    set({ products: updated });
+    pushProductsToCloud(updated);
   },
 
   resetToInitialData: () => {
@@ -482,6 +501,10 @@ export const useStore = create<StoreState>()(
       promoCodes: INITIAL_PROMO_CODES,
       settings: INITIAL_SETTINGS
     });
+    pushProductsToCloud(INITIAL_PRODUCTS);
+    pushCategoriesToCloud(INITIAL_CATEGORIES);
+    pushPromoCodesToCloud(INITIAL_PROMO_CODES);
+    pushSettingsToCloud(INITIAL_SETTINGS);
   },
 
   addPromoCode: (promoData) => {
@@ -491,7 +514,9 @@ export const useStore = create<StoreState>()(
       usedCount: 0,
       usedByUsers: []
     };
-    set({ promoCodes: [newPromo, ...get().promoCodes] });
+    const updated = [newPromo, ...get().promoCodes];
+    set({ promoCodes: updated });
+    pushPromoCodesToCloud(updated);
   },
 
   addPromoCodesBulk: (promosData) => {
@@ -501,21 +526,27 @@ export const useStore = create<StoreState>()(
       usedCount: 0,
       usedByUsers: []
     }));
-    set({ promoCodes: [...newPromos, ...get().promoCodes] });
+    const updated = [...newPromos, ...get().promoCodes];
+    set({ promoCodes: updated });
+    pushPromoCodesToCloud(updated);
   },
 
   updatePromoCode: (promo) => {
-    set({
-      promoCodes: get().promoCodes.map(p => p.id === promo.id ? promo : p)
-    });
+    const updated = get().promoCodes.map(p => p.id === promo.id ? promo : p);
+    set({ promoCodes: updated });
+    pushPromoCodesToCloud(updated);
   },
 
   deletePromoCode: (id) => {
-    set({ promoCodes: get().promoCodes.filter(p => p.id !== id) });
+    const updated = get().promoCodes.filter(p => p.id !== id);
+    set({ promoCodes: updated });
+    pushPromoCodesToCloud(updated);
   },
 
   updateSettings: (newSettings) => {
-    set({ settings: { ...get().settings, ...newSettings } });
+    const updatedSettings = { ...get().settings, ...newSettings };
+    set({ settings: updatedSettings });
+    pushSettingsToCloud(updatedSettings);
   },
 
   setUserSession: (session) => {

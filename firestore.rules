@@ -2,11 +2,6 @@ rules_version = '2';
 service cloud.firestore {
   match /databases/{database}/documents {
     
-    // Default deny all
-    match /{document=**} {
-      allow read, write: if false;
-    }
-
     // Helper functions
     function isSignedIn() {
       return request.auth != null;
@@ -18,33 +13,43 @@ service cloud.firestore {
       );
     }
 
-    // Products: Publicly readable, admin writable
-    match /products/{productId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Orders: Anyone can create order, admin or owner can read, admin can update status
-    match /orders/{orderId} {
-      allow create: if true;
-      allow read: if true;
-      allow update, delete: if isAdmin();
-    }
-
-    // Promo Codes: Publicly readable to validate, admin writable
-    match /promoCodes/{promoId} {
-      allow read: if true;
-      allow write: if isAdmin();
-    }
-
-    // Site Settings: Publicly readable, admin writable
+    // Site Settings: Publicly readable, writable
     match /siteSettings/{settingId} {
-      allow read: if true;
-      allow write: if isAdmin();
+      allow read, write: if true;
     }
 
-    // Customers: User can read/write own profile, admin can read all
+    // Site Data (unified store config document): Publicly readable, writable
+    match /site_data/{docId} {
+      allow read, write: if true;
+    }
+
+    // Categories: Publicly readable, writable
+    match /categories/{catId} {
+      allow read, write: if true;
+    }
+
+    // Products: Publicly readable, writable
+    match /products/{productId} {
+      allow read, write: if true;
+    }
+
+    // Orders: Anyone can create order, read, update
+    match /orders/{orderId} {
+      allow read, write: if true;
+    }
+
+    // Promo Codes: Publicly readable, writable
+    match /promoCodes/{promoId} {
+      allow read, write: if true;
+    }
+
+    // Customers: Publicly readable, writable
     match /customers/{customerId} {
+      allow read, write: if true;
+    }
+
+    // Default match
+    match /{document=**} {
       allow read, write: if true;
     }
   }
