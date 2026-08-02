@@ -9,7 +9,7 @@ import {
   signOut, 
   User 
 } from 'firebase/auth';
-import { getFirestore, doc, getDocFromServer, collection, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from 'firebase/firestore';
+import { initializeFirestore, getFirestore, doc, getDocFromServer, collection, getDocs, setDoc, addDoc, updateDoc, deleteDoc, query, where, orderBy, onSnapshot } from 'firebase/firestore';
 
 // Firebase project configuration for Cortado Cafe
 const defaultFirebaseConfig = {
@@ -55,7 +55,13 @@ try {
   } else {
     app = getApp();
   }
-  dbInstance = getFirestore(app);
+  try {
+    dbInstance = initializeFirestore(app, {
+      experimentalAutoDetectLongPolling: true,
+    });
+  } catch {
+    dbInstance = getFirestore(app);
+  }
   authInstance = getAuth(app);
 } catch (e) {
   console.warn('Firebase initialization running in fallback mode:', e);

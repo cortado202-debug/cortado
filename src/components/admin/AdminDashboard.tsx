@@ -384,6 +384,7 @@ export const AdminDashboard: React.FC = () => {
         phone,
         address,
         openingHours,
+        isStoreOpen: settings.isStoreOpen,
         branches: branchesList,
         adminEmail,
         deliveryFee: Number(deliveryFee) || 0,
