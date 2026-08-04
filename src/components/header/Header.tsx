@@ -51,12 +51,13 @@ export const Header: React.FC = () => {
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const pendingOrdersCount = orders ? orders.filter(o => o.status === 'pending').length : 0;
 
-  // Admin Check Logic: strictly checks if logged-in user email matches admin email
+  // Admin Check Logic: checks if logged-in user email matches admin email or userSession.isAdmin flag
   const isAdminUser = Boolean(
     userSession && 
-    userSession.email &&
-    (userSession.email.toLowerCase() === 'cortado202@gmail.com' || 
-     userSession.email.toLowerCase() === settings.adminEmail.toLowerCase())
+    (userSession.isAdmin ||
+     (userSession.email &&
+      (userSession.email.toLowerCase() === 'cortado202@gmail.com' || 
+       userSession.email.toLowerCase() === settings.adminEmail.toLowerCase())))
   );
 
   const handleGoogleLogin = async () => {

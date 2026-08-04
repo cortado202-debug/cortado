@@ -120,9 +120,9 @@ export async function testConnection() {
 export async function loginWithGoogle() {
   if (!auth) {
     return {
-      uid: 'demo-admin-cortado',
-      displayName: 'مدير كورتادو',
-      email: 'cortado202@gmail.com',
+      uid: 'demo-user-' + Date.now(),
+      displayName: 'مستخدم كورتادو',
+      email: 'demo@cortado.app',
       photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
     } as unknown as User;
   }
@@ -133,7 +133,7 @@ export async function loginWithGoogle() {
   } catch (error: unknown) {
     const errCode = (error as { code?: string })?.code || (error instanceof Error ? error.message : String(error));
     
-    // Fallback for preview mode with demo placeholder key
+    // Fallback ONLY if API key is a dummy placeholder DemoKey
     if (
       errCode.includes('auth/invalid-api-key') || 
       errCode.includes('auth/api-key-not-valid') ||
@@ -143,7 +143,7 @@ export async function loginWithGoogle() {
       return {
         uid: 'demo-google-user-' + Date.now(),
         displayName: 'مستخدم كورتادو (معاينة)',
-        email: 'cortado202@gmail.com',
+        email: 'demo-user@cortado.app',
         photoURL: 'https://images.unsplash.com/photo-1570295999919-56ceb5ecca61?auto=format&fit=crop&w=120&q=80',
       } as unknown as User;
     }
@@ -154,31 +154,10 @@ export async function loginWithGoogle() {
 
 export async function loginWithEmail(email: string, pass: string) {
   if (!auth) {
-    return {
-      uid: 'demo-' + Date.now(),
-      displayName: email.split('@')[0],
-      email: email,
-    } as unknown as User;
+    throw new Error('خدمة المصادقة غير متاحة حالياً');
   }
-  try {
-    const credential = await signInWithEmailAndPassword(auth, email, pass);
-    return credential.user;
-  } catch (error: unknown) {
-    const errCode = (error as { code?: string })?.code || (error instanceof Error ? error.message : String(error));
-    if (
-      errCode.includes('auth/invalid-api-key') || 
-      errCode.includes('auth/api-key-not-valid') ||
-      activeConfig.apiKey.includes('DemoKey')
-    ) {
-      console.info("Email login running in preview fallback mode:", errCode);
-      return {
-        uid: 'demo-' + Date.now(),
-        displayName: email.split('@')[0],
-        email: email,
-      } as unknown as User;
-    }
-    throw error;
-  }
+  const credential = await signInWithEmailAndPassword(auth, email, pass);
+  return credential.user;
 }
 
 export async function registerWithEmail(email: string, pass: string, name: string) {

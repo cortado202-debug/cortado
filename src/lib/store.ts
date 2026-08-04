@@ -18,13 +18,31 @@ import {
   INITIAL_PROMO_CODES, 
   INITIAL_SETTINGS 
 } from '../data/initialData';
-// Dynamic helper functions to push updates without creating circular top-level ESM dependencies
-const pushSettingsToCloud = (settings: any) => import('./firestoreSync').then((m) => m.pushSettingsToCloud(settings)).catch(() => {});
-const pushCategoriesToCloud = (categories: any) => import('./firestoreSync').then((m) => m.pushCategoriesToCloud(categories)).catch(() => {});
-const pushProductsToCloud = (products: any) => import('./firestoreSync').then((m) => m.pushProductsToCloud(products)).catch(() => {});
-const pushPromoCodesToCloud = (promoCodes: any) => import('./firestoreSync').then((m) => m.pushPromoCodesToCloud(promoCodes)).catch(() => {});
-const pushOrdersToCloud = (orders: any) => import('./firestoreSync').then((m) => m.pushOrdersToCloud(orders)).catch(() => {});
-const pushCustomersToCloud = (customers: any) => import('./firestoreSync').then((m) => m.pushCustomersToCloud(customers)).catch(() => {});
+export type CloudSyncType = 'settings' | 'categories' | 'products' | 'promoCodes' | 'orders' | 'customers';
+type CloudSyncCallback = (type: CloudSyncType, payload: any) => void;
+
+let syncCallback: CloudSyncCallback | null = null;
+
+export const setCloudSyncCallback = (cb: CloudSyncCallback) => {
+  syncCallback = cb;
+};
+
+export const triggerCloudSync = (type: CloudSyncType, payload: any) => {
+  if (syncCallback) {
+    try {
+      syncCallback(type, payload);
+    } catch (e) {
+      console.warn('Sync callback error:', e);
+    }
+  }
+};
+
+const pushSettingsToCloud = (settings: any) => triggerCloudSync('settings', settings);
+const pushCategoriesToCloud = (categories: any, isExplicitDelete = false) => triggerCloudSync('categories', { categories, isExplicitDelete });
+const pushProductsToCloud = (products: any, isExplicitDelete = false) => triggerCloudSync('products', { products, isExplicitDelete });
+const pushPromoCodesToCloud = (promoCodes: any, isExplicitDelete = false) => triggerCloudSync('promoCodes', { promoCodes, isExplicitDelete });
+const pushOrdersToCloud = (orders: any) => triggerCloudSync('orders', orders);
+const pushCustomersToCloud = (customers: any) => triggerCloudSync('customers', customers);
 
 interface StoreState {
   // Navigation & Category State
@@ -390,6 +408,15 @@ export const useStore = create<StoreState>()(
       });
     }
 
+    if (typeof window !== 'undefined') {
+      try {
+        const existing = JSON.parse(localStorage.getItem('cortado_my_order_ids') || '[]');
+        if (!existing.includes(newOrder.id)) {
+          localStorage.setItem('cortado_my_order_ids', JSON.stringify([newOrder.id, ...existing]));
+        }
+      } catch (e) {}
+    }
+
     set({ 
       orders: [newOrder, ...get().orders],
       cart: [],
@@ -452,7 +479,7 @@ export const useStore = create<StoreState>()(
   deleteCategory: (id) => {
     const updated = get().categories.filter(c => c.id !== id);
     set({ categories: updated });
-    pushCategoriesToCloud(updated);
+    pushCategoriesToCloud(updated, true);
   },
 
   toggleCategoryHidden: (id) => {
@@ -490,7 +517,7 @@ export const useStore = create<StoreState>()(
   deleteProduct: (id) => {
     const updated = get().products.filter(p => p.id !== id);
     set({ products: updated });
-    pushProductsToCloud(updated);
+    pushProductsToCloud(updated, true);
   },
 
   resetToInitialData: () => {
@@ -539,7 +566,7 @@ export const useStore = create<StoreState>()(
   deletePromoCode: (id) => {
     const updated = get().promoCodes.filter(p => p.id !== id);
     set({ promoCodes: updated });
-    pushPromoCodesToCloud(updated);
+    pushPromoCodesToCloud(updated, true);
   },
 
   updateSettings: (newSettings) => {
@@ -578,6 +605,10 @@ export const useStore = create<StoreState>()(
         cart: state.cart,
         userSession: state.userSession,
         appliedPromo: state.appliedPromo,
+        promoCodes: state.promoCodes,
+        settings: state.settings,
+        products: state.products,
+        categories: state.categories,
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {
@@ -590,8 +621,13 @@ export const useStore = create<StoreState>()(
           if (!state.settings) {
             state.settings = INITIAL_SETTINGS;
           }
+          if (!state.promoCodes) {
+            state.promoCodes = INITIAL_PROMO_CODES;
+          }
         }
       },
     }
   )
 );
+
+export default useStore;

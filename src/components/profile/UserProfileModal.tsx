@@ -40,24 +40,54 @@ export const UserProfileModal: React.FC = () => {
   const [copiedOrderId, setCopiedOrderId] = useState<string | null>(null);
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
-  // Filter orders related to this user session or search query
+  // Filter orders strictly related to this user session or created on this device
   const userIdentifier = userSession?.email?.toLowerCase();
 
+  const getLocalOrderIds = (): string[] => {
+    if (typeof window === 'undefined') return [];
+    try {
+      return JSON.parse(localStorage.getItem('cortado_my_order_ids') || '[]');
+    } catch {
+      return [];
+    }
+  };
+
+  const localOrderIds = getLocalOrderIds();
+
+  // STRICT ORDER PRIVACY FILTERING:
+  // A customer MUST ONLY see their OWN orders. Never leak other customers' orders.
   let filteredOrders = orders.filter(ord => {
+    const isMyEmail = Boolean(userIdentifier && ord.customerEmail?.toLowerCase() === userIdentifier);
+    const isMyLocalOrder = localOrderIds.includes(ord.id);
+
+    // If user is NOT logged in and order was not created on this device
+    if (!userIdentifier && !isMyLocalOrder) {
+      if (searchQuery.trim()) {
+        const query = searchQuery.trim().toLowerCase();
+        if (ord.id.toLowerCase() === query || ord.customerPhone === query) {
+          return true;
+        }
+      }
+      return false;
+    }
+
+    // If user IS logged in, order must match their email or local order ID
+    if (userIdentifier && !isMyEmail && !isMyLocalOrder) {
+      if (searchQuery.trim()) {
+        const query = searchQuery.trim().toLowerCase();
+        if (ord.id.toLowerCase() === query || ord.customerPhone === query) {
+          return true;
+        }
+      }
+      return false;
+    }
+
     if (searchQuery.trim()) {
       const query = searchQuery.trim().toLowerCase();
       const matchId = ord.id.toLowerCase().includes(query);
       const matchPhone = ord.customerPhone.includes(query);
       const matchName = ord.customerName.toLowerCase().includes(query);
       if (!matchId && !matchPhone && !matchName) return false;
-    }
-
-    if (userIdentifier && !searchQuery) {
-      const matchEmail = ord.customerEmail?.toLowerCase() === userIdentifier;
-      if (!matchEmail) {
-        if (ord.customerName.toLowerCase() !== userSession?.name?.toLowerCase()) {
-        }
-      }
     }
 
     if (activeTab === 'active') {
@@ -71,8 +101,8 @@ export const UserProfileModal: React.FC = () => {
   });
 
   const totalOrdersCount = filteredOrders.length;
-  const activeOrdersCount = orders.filter(o => o.status === 'pending' || o.status === 'preparing').length;
-  const totalSpent = orders.reduce((acc, o) => acc + (o.total || 0), 0);
+  const activeOrdersCount = filteredOrders.filter(o => o.status === 'pending' || o.status === 'preparing').length;
+  const totalSpent = filteredOrders.reduce((acc, o) => acc + (o.total || 0), 0);
 
   const handleCopyOrderId = (id: string) => {
     navigator.clipboard.writeText(id);

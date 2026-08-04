@@ -127,6 +127,7 @@ export interface SiteSettings {
   isStoreOpen?: boolean; // Toggle store status (open/closed)
   closedStoreNotice?: string; // Custom message displayed when store is closed
   isAnimatedBackgroundEnabled?: boolean; // Toggle animated green gradient background
+  updatedAt?: string; // Timestamp for sync resolution
 }
 
 export interface UserSession {

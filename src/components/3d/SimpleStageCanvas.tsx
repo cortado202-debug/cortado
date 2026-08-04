@@ -58,3 +58,5 @@ export const SimpleStageCanvas: React.FC<{ product?: Product }> = ({ product }) 
     </CanvasErrorBoundary>
   );
 };
+
+export default SimpleStageCanvas;

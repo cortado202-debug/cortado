@@ -179,7 +179,7 @@ export const Footer: React.FC = () => {
 
             <p className="flex items-center gap-2 text-[11px] text-[#523621] pt-1 font-semibold">
               <Coffee className="w-3.5 h-3.5 text-[#00A859] flex-shrink-0" />
-              <span>أوقات العمل: {settings.openingHours || 'يومياً من 6:00 صباحاً حتى 12:00 منتصف الليل'}</span>
+              <span>أوقات العمل: {settings.openingHours || 'يومياً: من 9:00 صباحاً حتى 02:00 منتصف الليل'}</span>
             </p>
           </div>
 

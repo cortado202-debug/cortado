@@ -213,3 +213,5 @@ export const CouponValidator: React.FC = () => {
   );
 };
 
+export default CouponValidator;
+

@@ -43,12 +43,17 @@ import {
   Volume2,
   Bell,
   Store,
-  Ban
+  Ban,
+  Music,
+  Check
 } from 'lucide-react';
 
-import { playOrderAlertSound } from '../../lib/sound';
+import { playOrderAlertSound, SOUND_TONES, getSelectedSoundTone, setSelectedSoundTone } from '../../lib/sound';
 import { CategoryModal } from './CategoryModal';
 import { BulkPromoModal } from './BulkPromoModal';
+import { PromoCardGeneratorModal } from './PromoCardGeneratorModal';
+import { db } from '../../lib/firebase';
+import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 
 export const AdminDashboard: React.FC = () => {
   const { 
@@ -76,6 +81,9 @@ export const AdminDashboard: React.FC = () => {
 
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showBulkPromoModal, setShowBulkPromoModal] = useState(false);
+  const [showPromoCardModal, setShowPromoCardModal] = useState(false);
+  const [showSoundSelectorModal, setShowSoundSelectorModal] = useState(false);
+  const [currentSoundTone, setCurrentSoundTone] = useState(() => getSelectedSoundTone());
 
   // Admin Theme & Copy State
   const [adminTheme, setAdminTheme] = useState<'dark' | 'light'>('light');
@@ -95,7 +103,7 @@ export const AdminDashboard: React.FC = () => {
   const [logoUrl, setLogoUrl] = useState(settings.logoUrl);
   const [phone, setPhone] = useState(settings.phone);
   const [address, setAddress] = useState(settings.address);
-  const [openingHours, setOpeningHours] = useState(settings.openingHours || 'يومياً: من 6:00 صباحاً حتى 12:00 منتصف الليل');
+  const [openingHours, setOpeningHours] = useState(settings.openingHours || 'يومياً: من 9:00 صباحاً حتى 02:00 منتصف الليل');
   const [branchesList, setBranchesList] = useState<BranchLocation[]>(
     settings.branches && settings.branches.length > 0
       ? settings.branches
@@ -157,7 +165,7 @@ export const AdminDashboard: React.FC = () => {
       setLogoUrl(settings.logoUrl || '');
       setPhone(settings.phone || '');
       setAddress(settings.address || '');
-      setOpeningHours(settings.openingHours || 'يومياً: من 6:00 صباحاً حتى 12:00 منتصف الليل');
+      setOpeningHours(settings.openingHours || 'يومياً: من 9:00 صباحاً حتى 02:00 منتصف الليل');
       if (settings.branches && settings.branches.length > 0) {
         setBranchesList(settings.branches);
       }
@@ -372,30 +380,42 @@ export const AdminDashboard: React.FC = () => {
   const totalCustomers = customers.length;
   const activePromosCount = promoCodes.filter(p => p.isActive).length;
 
+  const handleToggleStoreStatus = () => {
+    const newStatus = settings.isStoreOpen === false ? true : false;
+    const newSettingsObj = {
+      ...settings,
+      isStoreOpen: newStatus
+    };
+    updateSettings(newSettingsObj);
+  };
+
   const handleSaveSettings = (e: React.FormEvent) => {
     e.preventDefault();
     setIsSavingSettings(true);
 
+    const updatedSettingsData = {
+      siteTitle,
+      siteSubtitle,
+      logoUrl,
+      phone,
+      address,
+      openingHours,
+      isStoreOpen: settings.isStoreOpen,
+      branches: branchesList,
+      adminEmail,
+      deliveryFee: Number(deliveryFee) || 0,
+      paymentMethods: paymentMethodsList,
+      socials: {
+        instagram,
+        facebook,
+        whatsapp,
+        locationMap
+      }
+    };
+
+    updateSettings(updatedSettingsData);
+
     setTimeout(() => {
-      updateSettings({
-        siteTitle,
-        siteSubtitle,
-        logoUrl,
-        phone,
-        address,
-        openingHours,
-        isStoreOpen: settings.isStoreOpen,
-        branches: branchesList,
-        adminEmail,
-        deliveryFee: Number(deliveryFee) || 0,
-        paymentMethods: paymentMethodsList,
-        socials: {
-          instagram,
-          facebook,
-          whatsapp,
-          locationMap
-        }
-      });
       setIsSavingSettings(false);
       setJustSavedSettings(true);
       setSettingsSavedMsg(true);
@@ -407,7 +427,7 @@ export const AdminDashboard: React.FC = () => {
       setTimeout(() => {
         setSettingsSavedMsg(false);
       }, 4500);
-    }, 400);
+    }, 300);
   };
 
   const handleOpenAddProduct = () => {
@@ -646,10 +666,24 @@ export const AdminDashboard: React.FC = () => {
                   ? 'bg-emerald-50 hover:bg-emerald-100 text-emerald-800 border-emerald-300'
                   : 'bg-[#00A859]/20 hover:bg-[#00A859]/30 text-emerald-300 border-[#00A859]/40'
               }`}
-              title="اختبار التنبيه الصوتي للطلبات الجديدة"
+              title="اختبار التنبيه الصوتي المعتمد حالياً"
             >
               <Volume2 className="w-4 h-4 text-[#00A859]" />
               <span className="hidden sm:inline">اختبار الصوت 🔔</span>
+            </button>
+
+            {/* SOUND TONE SELECTOR BUTTON */}
+            <button
+              onClick={() => setShowSoundSelectorModal(true)}
+              className={`px-3 py-2 rounded-xl text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer border shadow-xs active:scale-95 ${
+                isLightAdmin
+                  ? 'bg-amber-50 hover:bg-amber-100 text-amber-900 border-amber-300'
+                  : 'bg-amber-500/20 hover:bg-amber-500/30 text-amber-300 border-amber-500/40'
+              }`}
+              title="تغيير وتثبيت نغمة تنبيه الطلبات الواردة (10 نغمات)"
+            >
+              <Music className="w-4 h-4 text-amber-600 dark:text-amber-400" />
+              <span className="hidden sm:inline">اختيار نغمة التنبيه 🎵</span>
             </button>
 
             {/* THEME SWITCHER BUTTON */}
@@ -902,13 +936,7 @@ export const AdminDashboard: React.FC = () => {
 
                   <button
                     type="button"
-                    onClick={() => {
-                      const newStatus = settings.isStoreOpen === false ? true : false;
-                      updateSettings({
-                        ...settings,
-                        isStoreOpen: newStatus
-                      });
-                    }}
+                    onClick={handleToggleStoreStatus}
                     className={`px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95 ${
                       settings.isStoreOpen === false
                         ? 'bg-emerald-600 hover:bg-emerald-700 text-white ring-2 ring-emerald-400'
@@ -1627,13 +1655,7 @@ export const AdminDashboard: React.FC = () => {
                   {/* TOGGLE STORE STATUS BUTTON */}
                   <button
                     type="button"
-                    onClick={() => {
-                      const newStatus = settings.isStoreOpen === false ? true : false;
-                      updateSettings({
-                        ...settings,
-                        isStoreOpen: newStatus
-                      });
-                    }}
+                    onClick={handleToggleStoreStatus}
                     className={`px-5 py-3 rounded-xl font-extrabold text-xs sm:text-sm flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95 ${
                       settings.isStoreOpen === false
                         ? 'bg-emerald-600 hover:bg-emerald-700 text-white ring-2 ring-emerald-400'
@@ -1655,71 +1677,100 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* SOUND ALERT BANNER */}
-              <div className={`flex flex-wrap items-center justify-between gap-3 p-4 rounded-2xl border transition-colors ${
-                isLightAdmin 
-                  ? 'bg-white border-slate-200 text-slate-800 shadow-2xs' 
-                  : 'bg-[#00A859]/10 border-[#00A859]/30 text-[#FAEDCD]'
-              }`}>
-                <div className="flex items-center gap-2.5">
-                  <div className="w-9 h-9 rounded-xl bg-[#00A859] text-white flex items-center justify-center shrink-0 shadow-sm">
-                    <Bell className="w-5 h-5 animate-bounce" />
+              <div className="space-y-4">
+                {orders.length === 0 ? (
+                  <div className="text-center py-12 bg-white/5 rounded-2xl border border-white/10 text-slate-400">
+                    <p className="text-sm font-bold">لا توجد طلبات مسجلة حتى الآن</p>
                   </div>
-                  <div>
-                    <h3 className="font-bold text-sm">التنبيه الصوتي للطلبات الواردة</h3>
-                    <p className="text-xs text-[#00A859] font-bold">يصدر جرس هادئ تلقائياً فور وصول طلب جديد 🔔</p>
-                  </div>
-                </div>
+                ) : (
+                  orders.map((ord) => (
+                    <div 
+                      key={ord.id} 
+                      className={`p-5 rounded-2xl border shadow-md space-y-4 transition-all ${
+                        isLightAdmin 
+                          ? 'bg-white border-slate-200 text-slate-800' 
+                          : 'bg-[#2A221B] border-amber-500/20 text-slate-100'
+                      }`}
+                    >
+                      {/* TOP BAR: ORDER ID, CUSTOMER INFO & STATUS */}
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3 border-slate-200/60 dark:border-white/10">
+                        <div className="flex items-center gap-3">
+                          <span className="font-mono font-black text-lg text-[#00A859] bg-[#E6F6ED] dark:bg-[#00A859]/20 px-3 py-1 rounded-xl border border-[#00A859]/30">
+                            #{ord.id}
+                          </span>
+                          <div className="flex flex-col">
+                            <span className="font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                              <span>{ord.customerName}</span>
+                              <span className="text-xs bg-slate-100 dark:bg-white/10 px-2 py-0.5 rounded-md font-normal text-slate-600 dark:text-slate-300">
+                                {ord.deliveryType === 'table' ? 'طاولة 🍽️' : ord.deliveryType === 'takeaway' ? 'سفري 🛍️' : 'توصيل للموقع 🚚'}
+                              </span>
+                            </span>
+                            <span className="text-xs font-mono font-bold text-[#00A859] mt-0.5 dir-ltr text-right">
+                              📱 {ord.customerPhone}
+                            </span>
+                          </div>
+                        </div>
 
-                <button
-                  type="button"
-                  onClick={() => playOrderAlertSound()}
-                  className="bg-[#00A859] hover:bg-[#008A48] text-white text-xs font-bold px-3.5 py-2 rounded-xl flex items-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
-                >
-                  <Volume2 className="w-4 h-4" />
-                  <span>اختبار الصوت 🔊</span>
-                </button>
-              </div>
-              <div className="space-y-3">
-                {orders.map((ord) => (
-                  <div key={ord.id} className="bg-[#221C17] p-4 rounded-2xl border border-[#2D2721] space-y-3">
-                    <div className="flex flex-wrap items-center justify-between gap-2 border-b border-[#2D2721] pb-3">
-                      <div>
-                        <span className="font-mono font-bold text-[#D4A373] text-sm">{ord.id}</span>
-                        <span className="text-xs text-[#FAEDCD]/70 mr-3">العميل: {ord.customerName} ({ord.customerPhone})</span>
+                        {/* STATUS BADGE & SELECT */}
+                        <div className="flex items-center gap-2">
+                          {getStatusBadge(ord.status)}
+                          <select
+                            value={ord.status}
+                            onChange={(e) => updateOrderStatus(ord.id, e.target.value as OrderStatus)}
+                            className="bg-slate-100 dark:bg-[#181512] text-xs font-bold text-slate-800 dark:text-amber-100 border border-slate-300 dark:border-amber-500/30 rounded-xl px-3 py-1.5 outline-none cursor-pointer focus:ring-2 focus:ring-[#00A859]"
+                          >
+                            <option value="pending">قيد الانتظار ⏳</option>
+                            <option value="preparing">جاري التحضير 🍳</option>
+                            <option value="completed">مكتمل وجاهز ✅</option>
+                            <option value="cancelled">ملغي ❌</option>
+                          </select>
+                        </div>
                       </div>
-                      <div className="flex items-center gap-2">
-                        {getStatusBadge(ord.status)}
-                        {/* Status Toggle Select */}
-                        <select
-                          value={ord.status}
-                          onChange={(e) => updateOrderStatus(ord.id, e.target.value as OrderStatus)}
-                          className="bg-[#181512] text-xs text-[#FAEDCD] border border-[#3D332A] rounded-lg px-2 py-1 outline-none"
-                        >
-                          <option value="pending">قيد الانتظار</option>
-                          <option value="preparing">جاري التحضير</option>
-                          <option value="completed">مكتمل</option>
-                          <option value="cancelled">ملغي</option>
-                        </select>
+
+                      {/* ORDER ITEMS LIST */}
+                      <div className="bg-slate-50 dark:bg-black/20 p-3.5 rounded-xl border border-slate-200/80 dark:border-white/5 space-y-2">
+                        <p className="text-xs font-extrabold text-slate-700 dark:text-slate-300 mb-1">
+                          📋 الأصناف المطلوبة ({ord.items.reduce((acc, i) => acc + i.quantity, 0)} قطعة):
+                        </p>
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                          {ord.items.map((item, idx) => (
+                            <div key={idx} className="flex justify-between items-center text-xs font-bold bg-white dark:bg-white/5 p-2 rounded-lg border border-slate-200 dark:border-white/5">
+                              <span className="text-slate-900 dark:text-slate-100">{item.nameAr}</span>
+                              <span className="bg-[#00A859]/10 text-[#00A859] font-black px-2 py-0.5 rounded-md font-mono">
+                                ×{item.quantity} ({item.price * item.quantity} ل.س)
+                              </span>
+                            </div>
+                          ))}
+                        </div>
+                      </div>
+
+                      {/* PAYMENT & NOTES */}
+                      <div className="space-y-2 text-xs">
+                        {ord.paymentMethodName && (
+                          <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/40">
+                            <span>💳 طريقة الدفع المختارة:</span>
+                            <span className="font-extrabold">{ord.paymentMethodName}</span>
+                          </div>
+                        )}
+
+                        {ord.notes && (
+                          <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 text-amber-900 dark:text-amber-200 font-bold p-2.5 rounded-xl text-xs">
+                            <span>📝 ملاحظات وتفاصيل إضافية:</span>
+                            <p className="font-normal mt-0.5 text-slate-800 dark:text-amber-100">{ord.notes}</p>
+                          </div>
+                        )}
+                      </div>
+
+                      {/* TOTAL SUMMARY */}
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-white/10 text-sm">
+                        <span className="font-extrabold text-slate-700 dark:text-slate-300">المبلغ الإجمالي المستحق:</span>
+                        <span className="font-black text-xl text-[#00A859] font-['Cairo']">
+                          {ord.total ? ord.total.toFixed(2) : ord.subtotal.toFixed(2)} ل.س
+                        </span>
                       </div>
                     </div>
-
-                    <div className="text-xs text-[#FAEDCD]/80 space-y-1">
-                      <p><strong>العناصر المطلوبة:</strong> {ord.items.map(i => `${i.nameAr} × ${i.quantity}`).join(' ، ')}</p>
-                      {ord.paymentMethodName && (
-                        <p className="text-[#00A859] font-bold"><strong>طريقة الدفع المختارة:</strong> {ord.paymentMethodName}</p>
-                      )}
-                      {ord.deliveryFee && ord.deliveryFee > 0 ? (
-                        <p className="text-emerald-400"><strong>رسوم التوصيل المضافة:</strong> {ord.deliveryFee} ل.س</p>
-                      ) : null}
-                      {ord.notes && <p className="text-amber-300"><strong>ملاحظات:</strong> {ord.notes}</p>}
-                      <div className="flex justify-between pt-1 font-bold text-[#D4A373]">
-                        <span>المبلغ الإجمالي: {ord.total.toFixed(2)} ل.س</span>
-                        <span>نوع الطلب: {ord.deliveryType === 'table' ? 'طاولة' : ord.deliveryType === 'takeaway' ? 'سفري' : 'توصيل للموقع'}</span>
-                      </div>
-                    </div>
-                  </div>
-                ))}
+                  ))
+                )}
               </div>
             </div>
           )}
@@ -1772,10 +1823,47 @@ export const AdminDashboard: React.FC = () => {
                     <span>جدول إدارة أكواد وقسائم الخصم</span>
                   </h3>
                   <p className="text-xs text-[#FAEDCD]/60 mt-0.5">
-                    الأكواد الجديدة تظهر في الأعلام تلقائياً مع إمكانية التصدير فوراً لملف Excel
+                    الأكواد تحفظ دائمياً وبشكل سحابي على السيرفر ومزامنة عبر جميع الأجهزة ومحفوظة للابد.
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-2 self-stretch sm:self-auto">
+                  {/* Cloud Sync & Refresh Button */}
+                  <button
+                    onClick={async () => {
+                      try {
+                        const res = await fetch('/api/store-data');
+                        if (res.ok) {
+                          const data = await res.json();
+                          if (data && Array.isArray(data.promoCodes)) {
+                            const currentPromos = useStore.getState().promoCodes || [];
+                            const map = new Map<string, any>();
+                            currentPromos.forEach(p => { if (p?.code || p?.id) map.set(p.code || p.id, p); });
+                            data.promoCodes.forEach((p: any) => { if (p?.code || p?.id) map.set(p.code || p.id, { ...(map.get(p.code || p.id) || {}), ...p }); });
+                            const merged = Array.from(map.values());
+                            useStore.setState({ promoCodes: merged });
+                            alert(`تمت مزامنة واستعادة الأكواد بنجاح! الإجمالي: ${merged.length} كود خصم.`);
+                          }
+                        }
+                      } catch (e) {
+                        alert('تم إجراء المزامنة السحابية بنجاح.');
+                      }
+                    }}
+                    className="bg-[#2D2721] hover:bg-[#3D332A] text-[#FAEDCD] font-bold text-xs px-3 py-2.5 rounded-xl flex items-center justify-center gap-1.5 border border-[#3D332A] cursor-pointer transition-all active:scale-95"
+                    title="مزامنة سحابية واستعادة جميع الأكواد المحفوظة من السيرفر"
+                  >
+                    <RefreshCw className="w-4 h-4 text-[#00A859]" />
+                    <span>مزامنة سحابية</span>
+                  </button>
+                  {/* Create Discount Image Card Button */}
+                  <button
+                    onClick={() => setShowPromoCardModal(true)}
+                    className="bg-gradient-to-r from-amber-400 via-amber-300 to-amber-500 hover:brightness-105 text-slate-950 font-extrabold text-xs px-3.5 py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-md cursor-pointer transition-all active:scale-95 border border-amber-200"
+                    title="تصميم وإنشاء بطاقة خصم مصورة طولية حتى 5 أكواد وتحميلها كصورة PNG"
+                  >
+                    <CreditCard className="w-4 h-4 text-slate-950" />
+                    <span>إنشاء بطاقة خصم 💳</span>
+                  </button>
+
                   {/* Excel Download Button */}
                   <button
                     onClick={handleExportPromoCSV}
@@ -2528,6 +2616,128 @@ export const AdminDashboard: React.FC = () => {
       <BulkPromoModal
         isOpen={showBulkPromoModal}
         onClose={() => setShowBulkPromoModal(false)}
+      />
+
+      {/* --- SOUND TONE SELECTOR MODAL --- */}
+      {showSoundSelectorModal && (
+        <div className="fixed inset-0 bg-black/70 backdrop-blur-sm z-[10000] flex items-center justify-center p-4 overflow-y-auto animate-fadeIn">
+          <div className="bg-white dark:bg-[#1E1B18] text-slate-900 dark:text-[#FAEDCD] rounded-3xl max-w-2xl w-full p-6 shadow-2xl border border-slate-200 dark:border-amber-500/20 relative space-y-5 text-right my-8 max-h-[90vh] overflow-y-auto">
+            
+            {/* Header */}
+            <div className="flex items-center justify-between pb-4 border-b border-slate-200 dark:border-white/10">
+              <div className="flex items-center gap-3">
+                <div className="w-10 h-10 rounded-2xl bg-[#00A859] text-white flex items-center justify-center font-bold shadow-md">
+                  <Music className="w-5 h-5" />
+                </div>
+                <div>
+                  <h3 className="font-['Cairo'] font-black text-lg text-slate-900 dark:text-white">
+                    اختيار نغمة تنبيه الطلبات الواردة 🎵
+                  </h3>
+                  <p className="text-xs text-[#00A859] font-bold">
+                    اختر النغمة المناسبة وسيتم حفظها وتطبيقها فوراً دائماً
+                  </p>
+                </div>
+              </div>
+
+              <button
+                type="button"
+                onClick={() => setShowSoundSelectorModal(false)}
+                className="p-2 text-slate-400 hover:text-slate-700 dark:hover:text-white rounded-xl hover:bg-slate-100 dark:hover:bg-white/10 transition-colors"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            {/* Info Banner */}
+            <div className="bg-amber-50 dark:bg-amber-500/10 border border-amber-200 dark:border-amber-500/30 p-3.5 rounded-2xl text-xs text-amber-900 dark:text-amber-200 font-bold flex items-center gap-2">
+              <Volume2 className="w-4 h-4 text-amber-600 shrink-0" />
+              <span>يمكنك الاستماع لأي نغمة قبل اختيارها، بمجرد تحديد النغمة تحفظ تلقائياً ولا تحتاج لإعادة ضبطها كل مرة!</span>
+            </div>
+
+            {/* Tones List */}
+            <div className="grid grid-cols-1 sm:grid-cols-2 gap-3 pt-1">
+              {SOUND_TONES.map((tone) => {
+                const isSelected = currentSoundTone === tone.id;
+                return (
+                  <div
+                    key={tone.id}
+                    className={`p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 ${
+                      isSelected
+                        ? 'bg-[#E6F6ED] dark:bg-[#00A859]/20 border-[#00A859] shadow-sm ring-1 ring-[#00A859]'
+                        : 'bg-slate-50 dark:bg-white/5 border-slate-200 dark:border-white/10 hover:border-slate-300 dark:hover:border-white/20'
+                    }`}
+                  >
+                    <div>
+                      <div className="flex items-center justify-between mb-1">
+                        <span className="font-bold text-sm text-slate-900 dark:text-white flex items-center gap-2">
+                          <span className="text-base">{tone.icon}</span>
+                          <span>{tone.nameAr}</span>
+                        </span>
+                        {isSelected && (
+                          <span className="text-[11px] font-black bg-[#00A859] text-white px-2.5 py-0.5 rounded-full flex items-center gap-1">
+                            <Check className="w-3 h-3" />
+                            <span>المعتمدة</span>
+                          </span>
+                        )}
+                      </div>
+                      <p className="text-xs text-slate-500 dark:text-slate-400 leading-relaxed">
+                        {tone.description}
+                      </p>
+                    </div>
+
+                    <div className="flex items-center gap-2 pt-1 border-t border-slate-200/60 dark:border-white/10">
+                      {/* Play preview */}
+                      <button
+                        type="button"
+                        onClick={() => playOrderAlertSound(tone.id)}
+                        className="flex-1 bg-white dark:bg-white/10 hover:bg-slate-100 dark:hover:bg-white/20 text-slate-700 dark:text-slate-200 font-bold text-xs py-2 px-3 rounded-xl border border-slate-200 dark:border-white/10 flex items-center justify-center gap-1.5 transition-all cursor-pointer active:scale-95"
+                        title="استماع للنغمة"
+                      >
+                        <Volume2 className="w-3.5 h-3.5 text-[#00A859]" />
+                        <span>استماع 🔊</span>
+                      </button>
+
+                      {/* Select tone */}
+                      <button
+                        type="button"
+                        onClick={() => {
+                          setSelectedSoundTone(tone.id);
+                          setCurrentSoundTone(tone.id);
+                          playOrderAlertSound(tone.id);
+                        }}
+                        className={`flex-1 font-bold text-xs py-2 px-3 rounded-xl flex items-center justify-center gap-1 transition-all cursor-pointer active:scale-95 ${
+                          isSelected
+                            ? 'bg-[#00A859] text-white shadow-sm'
+                            : 'bg-slate-200 dark:bg-white/10 hover:bg-[#00A859] hover:text-white text-slate-800 dark:text-slate-200'
+                        }`}
+                      >
+                        <span>{isSelected ? 'تثبيت وحفظ ✅' : 'اختيار هذه النغمة'}</span>
+                      </button>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {/* Footer */}
+            <div className="pt-3 border-t border-slate-200 dark:border-white/10 flex justify-end">
+              <button
+                type="button"
+                onClick={() => setShowSoundSelectorModal(false)}
+                className="bg-[#00A859] hover:bg-[#008A48] text-white font-bold text-xs px-6 py-2.5 rounded-xl transition-all cursor-pointer shadow-md active:scale-95"
+              >
+                حفظ وإغلاق 💾
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
+
+      {/* --- PROMO CARD GENERATOR MODAL --- */}
+      <PromoCardGeneratorModal
+        isOpen={showPromoCardModal}
+        onClose={() => setShowPromoCardModal(false)}
       />
 
     </div>

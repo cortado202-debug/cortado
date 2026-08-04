@@ -3106,22 +3106,22 @@ export const INITIAL_SETTINGS: SiteSettings = {
   logoUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><circle cx="250" cy="250" r="240" fill="%2300A859"/><g transform="rotate(-5 250 240)"><path d="M125 110 C125 100, 150 90, 250 90 C350 90, 375 100, 375 110 L395 135 C400 142, 395 152, 375 152 L125 152 C105 152, 100 142, 105 135 Z" fill="white"/><path d="M140 162 L360 162 L335 370 L165 370 Z" fill="white"/><path d="M135 200 L365 210 L350 310 L150 300 Z" fill="none" stroke="%2300A859" stroke-width="12"/><text x="250" y="278" text-anchor="middle" fill="%2300A859" font-family="\'Brush Script MT\', \'Dancing Script\', cursive, sans-serif" font-size="78" font-weight="bold" transform="rotate(-4 250 278)">Cortado</text><text x="250" y="352" text-anchor="middle" fill="%2300A859" font-family="\'Cairo\', sans-serif" font-size="36" font-weight="900" letter-spacing="4">CAFÉ</text><path d="M220 370 L245 415 L270 370 Z" fill="white"/></g></svg>',
   siteTitle: 'كورتادو كافيه',
   siteSubtitle: 'Cortado CAFÉ',
-  phone: '+963 33 123 4567',
+  phone: '0132224300',
   address: 'سوريا - حماة - الشريعة',
-  openingHours: 'يومياً: من 6:00 صباحاً حتى 12:00 منتصف الليل',
+  openingHours: 'يومياً: من 9:00 صباحاً حتى 02:00 منتصف الليل',
   branches: [
     {
       id: 'b-1',
-      name: 'فرع حماة الرئيسي',
+      name: 'فرع حماة الشريعة',
       address: 'سوريا - حماة - الشريعة',
-      phone: '+963 33 123 4567',
+      phone: '0132224300',
       isMain: true
     },
     {
       id: 'b-2',
-      name: 'فرع الشام الجديد',
-      address: 'سوريا - دمشق - المزة',
-      phone: '+963 11 987 6543',
+      name: 'فرع حماة ابي الفداء',
+      address: 'سوريا - حماة - ابي الفداء',
+      phone: '0132270778',
       isMain: false
     }
   ],

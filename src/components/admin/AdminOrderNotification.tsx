@@ -60,76 +60,78 @@ export const AdminOrderNotification: React.FC = () => {
   const badge = getDeliveryBadge(activeNotification.deliveryType);
 
   return (
-    <div className="fixed top-4 right-4 left-4 sm:left-auto sm:right-6 sm:w-[420px] z-[9999] animate-slideDown">
-      <div className="bg-[#2A2118] text-white rounded-2xl p-4 shadow-2xl border-2 border-[#00A859] relative overflow-hidden backdrop-blur-md">
+    <div className="fixed top-4 right-4 left-4 sm:left-auto sm:right-6 sm:w-[440px] z-[9999] animate-slideDown">
+      <div className="bg-white text-slate-900 rounded-2xl p-5 shadow-2xl border-2 border-[#00A859] relative overflow-hidden text-right">
         
         {/* Animated Background Glow */}
-        <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#00A859]/30 rounded-full blur-2xl pointer-events-none animate-pulse" />
+        <div className="absolute -right-10 -top-10 w-32 h-32 bg-[#00A859]/15 rounded-full blur-2xl pointer-events-none animate-pulse" />
 
         {/* HEADER BAR */}
-        <div className="flex items-center justify-between pb-2.5 border-b border-white/10">
+        <div className="flex items-center justify-between pb-3 border-b border-slate-200">
           <div className="flex items-center gap-2">
-            <span className="relative flex h-3 w-3">
+            <span className="relative flex h-3.5 w-3.5">
               <span className="animate-ping absolute inline-flex h-full w-full rounded-full bg-[#00A859] opacity-75"></span>
-              <span className="relative inline-flex rounded-full h-3 w-3 bg-[#00A859]"></span>
+              <span className="relative inline-flex rounded-full h-3.5 w-3.5 bg-[#00A859]"></span>
             </span>
-            <span className="font-['Cairo'] font-black text-xs text-[#00A859] tracking-wide flex items-center gap-1">
-              <Bell className="w-4 h-4 text-[#00A859] animate-bounce" />
-              <span>إشعار إداري: وصل طلب جديد الآن!</span>
+            <span className="font-['Cairo'] font-black text-sm text-[#00A859] flex items-center gap-1.5">
+              <Bell className="w-5 h-5 text-[#00A859] animate-bounce" />
+              <span>وصل طلب جديد للمتجر الآن! ☕</span>
             </span>
           </div>
 
           <div className="flex items-center gap-1.5">
             <button
               onClick={() => playOrderAlertSound()}
-              className="text-emerald-400 hover:text-emerald-300 px-2 py-1 hover:bg-emerald-500/20 rounded-lg transition-colors cursor-pointer flex items-center gap-1 text-[11px] font-bold border border-emerald-500/30"
-              title="إعادة إعادة تشغيل التنبيه الصوتي"
+              className="text-[#00A859] hover:bg-[#E6F6ED] px-2.5 py-1.5 rounded-xl transition-colors cursor-pointer flex items-center gap-1 text-xs font-bold border border-[#00A859]/30"
+              title="إعادة تشغيل التنبيه الصوتي"
             >
-              <Volume2 className="w-3.5 h-3.5" />
+              <Volume2 className="w-4 h-4 text-[#00A859]" />
               <span>إعادة الصوت 🔔</span>
             </button>
             <button
               onClick={() => setActiveNotification(null)}
-              className="text-white/60 hover:text-white p-1 hover:bg-white/10 rounded-lg transition-colors cursor-pointer"
+              className="text-slate-400 hover:text-slate-700 p-1.5 hover:bg-slate-100 rounded-xl transition-colors cursor-pointer"
               title="إغلاق الإشعار"
             >
-              <X className="w-4 h-4" />
+              <X className="w-5 h-5" />
             </button>
           </div>
         </div>
 
         {/* ORDER CONTENT */}
-        <div className="py-3 space-y-2 text-right">
+        <div className="py-3.5 space-y-3">
           <div className="flex justify-between items-center">
-            <span className="font-mono font-black text-sm text-[#00A859] bg-[#00A859]/10 px-2.5 py-0.5 rounded-lg border border-[#00A859]/30">
+            <span className="font-mono font-black text-base text-[#00A859] bg-[#E6F6ED] px-3 py-1 rounded-xl border border-[#00A859]/30">
               #{activeNotification.id}
             </span>
-            <span className="text-xs font-bold text-white/90 bg-white/10 px-2.5 py-0.5 rounded-full flex items-center gap-1.5">
+            <span className="text-xs font-extrabold text-slate-800 bg-slate-100 px-3 py-1 rounded-full flex items-center gap-1.5 border border-slate-200">
               {badge.icon}
               <span>{badge.label}</span>
             </span>
           </div>
 
-          <div className="text-xs space-y-1">
-            <p className="font-bold text-sm text-white flex items-center gap-1.5">
-              <span>العميل:</span>
-              <span className="text-[#00A859]">{activeNotification.customerName}</span>
-              <span className="text-white/60 text-[11px] font-mono dir-ltr">({activeNotification.customerPhone})</span>
+          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
+            <p className="font-extrabold text-base text-slate-900 flex items-center justify-between">
+              <span>العميل: <strong className="text-[#00A859]">{activeNotification.customerName}</strong></span>
+              <span className="text-xs font-mono font-bold text-slate-700 dir-ltr bg-white px-2 py-0.5 rounded-lg border border-slate-200">
+                📱 {activeNotification.customerPhone}
+              </span>
             </p>
-            <p className="text-white/80 text-[11px] truncate">
+            <p className="text-xs font-bold text-slate-700 leading-relaxed pt-1 border-t border-slate-200/60">
+              <span className="text-slate-500">الأصناف: </span>
               {activeNotification.items.map(i => `${i.nameAr} (×${i.quantity})`).join(' ، ')}
             </p>
           </div>
 
-          <div className="pt-2 flex items-center justify-between border-t border-white/10 text-xs">
-            <div className="flex items-center gap-1">
-              <span className="text-white/70">المبلغ الإجمالي:</span>
-              <span className="font-black text-sm text-[#00A859] font-['Cairo']">
+          <div className="pt-1 flex items-center justify-between text-xs font-bold">
+            <div className="flex items-center gap-1.5 text-slate-800">
+              <span>المبلغ الإجمالي:</span>
+              <span className="font-black text-base text-[#00A859] font-['Cairo']">
                 {activeNotification.total ? activeNotification.total.toFixed(2) : activeNotification.subtotal.toFixed(2)} ل.س
               </span>
             </div>
             
-            <span className="text-[10px] text-emerald-400 font-bold bg-emerald-500/10 px-2 py-0.5 rounded-full border border-emerald-500/20">
+            <span className="text-xs text-amber-800 font-extrabold bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-300">
               قيد الانتظار ⏳
             </span>
           </div>
@@ -139,7 +141,7 @@ export const AdminOrderNotification: React.FC = () => {
         <div className="pt-2 flex gap-2">
           <button
             onClick={handleOpenOrderInAdmin}
-            className="flex-1 bg-[#00A859] hover:bg-[#008A48] text-white font-black text-xs py-2.5 px-3 rounded-xl flex items-center justify-center gap-1.5 cursor-pointer shadow-lg transition-all active:scale-95"
+            className="flex-1 bg-[#00A859] hover:bg-[#008A48] text-white font-black text-xs py-3 px-3 rounded-xl flex items-center justify-center gap-2 cursor-pointer shadow-md transition-all active:scale-95"
           >
             <span>عرض وإدارة الطلب في لوحة التحكم</span>
             <ArrowLeft className="w-4 h-4" />
@@ -147,7 +149,7 @@ export const AdminOrderNotification: React.FC = () => {
           
           <button
             onClick={() => setActiveNotification(null)}
-            className="bg-white/10 hover:bg-white/20 text-white font-bold text-xs px-3 py-2.5 rounded-xl cursor-pointer transition-colors"
+            className="bg-slate-100 hover:bg-slate-200 text-slate-700 font-bold text-xs px-3.5 py-3 rounded-xl cursor-pointer transition-colors border border-slate-200"
           >
             تجاهل
           </button>
