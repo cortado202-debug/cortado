@@ -341,6 +341,14 @@ export const useStore = create<StoreState>()(
 
   createOrder: ({ name, phone, email, deliveryType, paymentMethodName, notes }) => {
     const { cart, appliedPromo, userSession, settings } = get();
+
+    // STRICT LOCK: Block order creation if store is closed
+    if (settings.isStoreOpen === false) {
+      alert('عذراً، المتجر مغلق حالياً ولا استقبال للطلبات في الوقت الحالي.');
+      window.dispatchEvent(new CustomEvent('show-closed-store-modal'));
+      throw new Error('المتجر مغلق حالياً');
+    }
+
     const subtotal = cart.reduce((acc, item) => acc + (item.product.price * item.quantity), 0);
     const discountAmount = appliedPromo ? appliedPromo.discountAmount : 0;
     const deliveryFee = (deliveryType === 'delivery' && settings.deliveryFee) ? settings.deliveryFee : 0;
@@ -609,6 +617,8 @@ export const useStore = create<StoreState>()(
         settings: state.settings,
         products: state.products,
         categories: state.categories,
+        orders: state.orders,
+        customers: state.customers,
       }),
       onRehydrateStorage: () => (state) => {
         if (state) {

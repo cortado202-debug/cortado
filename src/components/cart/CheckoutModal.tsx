@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../../lib/store';
-import { X, CheckCircle2, ShoppingBag, ShieldCheck, Truck, Utensils, MapPin, Tag, Sparkles, PackageCheck, CreditCard, Wallet, Info, MailOpen, Heart } from 'lucide-react';
+import { X, CheckCircle2, ShoppingBag, ShieldCheck, Truck, Utensils, MapPin, Tag, Sparkles, PackageCheck, CreditCard, Wallet, Info, MailOpen, Heart, Store } from 'lucide-react';
 
 export const CheckoutModal: React.FC = () => {
   const { 
@@ -525,23 +525,48 @@ export const CheckoutModal: React.FC = () => {
                 </div>
               </div>
 
+              {/* STORE CLOSED WARNING BANNER */}
+              {settings.isStoreOpen === false && (
+                <div className="p-4 bg-rose-500/10 border border-rose-500/30 text-rose-600 rounded-2xl flex items-center gap-3">
+                  <Store className="w-6 h-6 shrink-0 animate-bounce" />
+                  <div>
+                    <h4 className="font-extrabold text-sm">المتجر مغلق حالياً 🔴</h4>
+                    <p className="text-xs mt-0.5 text-rose-700 font-medium">نعتذر منك، لا نتلقى طلبات جديدة في الوقت الحالي بسبب إيقاف استقبال الطلبات.</p>
+                  </div>
+                </div>
+              )}
+
               {/* Submit Order Button */}
               <button
                 type="submit"
+                disabled={settings.isStoreOpen === false}
                 onClick={(e) => {
+                  if (settings.isStoreOpen === false) {
+                    e.preventDefault();
+                    alert('عذراً، المتجر مغلق حالياً ولا استقبال للطلبات في الوقت الحالي.');
+                    return;
+                  }
                   if (!isFormValid) {
                     e.preventDefault();
                     alert('⚠️ يرجى إدخال معلومات الاسم ورقم الجوال لتأكيد الطلب');
                   }
                 }}
-                className={`w-full font-bold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all cursor-pointer ${
-                  isFormValid 
-                    ? 'bg-[#00A859] hover:bg-[#008A48] text-white shadow-md active:scale-98' 
-                    : 'bg-slate-300 text-slate-600 hover:bg-slate-350 opacity-90 border border-slate-300'
+                className={`w-full font-bold text-sm py-3.5 rounded-xl flex items-center justify-center gap-2 transition-all ${
+                  settings.isStoreOpen === false
+                    ? 'bg-rose-100 text-rose-700 border border-rose-300 cursor-not-allowed'
+                    : isFormValid 
+                      ? 'bg-[#00A859] hover:bg-[#008A48] text-white shadow-md active:scale-98 cursor-pointer' 
+                      : 'bg-slate-300 text-slate-600 hover:bg-slate-350 opacity-90 border border-slate-300 cursor-pointer'
                 }`}
               >
                 <ShoppingBag className="w-4 h-4" />
-                <span>{isFormValid ? 'تأكيد الطلب الآن' : 'تأكيد الطلب الآن (يرجى تعبئة البيانات)'}</span>
+                <span>
+                  {settings.isStoreOpen === false 
+                    ? 'المتجر مغلق حالياً (الطلبات متوقفة)'
+                    : isFormValid 
+                      ? 'تأكيد الطلب الآن' 
+                      : 'تأكيد الطلب الآن (يرجى تعبئة البيانات)'}
+                </span>
               </button>
 
             </form>

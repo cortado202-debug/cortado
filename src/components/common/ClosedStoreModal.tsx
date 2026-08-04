@@ -4,8 +4,17 @@ import { useStore } from '../../lib/store';
 import { AlertTriangle, Coffee, X, Clock, ShoppingBag } from 'lucide-react';
 
 export const ClosedStoreModal: React.FC = () => {
-  const { settings } = useStore();
+  const { settings, userSession } = useStore();
   const [isOpen, setIsOpen] = useState(false);
+
+  useEffect(() => {
+    // If store is closed and user is not admin, auto open modal
+    if (settings.isStoreOpen === false && !userSession?.isAdmin) {
+      setIsOpen(true);
+    } else if (settings.isStoreOpen === true) {
+      setIsOpen(false);
+    }
+  }, [settings.isStoreOpen, userSession?.isAdmin]);
 
   useEffect(() => {
     const handleShowModal = () => {

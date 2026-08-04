@@ -383,6 +383,57 @@ export function initFirestoreSync() {
     }).catch((e) => {
       console.warn('Initial Firestore store_config fetch error:', e);
     });
+
+    getDoc(doc(db, 'site_data', 'promoCodes')).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data && Array.isArray(data.items) && data.items.length > 0) {
+          const currentPromos = useStore.getState().promoCodes || [];
+          const map = new Map<string, any>();
+          currentPromos.forEach(p => map.set(p.code, p));
+          data.items.forEach((p: any) => map.set(p.code, { ...(map.get(p.code) || {}), ...p }));
+          const merged = Array.from(map.values());
+          useStore.setState({ promoCodes: merged });
+          savePromoCodesToLocalStorage(merged);
+        }
+      }
+    }).catch((e) => console.warn('Initial Firestore promoCodes fetch error:', e));
+
+    getDoc(doc(db, 'site_data', 'orders')).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data && Array.isArray(data.items) && data.items.length > 0) {
+          useStore.setState({ orders: data.items });
+        }
+      }
+    }).catch((e) => console.warn('Initial Firestore orders fetch error:', e));
+
+    getDoc(doc(db, 'site_data', 'customers')).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data && Array.isArray(data.items) && data.items.length > 0) {
+          useStore.setState({ customers: data.items });
+        }
+      }
+    }).catch((e) => console.warn('Initial Firestore customers fetch error:', e));
+
+    getDoc(doc(db, 'site_data', 'categories')).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data && Array.isArray(data.items) && data.items.length > 0) {
+          useStore.setState({ categories: data.items });
+        }
+      }
+    }).catch((e) => console.warn('Initial Firestore categories fetch error:', e));
+
+    getDoc(doc(db, 'site_data', 'products')).then((snap) => {
+      if (snap.exists()) {
+        const data = snap.data();
+        if (data && Array.isArray(data.items) && data.items.length > 0) {
+          useStore.setState({ products: data.items });
+        }
+      }
+    }).catch((e) => console.warn('Initial Firestore products fetch error:', e));
   }
 
   // 4. Poll server every 3 seconds for updates

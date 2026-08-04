@@ -70,22 +70,16 @@ export const AuthModal: React.FC = () => {
     try {
       const user = await loginWithGoogle();
       if (user) {
-        const userEmail = (user.email || '').toLowerCase();
-        const isUserAdmin = Boolean(
-          userEmail === 'cortado202@gmail.com' ||
-          userEmail === settings.adminEmail.toLowerCase()
-        );
         setUserSession({
           uid: user.uid,
           name: user.displayName || 'عميل كورتادو',
-          email: user.email || 'cortado202@gmail.com',
+          email: user.email || '',
           photoURL: user.photoURL || undefined,
-          isAdmin: isUserAdmin
+          isAdmin: false
         });
-        setSuccessMsg(isUserAdmin ? 'تم تسجيل الدخول كمدير للنظام بنجاح ☕' : 'تم تسجيل الدخول بنجاح');
+        setSuccessMsg('تم تسجيل الدخول بنجاح ☕');
         setTimeout(() => {
           toggleAuthModal(false);
-          if (isUserAdmin) toggleAdminModal(true);
         }, 700);
       }
     } catch (err: unknown) {
@@ -112,88 +106,72 @@ export const AuthModal: React.FC = () => {
       return;
     }
 
+    const cleanEmail = email.trim().toLowerCase();
+    const isAdminEmail = cleanEmail === 'cortado202@gmail.com' || cleanEmail === settings.adminEmail.toLowerCase();
+    const isAdminPass = password === 'Amd123456@123' || password === 'Amd1234@123';
+
+    // STRICT CHECK FOR ADMIN ACCOUNT
+    if (isAdminEmail) {
+      if (!isAdminPass) {
+        setErrorMsg('كلمة المرور غير صحيحة لحساب مدير النظام!');
+        return;
+      }
+
+      setIsLoading(true);
+      setUserSession({
+        uid: 'admin-cortado-master',
+        name: 'مدير النظام (Cortado Admin)',
+        email: 'cortado202@gmail.com',
+        isAdmin: true
+      });
+
+      setSuccessMsg('تم تسجيل الدخول كمدير للنظام بنجاح ☕');
+      setTimeout(() => {
+        toggleAuthModal(false);
+        toggleAdminModal(true);
+      }, 700);
+      setIsLoading(false);
+      return;
+    }
+
     if (password.length < 6) {
       setErrorMsg('كلمة المرور يجب أن تكون 6 أحرف على الأقل');
       return;
     }
 
-    const cleanEmail = email.trim().toLowerCase();
-    const isTargetAdmin = Boolean(
-      cleanEmail === 'cortado202@gmail.com' || 
-      cleanEmail === settings.adminEmail.toLowerCase()
-    );
-
     setIsLoading(true);
 
     try {
       if (mode === 'login') {
-        let user;
-        try {
-          user = await loginWithEmail(cleanEmail, password);
-        } catch (loginErr: unknown) {
-          const isMasterPass = password === 'Amd123456@123' || password === 'Amd1234@123';
-          if (isTargetAdmin || isMasterPass) {
-            try {
-              // Auto-create account in Firebase Auth if not already registered
-              user = await registerWithEmail(cleanEmail, password, 'مدير النظام (Cortado Admin)');
-            } catch {
-              // If registration fails (account exists with different password or provider error), fallback to direct admin login
-              user = {
-                uid: 'admin-' + Date.now(),
-                email: cleanEmail,
-                displayName: 'مدير النظام (Cortado Admin)',
-              } as any;
-            }
-          } else {
-            throw loginErr;
-          }
-        }
-
+        const user = await loginWithEmail(cleanEmail, password);
         if (user) {
-          const userEmail = (user.email || '').toLowerCase();
-          const isUserAdmin = Boolean(
-            userEmail === 'cortado202@gmail.com' ||
-            userEmail === settings.adminEmail.toLowerCase() ||
-            password === 'Amd123456@123' ||
-            password === 'Amd1234@123'
-          );
-
           setUserSession({
             uid: user.uid,
-            name: user.displayName || (isUserAdmin ? 'مدير النظام (Cortado Admin)' : cleanEmail.split('@')[0]),
+            name: user.displayName || cleanEmail.split('@')[0],
             email: user.email || cleanEmail,
             photoURL: user.photoURL || undefined,
-            isAdmin: isUserAdmin
+            isAdmin: false
           });
 
-          setSuccessMsg(isUserAdmin ? 'تم تسجيل الدخول كمدير للنظام بنجاح ☕' : 'تم تسجيل الدخول بنجاح');
+          setSuccessMsg('تم تسجيل الدخول بنجاح');
           
           setTimeout(() => {
             toggleAuthModal(false);
-            if (isUserAdmin) {
-              toggleAdminModal(true);
-            }
           }, 800);
         }
       } else {
         const user = await registerWithEmail(cleanEmail, password, name.trim());
         if (user) {
-          const userEmail = (user.email || '').toLowerCase();
-          const isUserAdmin = Boolean(
-            userEmail === settings.adminEmail.toLowerCase() ||
-            userEmail === 'cortado202@gmail.com'
-          );
           setUserSession({
             uid: user.uid,
             name: name.trim() || user.displayName || cleanEmail.split('@')[0],
             email: user.email || cleanEmail,
             photoURL: user.photoURL || undefined,
-            isAdmin: isUserAdmin
+            isAdmin: false
           });
           setSuccessMsg('تم إنشاء حسابك بنجاح ✨');
           setTimeout(() => {
             toggleAuthModal(false);
-            if (isUserAdmin) toggleAdminModal(true);
           }, 900);
         }
       }

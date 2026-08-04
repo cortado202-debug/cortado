@@ -51,13 +51,12 @@ export const Header: React.FC = () => {
   const totalCartCount = cart.reduce((acc, item) => acc + item.quantity, 0);
   const pendingOrdersCount = orders ? orders.filter(o => o.status === 'pending').length : 0;
 
-  // Admin Check Logic: checks if logged-in user email matches admin email or userSession.isAdmin flag
+  // Admin Check Logic: checks if logged-in user is authenticated with admin privileges
   const isAdminUser = Boolean(
     userSession && 
-    (userSession.isAdmin ||
-     (userSession.email &&
-      (userSession.email.toLowerCase() === 'cortado202@gmail.com' || 
-       userSession.email.toLowerCase() === settings.adminEmail.toLowerCase())))
+    userSession.isAdmin === true &&
+    userSession.email &&
+    (userSession.email.toLowerCase() === 'cortado202@gmail.com' || userSession.email.toLowerCase() === settings.adminEmail.toLowerCase())
   );
 
   const handleGoogleLogin = async () => {
@@ -65,22 +64,16 @@ export const Header: React.FC = () => {
     try {
       const user = await loginWithGoogle();
       if (user && user.email) {
-        const userEmail = user.email.toLowerCase();
-        const isUserAdmin = Boolean(
-          userEmail === 'cortado202@gmail.com' ||
-          userEmail === settings.adminEmail.toLowerCase()
-        );
         setUserSession({
           uid: user.uid,
           name: user.displayName || user.email.split('@')[0],
           email: user.email,
           photoURL: user.photoURL || undefined,
-          isAdmin: isUserAdmin
+          isAdmin: false
         });
       }
     } catch (error) {
       console.warn("Google login error:", error);
-      // Open auth modal if popup closed or error occurred so user can see message or try email login
       toggleAuthModal(true);
     } finally {
       setIsLoggingIn(false);

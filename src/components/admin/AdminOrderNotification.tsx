@@ -110,28 +110,33 @@ export const AdminOrderNotification: React.FC = () => {
             </span>
           </div>
 
-          <div className="bg-slate-50 p-3 rounded-xl border border-slate-200 space-y-1.5">
-            <p className="font-extrabold text-base text-slate-900 flex items-center justify-between">
-              <span>العميل: <strong className="text-[#00A859]">{activeNotification.customerName}</strong></span>
-              <span className="text-xs font-mono font-bold text-slate-700 dir-ltr bg-white px-2 py-0.5 rounded-lg border border-slate-200">
+          <div className="bg-slate-100 p-3.5 rounded-xl border border-slate-300 space-y-2">
+            <div className="flex items-center justify-between gap-2 flex-wrap">
+              <span className="font-extrabold text-sm sm:text-base text-slate-900">
+                العميل: <strong className="text-[#00A859] font-black">{activeNotification.customerName}</strong>
+              </span>
+              <span className="text-xs sm:text-sm font-mono font-black text-slate-900 dir-ltr bg-white px-2.5 py-1 rounded-lg border border-slate-300 shadow-2xs">
                 📱 {activeNotification.customerPhone}
               </span>
-            </p>
-            <p className="text-xs font-bold text-slate-700 leading-relaxed pt-1 border-t border-slate-200/60">
-              <span className="text-slate-500">الأصناف: </span>
-              {activeNotification.items.map(i => `${i.nameAr} (×${i.quantity})`).join(' ، ')}
-            </p>
+            </div>
+
+            <div className="text-xs sm:text-sm font-bold text-slate-900 leading-relaxed pt-2 border-t border-slate-300">
+              <span className="text-slate-900 font-black">الأصناف المطلوبـة: </span>
+              <span className="text-slate-900 font-bold">
+                {activeNotification.items.map(i => `${i.nameAr} (×${i.quantity})`).join(' ، ')}
+              </span>
+            </div>
           </div>
 
-          <div className="pt-1 flex items-center justify-between text-xs font-bold">
-            <div className="flex items-center gap-1.5 text-slate-800">
-              <span>المبلغ الإجمالي:</span>
-              <span className="font-black text-base text-[#00A859] font-['Cairo']">
+          <div className="pt-1 flex items-center justify-between text-xs sm:text-sm font-bold">
+            <div className="flex items-center gap-1.5 text-slate-900">
+              <span className="font-extrabold">المبلغ الإجمالي:</span>
+              <span className="font-black text-base sm:text-lg text-[#00A859] font-['Cairo']">
                 {activeNotification.total ? activeNotification.total.toFixed(2) : activeNotification.subtotal.toFixed(2)} ل.س
               </span>
             </div>
             
-            <span className="text-xs text-amber-800 font-extrabold bg-amber-100 px-2.5 py-1 rounded-lg border border-amber-300">
+            <span className="text-xs text-amber-950 font-black bg-amber-100 px-3 py-1 rounded-lg border border-amber-400 shadow-2xs">
               قيد الانتظار ⏳
             </span>
           </div>
