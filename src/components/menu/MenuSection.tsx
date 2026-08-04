@@ -59,6 +59,10 @@ export const MenuSection: React.FC = () => {
   const activeSize = selectedSize || availableSizes[0] || null;
   const currentPrice = activeSize ? activeSize.price : (currentProduct?.price || 0);
 
+  const [isAdded, setIsAdded] = useState(false);
+  const [addedItemName, setAddedItemName] = useState('');
+  const addedTimeoutRef = useRef<NodeJS.Timeout | null>(null);
+
   const handleAddToCartWithFly = (e: React.MouseEvent<HTMLButtonElement>) => {
     if (!currentProduct) return;
 
@@ -77,12 +81,52 @@ export const MenuSection: React.FC = () => {
           startX,
           startY,
           imageUrl: currentProduct.imageUrl,
-          nameAr: currentProduct.nameAr
+          nameAr: currentProduct.nameAr,
+          sizeName: activeSize?.name,
+          price: currentPrice
         }
       })
     );
 
     addToCart(currentProduct, 1, activeSize || undefined);
+
+    // Trigger visual button transformation feedback
+    setAddedItemName(currentProduct.nameAr);
+    setIsAdded(true);
+    if (addedTimeoutRef.current) clearTimeout(addedTimeoutRef.current);
+    addedTimeoutRef.current = setTimeout(() => {
+      setIsAdded(false);
+    }, 2200);
+  };
+
+  const handleQuickAdd = (prod: Product, e: React.MouseEvent) => {
+    e.stopPropagation();
+    if (settings.isStoreOpen === false) {
+      window.dispatchEvent(new CustomEvent('show-closed-store-modal'));
+      return;
+    }
+
+    const rect = e.currentTarget.getBoundingClientRect();
+    const startX = rect.left + rect.width / 2;
+    const startY = rect.top + rect.height / 2;
+
+    const defaultSize = prod.sizes && prod.sizes.length > 0 ? prod.sizes[0] : undefined;
+    const price = defaultSize ? defaultSize.price : prod.price;
+
+    window.dispatchEvent(
+      new CustomEvent('fly-to-cart', {
+        detail: {
+          startX,
+          startY,
+          imageUrl: prod.imageUrl,
+          nameAr: prod.nameAr,
+          sizeName: defaultSize?.name,
+          price
+        }
+      })
+    );
+
+    addToCart(prod, 1, defaultSize);
   };
 
   const touchStartX = useRef<number>(0);
@@ -279,7 +323,7 @@ export const MenuSection: React.FC = () => {
                         decoding="async"
                         className="w-13 h-15 sm:w-15 sm:h-17 rounded-xl object-cover shadow-xs flex-shrink-0 border border-white/80 pointer-events-none" 
                       />
-                      <div className="flex flex-col min-w-[100px] max-w-[135px] overflow-hidden pointer-events-none">
+                      <div className="flex flex-col min-w-[90px] max-w-[120px] overflow-hidden pointer-events-none">
                         <span className="text-xs sm:text-sm font-extrabold font-['Cairo'] truncate leading-tight">{prod.nameAr}</span>
                         <span className={`text-[11px] font-sans font-medium truncate ${isSelected ? 'text-white/90' : 'text-[#008A48]'}`}>
                           {prod.nameEn}
@@ -288,6 +332,19 @@ export const MenuSection: React.FC = () => {
                           {prod.price} ل.س
                         </span>
                       </div>
+                      
+                      {/* Quick Add Button */}
+                      <button
+                        onClick={(e) => handleQuickAdd(prod, e)}
+                        className={`mr-auto p-1.5 sm:p-2 rounded-xl transition-all cursor-pointer shrink-0 shadow-2xs active:scale-90 ${
+                          isSelected
+                            ? 'bg-white text-[#00A859] hover:bg-emerald-50'
+                            : 'bg-[#00A859] text-white hover:bg-[#008A48]'
+                        }`}
+                        title="إضافة سريعة للسلة 🛒"
+                      >
+                        <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+                      </button>
                     </button>
                   );
                 })}
@@ -485,22 +542,52 @@ export const MenuSection: React.FC = () => {
 
                 {/* Add to Cart Button */}
                 <div className="pt-2 border-t border-[#E8E2D8]">
-                  <button
+                  <motion.button
                     id={`add-to-cart-${currentProduct.id}`}
                     onClick={handleAddToCartWithFly}
-                    className={`w-full font-black text-base py-4 rounded-xl flex items-center justify-center gap-2 shadow-lg transition-all cursor-pointer relative overflow-hidden active:scale-[0.98] ${
+                    whileTap={{ scale: 0.96 }}
+                    animate={isAdded ? { scale: [1, 1.03, 1] } : { scale: 1 }}
+                    transition={{ duration: 0.35, ease: 'easeInOut' }}
+                    className={`w-full min-h-[56px] font-black text-sm sm:text-base py-3.5 px-4 rounded-xl flex items-center justify-center gap-2.5 shadow-lg transition-colors duration-200 cursor-pointer relative overflow-hidden select-none font-['Cairo'] ${
                       settings.isStoreOpen === false
                         ? 'bg-rose-600 hover:bg-rose-700 text-white shadow-rose-600/20 ring-2 ring-rose-400'
-                        : 'bg-[#00A859] hover:bg-[#008A48] text-white shadow-[#00A859]/25'
+                        : isAdded
+                        ? 'bg-emerald-600 hover:bg-emerald-700 text-white ring-4 ring-emerald-300/80 shadow-emerald-600/40 shadow-xl'
+                        : 'bg-[#00A859] hover:bg-[#008A48] text-white shadow-[#00A859]/25 hover:shadow-xl'
                     }`}
                   >
-                    <ShoppingBag className="w-5 h-5" />
                     {settings.isStoreOpen === false ? (
-                      <span>المتجر مغلق حالياً ☕ (انقر لمزيد من التفاصيل)</span>
+                      <div className="flex items-center gap-2">
+                        <ShoppingBag className="w-5 h-5 shrink-0" />
+                        <span>المتجر مغلق حالياً ☕ (انقر لمزيد من التفاصيل)</span>
+                      </div>
+                    ) : isAdded ? (
+                      <motion.div 
+                        initial={{ opacity: 0, scale: 0.85 }} 
+                        animate={{ opacity: 1, scale: 1 }} 
+                        transition={{ type: 'spring', stiffness: 600, damping: 25 }}
+                        className="flex items-center gap-2 text-white font-['Cairo'] font-black"
+                      >
+                        <CheckCircle2 className="w-6 h-6 text-white shrink-0" />
+                        <span className="text-base sm:text-lg">تمت الإضافة للسلة بنجاح! ✓</span>
+                      </motion.div>
                     ) : (
-                      <span>إضافة للسلة ({currentPrice} ل.س){activeSize ? ` - ${activeSize.name}` : ''}</span>
+                      <div className="flex items-center gap-2 font-['Cairo']">
+                        <ShoppingBag className="w-5 h-5 shrink-0" />
+                        <span>إضافة للسلة ({currentPrice} ل.س){activeSize ? ` - ${activeSize.name}` : ''}</span>
+                      </div>
                     )}
-                  </button>
+
+                    {/* Green Pulse Wave Overlay on Click */}
+                    {isAdded && (
+                      <motion.span
+                        initial={{ opacity: 0.5, scale: 0.8 }}
+                        animate={{ opacity: 0, scale: 2 }}
+                        transition={{ duration: 0.6 }}
+                        className="absolute inset-0 bg-white/30 rounded-xl pointer-events-none"
+                      />
+                    )}
+                  </motion.button>
                 </div>
 
               </div>
