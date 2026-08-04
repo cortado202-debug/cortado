@@ -15,6 +15,7 @@ import { AdminOrderNotification } from './components/admin/AdminOrderNotificatio
 import { UserProfileModal } from './components/profile/UserProfileModal';
 import { AuthModal } from './components/auth/AuthModal';
 import { ClosedStoreModal } from './components/common/ClosedStoreModal';
+import { InfoModal } from './components/info/InfoModal';
 import { FloatingBeans } from './components/common/FloatingBeans';
 import { FlyToCartParticle } from './components/common/FlyToCartParticle';
 import { initFirestoreSync } from './lib/firestoreSync';
@@ -53,6 +54,7 @@ export default function App() {
       <UserProfileModal />
       <AuthModal />
       <ClosedStoreModal />
+      <InfoModal />
     </div>
   );
 }

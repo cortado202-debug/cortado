@@ -205,6 +205,10 @@ export const applySettings = (cloudSettings: Partial<SiteSettings>, persistToLoc
       ? cloudSettings.paymentMethods
       : state.settings.paymentMethods;
 
+    const updatedQuickLinks = Array.isArray(cloudSettings.quickLinks) && cloudSettings.quickLinks.length > 0
+      ? cloudSettings.quickLinks
+      : state.settings.quickLinks;
+
     const mergedSettings: SiteSettings = {
       ...state.settings,
       ...cloudSettings,
@@ -219,6 +223,7 @@ export const applySettings = (cloudSettings: Partial<SiteSettings>, persistToLoc
       socials: { ...state.settings.socials, ...(cloudSettings.socials || {}) },
       branches: updatedBranches,
       paymentMethods: updatedPaymentMethods,
+      quickLinks: updatedQuickLinks,
       updatedAt: cloudSettings.updatedAt || state.settings?.updatedAt || new Date().toISOString()
     };
 

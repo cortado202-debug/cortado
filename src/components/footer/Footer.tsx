@@ -1,6 +1,7 @@
 import React from 'react';
 import { motion } from 'motion/react';
 import { useStore } from '../../lib/store';
+import { DEFAULT_QUICK_LINKS } from '../../data/initialData';
 import adixMediaLogo from '../../assets/images/adix_media_logo_1785267780952.jpg';
 import { 
   Coffee, 
@@ -14,51 +15,52 @@ import {
 
 export const Footer: React.FC = () => {
   const { settings } = useStore();
+  const activeQuickLinks = (settings.quickLinks && settings.quickLinks.length > 0 ? settings.quickLinks : DEFAULT_QUICK_LINKS).filter(link => !link.isHidden);
 
   return (
     <footer id="about" className="bg-[#FAF8F5] border-t border-[#E8E2D8] pt-12 pb-8 text-right relative overflow-hidden text-[#2A2118]">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 relative z-10">
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-12 gap-10 pb-10 border-b border-[#E8E2D8]">
           
-          {/* BRAND SUMMARY (COL-5) */}
-          <div className="lg:col-span-5 space-y-4">
-            <div className="flex items-center gap-3">
+          {/* BRAND SUMMARY (COL-4) */}
+          <div className="lg:col-span-4 space-y-2.5">
+            <div className="flex items-center gap-2.5">
               <motion.div 
                 animate={{ rotate: 360 }}
-                transition={{ repeat: Infinity, duration: 12, ease: "linear" }}
-                className="w-12 h-12 rounded-full bg-[#00A859] p-0.5 shadow-md flex items-center justify-center overflow-hidden flex-shrink-0"
+                transition={{ repeat: Infinity, duration: 15, ease: "linear" }}
+                className="w-9 h-9 sm:w-10 sm:h-10 rounded-full bg-[#00A859] p-0.5 shadow-xs flex items-center justify-center overflow-hidden flex-shrink-0"
               >
                 {settings.logoUrl ? (
                   <img src={settings.logoUrl} alt={settings.siteTitle} className="w-full h-full object-cover rounded-full" />
                 ) : (
-                  <Coffee className="w-5 h-5 text-white" />
+                  <Coffee className="w-4 h-4 text-white" />
                 )}
               </motion.div>
               <div className="flex flex-col">
-                <span className="font-['Cairo'] font-extrabold text-2xl text-[#2A2118]">
+                <span className="font-['Cairo'] font-extrabold text-lg sm:text-xl text-[#2A2118] leading-tight">
                   {settings.siteTitle}
                 </span>
-                <span className="text-[11px] font-sans font-black text-[#00A859] tracking-[0.2em] uppercase font-['Dancing_Script',cursive]">
+                <span className="text-[10px] font-sans font-black text-[#00A859] tracking-[0.15em] uppercase font-['Dancing_Script',cursive]">
                   {settings.siteSubtitle || 'Cortado CAFÉ'}
                 </span>
               </div>
             </div>
 
-            <p className="text-xs sm:text-sm text-[#523621] leading-relaxed font-normal max-w-md">
+            <p className="text-[11px] sm:text-xs text-[#523621] leading-relaxed font-normal max-w-sm">
               كورتادو كافيه يقدم أرقى تجربة قهوة مختصة بحرفية عالية، نجمع بين جودة المحاصيل العالمية والعرض الأنيق لعملائنا الكرام.
             </p>
 
             {/* SOCIAL LINKS */}
-            <div className="flex items-center gap-3 pt-2">
+            <div className="flex items-center gap-2 pt-1">
               {settings.socials.instagram && (
                 <a 
                   href={settings.socials.instagram} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-[#00A859] text-[#00A859] hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
+                  className="w-8 h-8 rounded-lg bg-white hover:bg-[#00A859] text-[#00A859] hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
                   aria-label="Instagram"
                 >
-                  <Instagram className="w-5 h-5" />
+                  <Instagram className="w-4 h-4" />
                 </a>
               )}
 
@@ -67,10 +69,10 @@ export const Footer: React.FC = () => {
                   href={settings.socials.facebook} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-[#00A859] text-[#00A859] hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
+                  className="w-8 h-8 rounded-lg bg-white hover:bg-[#00A859] text-[#00A859] hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
                   aria-label="Facebook"
                 >
-                  <Facebook className="w-5 h-5" />
+                  <Facebook className="w-4 h-4" />
                 </a>
               )}
 
@@ -79,10 +81,10 @@ export const Footer: React.FC = () => {
                   href={settings.socials.whatsapp} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-emerald-600 text-emerald-600 hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
+                  className="w-8 h-8 rounded-lg bg-white hover:bg-emerald-600 text-emerald-600 hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
                   aria-label="WhatsApp"
                 >
-                  <MessageCircle className="w-5 h-5" />
+                  <MessageCircle className="w-4 h-4" />
                 </a>
               )}
 
@@ -91,27 +93,41 @@ export const Footer: React.FC = () => {
                   href={settings.socials.locationMap} 
                   target="_blank" 
                   rel="noopener noreferrer"
-                  className="w-10 h-10 rounded-xl bg-white hover:bg-[#00A859] text-[#00A859] hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
+                  className="w-8 h-8 rounded-lg bg-white hover:bg-[#00A859] text-[#00A859] hover:text-white border border-[#E8E2D8] flex items-center justify-center transition-all shadow-2xs"
                   aria-label="Location Map"
                 >
-                  <MapPin className="w-5 h-5" />
+                  <MapPin className="w-4 h-4" />
                 </a>
               )}
             </div>
           </div>
 
-          {/* QUICK LINKS (COL-3) */}
-          <div className="lg:col-span-3 space-y-3">
-            <h4 className="font-['Cairo'] font-bold text-base text-[#00A859]">روابط سريعة</h4>
-            <ul className="space-y-2 text-xs text-[#523621] font-semibold">
-              <li><a href="#menu" className="hover:text-[#00A859] transition-colors">المنتجات</a></li>
-              <li><a href="#coupon" className="hover:text-[#00A859] transition-colors">أكواد الخصم</a></li>
-              <li><a href="#about" className="hover:text-[#00A859] transition-colors">عن كورتادو كافيه</a></li>
-            </ul>
+          {/* QUICK LINKS (COL-5 - 2 COLUMNS GRID) */}
+          <div className="lg:col-span-5 space-y-2.5">
+            <h4 className="font-['Cairo'] font-bold text-sm sm:text-base text-[#00A859]">روابط سريعة</h4>
+            <div className="grid grid-cols-2 gap-x-2 gap-y-1.5 text-[11px] sm:text-xs text-[#523621] font-semibold">
+              {activeQuickLinks.map((link) => (
+                <button
+                  key={link.id}
+                  onClick={() => {
+                    if (link.customUrl) {
+                      window.open(link.customUrl, '_blank');
+                    } else {
+                      window.dispatchEvent(new CustomEvent('open-info-modal', { detail: { tabId: link.id } }));
+                    }
+                  }}
+                  className="hover:text-[#00A859] hover:bg-[#E6F6ED] px-2 py-1.5 rounded-lg transition-all cursor-pointer text-right flex items-center gap-1.5 font-['Cairo'] border border-transparent hover:border-[#00A859]/20 truncate"
+                  title={link.titleAr}
+                >
+                  <span className="w-1.5 h-1.5 rounded-full bg-[#00A859] shrink-0" />
+                  <span className="truncate">{link.titleAr}</span>
+                </button>
+              ))}
+            </div>
           </div>
 
-          {/* LOCATION & CONTACT (COL-4) */}
-          <div className="lg:col-span-4 space-y-3">
+          {/* LOCATION & CONTACT (COL-3) */}
+          <div className="lg:col-span-3 space-y-3">
             <div className="flex items-center gap-2">
               <MapPin className="w-4 h-4 text-[#00A859]" />
               <h4 className="font-['Cairo'] font-bold text-base text-[#00A859]">فروعنا ومواقعنا</h4>

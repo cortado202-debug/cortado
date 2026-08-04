@@ -71,7 +71,7 @@ interface StoreState {
   isCouponModalOpen: boolean;
   isProfileModalOpen: boolean;
   isAuthModalOpen: boolean;
-  activeAdminTab: 'overview' | 'settings' | 'products' | 'orders' | 'customers' | 'promos';
+  activeAdminTab: 'overview' | 'settings' | 'quickLinks' | 'products' | 'orders' | 'customers' | 'promos';
   
   // Actions
   setActiveCategory: (catId: CategoryId) => void;

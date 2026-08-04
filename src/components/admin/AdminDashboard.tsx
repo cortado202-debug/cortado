@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../../lib/store';
-import { Product, PromoCode, OrderStatus, CategoryId, BranchLocation, PaymentMethod } from '../../types';
+import { Product, PromoCode, OrderStatus, CategoryId, BranchLocation, PaymentMethod, QuickLinkItem } from '../../types';
+import { DEFAULT_QUICK_LINKS } from '../../data/initialData';
 import { 
   X, 
   LayoutDashboard, 
@@ -45,7 +46,11 @@ import {
   Store,
   Ban,
   Music,
-  Check
+  Check,
+  Eye,
+  EyeOff,
+  Link as LinkIcon,
+  FileText
 } from 'lucide-react';
 
 import { playOrderAlertSound, SOUND_TONES, getSelectedSoundTone, setSelectedSoundTone } from '../../lib/sound';
@@ -146,6 +151,13 @@ export const AdminDashboard: React.FC = () => {
         ]
   );
   const [adminEmail, setAdminEmail] = useState(settings.adminEmail);
+  const [quickLinksList, setQuickLinksList] = useState<QuickLinkItem[]>(
+    settings.quickLinks && settings.quickLinks.length > 0
+      ? settings.quickLinks
+      : DEFAULT_QUICK_LINKS
+  );
+  const [editingQuickLink, setEditingQuickLink] = useState<QuickLinkItem | null>(null);
+  const [quickLinkSavedMsg, setQuickLinkSavedMsg] = useState(false);
   const [instagram, setInstagram] = useState(settings.socials.instagram);
   const [facebook, setFacebook] = useState(settings.socials.facebook);
   const [whatsapp, setWhatsapp] = useState(settings.socials.whatsapp);
@@ -180,8 +192,60 @@ export const AdminDashboard: React.FC = () => {
         setWhatsapp(settings.socials.whatsapp || '');
         setLocationMap(settings.socials.locationMap || '');
       }
+      if (settings.quickLinks && settings.quickLinks.length > 0) {
+        setQuickLinksList(settings.quickLinks);
+      } else {
+        setQuickLinksList(DEFAULT_QUICK_LINKS);
+      }
     }
   }, [settings, isAdminModalOpen]);
+
+  const handleToggleQuickLinkHidden = (id: string) => {
+    const updated = quickLinksList.map((item) =>
+      item.id === id ? { ...item, isHidden: !item.isHidden } : item
+    );
+    setQuickLinksList(updated);
+    updateSettings({ quickLinks: updated });
+    setQuickLinkSavedMsg(true);
+    setTimeout(() => setQuickLinkSavedMsg(false), 2500);
+  };
+
+  const handleSaveQuickLinkModal = () => {
+    if (!editingQuickLink) return;
+    const exists = quickLinksList.some(item => item.id === editingQuickLink.id);
+    let updated: QuickLinkItem[];
+    if (exists) {
+      updated = quickLinksList.map(item => item.id === editingQuickLink.id ? editingQuickLink : item);
+    } else {
+      updated = [...quickLinksList, editingQuickLink];
+    }
+    setQuickLinksList(updated);
+    updateSettings({ quickLinks: updated });
+    setEditingQuickLink(null);
+    setQuickLinkSavedMsg(true);
+    setTimeout(() => setQuickLinkSavedMsg(false), 2500);
+  };
+
+  const handleDeleteQuickLink = (id: string) => {
+    if (window.confirm('هل أنت تأكد من حذف هذا الرابط السريع؟')) {
+      const updated = quickLinksList.filter(item => item.id !== id);
+      setQuickLinksList(updated);
+      updateSettings({ quickLinks: updated });
+      setQuickLinkSavedMsg(true);
+      setTimeout(() => setQuickLinkSavedMsg(false), 2500);
+    }
+  };
+
+  const handleAddNewQuickLink = () => {
+    const newId = `custom-page-${Date.now()}`;
+    setEditingQuickLink({
+      id: newId,
+      titleAr: 'صفحة تعريفية جديدة',
+      badge: 'معلومات',
+      isHidden: false,
+      contentAr: 'أدخل تفاصيل ومحتوى الصفحة هنا...'
+    });
+  };
 
   const handleAddPaymentMethod = () => {
     const newPm: PaymentMethod = {
@@ -405,6 +469,7 @@ export const AdminDashboard: React.FC = () => {
       adminEmail,
       deliveryFee: Number(deliveryFee) || 0,
       paymentMethods: paymentMethodsList,
+      quickLinks: quickLinksList,
       socials: {
         instagram,
         facebook,
@@ -750,6 +815,20 @@ export const AdminDashboard: React.FC = () => {
           >
             <Settings className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
             <span>إعدادات الموقع والشعار</span>
+          </button>
+
+          <button
+            onClick={() => setActiveAdminTab('quickLinks')}
+            className={`px-2.5 py-1.5 sm:px-4 sm:py-2.5 rounded-lg sm:rounded-xl text-[11px] sm:text-xs font-bold flex items-center gap-1.5 transition-all cursor-pointer whitespace-nowrap shrink-0 ${
+              activeAdminTab === 'quickLinks' 
+                ? 'bg-[#00A859] text-white shadow-md' 
+                : isLightAdmin 
+                ? 'text-slate-700 hover:bg-white hover:text-slate-900'
+                : 'text-[#FAEDCD]/70 hover:bg-[#2D2926] hover:text-[#FAEDCD]'
+            }`}
+          >
+            <Globe className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
+            <span>الروابط السريعة والصفحات ({quickLinksList.length})</span>
           </button>
 
           <button
@@ -1469,6 +1548,272 @@ export const AdminDashboard: React.FC = () => {
                 </button>
               </div>
             </form>
+          )}
+
+          {/* TAB 2.5: QUICK LINKS MANAGEMENT */}
+          {activeAdminTab === 'quickLinks' && (
+            <div className="space-y-4 max-w-5xl">
+              {/* Header Banner */}
+              <div className={`p-4 sm:p-5 rounded-2xl border ${
+                isLightAdmin ? 'bg-white border-slate-200 shadow-sm' : 'bg-[#2D2926] border-[#00A859]/30'
+              } flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3`}>
+                <div>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-lg bg-[#00A859]/20 text-[#00A859] flex items-center justify-center font-bold">
+                      <Globe className="w-4 h-4" />
+                    </div>
+                    <h3 className={`font-bold text-sm sm:text-base ${isLightAdmin ? 'text-slate-800' : 'text-[#FAEDCD]'}`}>
+                      إدارة الروابط السريعة والصفحات التعريفية
+                    </h3>
+                  </div>
+                  <p className={`text-xs mt-1 ${isLightAdmin ? 'text-slate-500' : 'text-[#FAEDCD]/70'}`}>
+                    قم بتعديل محتوى الصفحات التعريفية، إخفائها، أو إضافة صفحات جديدة لتعزيز أرشفة محركات البحث وذكاء AI
+                  </p>
+                </div>
+
+                <div className="flex items-center gap-2 w-full sm:w-auto">
+                  <button
+                    onClick={handleAddNewQuickLink}
+                    className="flex-1 sm:flex-none bg-[#00A859] hover:bg-[#008F4C] text-white font-bold text-xs px-3.5 py-2.5 rounded-xl flex items-center justify-center gap-1.5 shadow-md transition-all cursor-pointer"
+                  >
+                    <Plus className="w-4 h-4" />
+                    <span>إضافة صفحة جديدة</span>
+                  </button>
+                </div>
+              </div>
+
+              {quickLinkSavedMsg && (
+                <div className="p-3 bg-emerald-500/10 border border-emerald-500/40 text-emerald-600 dark:text-emerald-400 rounded-xl text-xs font-bold flex items-center gap-2 animate-fade-in">
+                  <CheckCircle2 className="w-4 h-4 shrink-0" />
+                  <span>تم حفظ وتحديث إعدادات الروابط السريعة بنجاح!</span>
+                </div>
+              )}
+
+              {/* Quick Links Grid */}
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-3 sm:gap-4">
+                {quickLinksList.map((item, idx) => (
+                  <div
+                    key={item.id}
+                    className={`p-4 rounded-2xl border transition-all flex flex-col justify-between gap-3 ${
+                      item.isHidden 
+                        ? (isLightAdmin ? 'bg-slate-100 border-slate-300 opacity-75' : 'bg-[#181513] border-red-500/20 opacity-70')
+                        : (isLightAdmin ? 'bg-white border-slate-200 shadow-sm hover:border-[#00A859]/40' : 'bg-[#2D2926] border-[#00A859]/20 hover:border-[#00A859]/50')
+                    }`}
+                  >
+                    <div className="space-y-2">
+                      <div className="flex items-start justify-between gap-2">
+                        <div className="flex items-center gap-2 flex-wrap">
+                          <span className="text-[10px] font-bold px-2 py-0.5 rounded-md bg-[#00A859]/15 text-[#00A859] border border-[#00A859]/30">
+                            {item.badge || `صفحة ${idx + 1}`}
+                          </span>
+                          <span className={`text-xs font-mono text-slate-400`}>
+                            #{item.id}
+                          </span>
+                        </div>
+
+                        {/* Status Badge */}
+                        <div className="flex items-center gap-1">
+                          {item.isHidden ? (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-amber-500/20 text-amber-600 dark:text-amber-400 flex items-center gap-1 border border-amber-500/30">
+                              <EyeOff className="w-3 h-3" />
+                              <span>مخفية</span>
+                            </span>
+                          ) : (
+                            <span className="text-[10px] font-bold px-2 py-0.5 rounded-full bg-emerald-500/20 text-emerald-600 dark:text-emerald-400 flex items-center gap-1 border border-emerald-500/30">
+                              <Eye className="w-3 h-3" />
+                              <span>ظاهرة</span>
+                            </span>
+                          )}
+                        </div>
+                      </div>
+
+                      <h4 className={`font-bold text-sm sm:text-base font-['Cairo'] ${isLightAdmin ? 'text-slate-900' : 'text-white'}`}>
+                        {item.titleAr}
+                      </h4>
+
+                      <p className={`text-xs line-clamp-2 leading-relaxed ${isLightAdmin ? 'text-slate-600' : 'text-[#FAEDCD]/70'}`}>
+                        {item.contentAr || 'لا يوجد محتوى مكتوب بعد'}
+                      </p>
+
+                      {item.customUrl && (
+                        <div className="flex items-center gap-1 text-[11px] text-sky-500 font-mono truncate pt-1">
+                          <LinkIcon className="w-3 h-3 shrink-0" />
+                          <span className="truncate">{item.customUrl}</span>
+                        </div>
+                      )}
+                    </div>
+
+                    {/* Quick Control Actions */}
+                    <div className={`pt-3 border-t flex items-center justify-between gap-2 ${
+                      isLightAdmin ? 'border-slate-200' : 'border-white/10'
+                    }`}>
+                      <button
+                        type="button"
+                        onClick={() => handleToggleQuickLinkHidden(item.id)}
+                        className={`text-xs font-bold px-2.5 py-1.5 rounded-lg flex items-center gap-1.5 transition-colors cursor-pointer ${
+                          item.isHidden 
+                            ? 'bg-emerald-500/10 hover:bg-emerald-500/20 text-emerald-600 dark:text-emerald-400' 
+                            : 'bg-amber-500/10 hover:bg-amber-500/20 text-amber-600 dark:text-amber-400'
+                        }`}
+                        title={item.isHidden ? 'إظهار الصفحة في التذييل' : 'إخفاء الصفحة من التذييل'}
+                      >
+                        {item.isHidden ? (
+                          <>
+                            <Eye className="w-3.5 h-3.5" />
+                            <span>إظهار الصفحة</span>
+                          </>
+                        ) : (
+                          <>
+                            <EyeOff className="w-3.5 h-3.5" />
+                            <span>إخفاء الصفحة</span>
+                          </>
+                        )}
+                      </button>
+
+                      <div className="flex items-center gap-1.5">
+                        <button
+                          type="button"
+                          onClick={() => setEditingQuickLink(item)}
+                          className="p-1.5 bg-[#00A859]/10 hover:bg-[#00A859]/20 text-[#00A859] rounded-lg transition-colors cursor-pointer text-xs font-bold flex items-center gap-1 px-2.5"
+                          title="تعديل تفاصيل الصفحة"
+                        >
+                          <Edit3 className="w-3.5 h-3.5" />
+                          <span>تعديل</span>
+                        </button>
+
+                        <button
+                          type="button"
+                          onClick={() => handleDeleteQuickLink(item.id)}
+                          className="p-1.5 bg-red-500/10 hover:bg-red-500/20 text-red-500 rounded-lg transition-colors cursor-pointer"
+                          title="حذف الصفحة"
+                        >
+                          <Trash2 className="w-3.5 h-3.5" />
+                        </button>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+            </div>
+          )}
+
+          {/* EDIT QUICK LINK MODAL */}
+          {editingQuickLink && (
+            <div className="fixed inset-0 z-[10010] flex items-center justify-center p-4 bg-black/70 backdrop-blur-sm animate-fade-in">
+              <div className={`w-full max-w-xl rounded-2xl border shadow-2xl overflow-hidden flex flex-col max-h-[90vh] ${
+                isLightAdmin ? 'bg-white border-slate-200 text-slate-900' : 'bg-[#1E1B18] border-[#00A859]/30 text-[#FAEDCD]'
+              }`}>
+                {/* Modal Header */}
+                <div className="bg-[#181513] px-5 py-4 flex items-center justify-between border-b border-white/10 shrink-0">
+                  <div className="flex items-center gap-2">
+                    <FileText className="w-5 h-5 text-[#00A859]" />
+                    <h3 className="font-bold text-base text-white font-['Cairo']">
+                      تعديل صفحة: {editingQuickLink.titleAr}
+                    </h3>
+                  </div>
+                  <button
+                    onClick={() => setEditingQuickLink(null)}
+                    className="p-1.5 text-slate-400 hover:text-white rounded-lg transition-colors"
+                  >
+                    <X className="w-5 h-5" />
+                  </button>
+                </div>
+
+                {/* Modal Form Content */}
+                <div className="p-5 space-y-4 overflow-y-auto font-['Cairo']">
+                  <div>
+                    <label className="block text-xs font-bold mb-1.5">
+                      عنوان الصفحة (يظهر في أسفل الموقع وفي القائمة)
+                    </label>
+                    <input
+                      type="text"
+                      value={editingQuickLink.titleAr}
+                      onChange={(e) => setEditingQuickLink({ ...editingQuickLink, titleAr: e.target.value })}
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm font-bold focus:outline-none focus:ring-2 focus:ring-[#00A859] ${
+                        isLightAdmin ? 'bg-slate-50 border-slate-300' : 'bg-[#2D2926] border-white/10 text-white'
+                      }`}
+                      placeholder="مثال: تعريف Cortado Café"
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold mb-1.5">
+                      وسام الصفحة / التصنيف الفرعي
+                    </label>
+                    <input
+                      type="text"
+                      value={editingQuickLink.badge || ''}
+                      onChange={(e) => setEditingQuickLink({ ...editingQuickLink, badge: e.target.value })}
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-sm focus:outline-none focus:ring-2 focus:ring-[#00A859] ${
+                        isLightAdmin ? 'bg-slate-50 border-slate-300' : 'bg-[#2D2926] border-white/10 text-white'
+                      }`}
+                      placeholder="مثال: الرئيسية، خدماتنا، هويتنا..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold mb-1.5">
+                      محتوى ومعلومات الصفحة المفصلة (هام جداً لمحركات البحث والذكاء الاصطناعي)
+                    </label>
+                    <textarea
+                      rows={5}
+                      value={editingQuickLink.contentAr || ''}
+                      onChange={(e) => setEditingQuickLink({ ...editingQuickLink, contentAr: e.target.value })}
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs sm:text-sm leading-relaxed focus:outline-none focus:ring-2 focus:ring-[#00A859] ${
+                        isLightAdmin ? 'bg-slate-50 border-slate-300' : 'bg-[#2D2926] border-white/10 text-white'
+                      }`}
+                      placeholder="اكتب هنا التفاصيل الكاملة للصفحة، الرؤية، الخدمات، أو البيانات المخصصة..."
+                    />
+                  </div>
+
+                  <div>
+                    <label className="block text-xs font-bold mb-1.5">
+                      رابط خارجي مخصص (اختياري - يفتح في نافذة جديدة عند النقر)
+                    </label>
+                    <input
+                      type="url"
+                      value={editingQuickLink.customUrl || ''}
+                      onChange={(e) => setEditingQuickLink({ ...editingQuickLink, customUrl: e.target.value })}
+                      className={`w-full px-3.5 py-2.5 rounded-xl border text-xs font-mono focus:outline-none focus:ring-2 focus:ring-[#00A859] ${
+                        isLightAdmin ? 'bg-slate-50 border-slate-300' : 'bg-[#2D2926] border-white/10 text-white'
+                      }`}
+                      placeholder="https://example.com"
+                    />
+                  </div>
+
+                  <div className="flex items-center gap-3 pt-2">
+                    <label className="flex items-center gap-2 cursor-pointer text-xs font-bold">
+                      <input
+                        type="checkbox"
+                        checked={editingQuickLink.isHidden || false}
+                        onChange={(e) => setEditingQuickLink({ ...editingQuickLink, isHidden: e.target.checked })}
+                        className="w-4 h-4 rounded text-[#00A859] focus:ring-[#00A859]"
+                      />
+                      <span>إخفاء هذه الصفحة من تذييل الموقع والروابط السريعة</span>
+                    </label>
+                  </div>
+                </div>
+
+                {/* Modal Footer */}
+                <div className="bg-[#181513] px-5 py-3 flex items-center justify-end gap-2 border-t border-white/10 shrink-0">
+                  <button
+                    type="button"
+                    onClick={() => setEditingQuickLink(null)}
+                    className="px-4 py-2 rounded-xl text-xs font-bold text-slate-400 hover:text-white transition-colors cursor-pointer"
+                  >
+                    إلغاء
+                  </button>
+                  <button
+                    type="button"
+                    onClick={handleSaveQuickLinkModal}
+                    className="px-5 py-2 rounded-xl text-xs font-bold bg-[#00A859] hover:bg-[#008F4C] text-white flex items-center gap-1.5 shadow-md transition-all cursor-pointer"
+                  >
+                    <Save className="w-4 h-4" />
+                    <span>حفظ التغييرات</span>
+                  </button>
+                </div>
+              </div>
+            </div>
           )}
 
           {/* TAB 3: PRODUCTS & MENU MANAGEMENT */}

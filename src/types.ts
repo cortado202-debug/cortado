@@ -112,6 +112,15 @@ export interface PaymentMethod {
   isActive: boolean;
 }
 
+export interface QuickLinkItem {
+  id: string;
+  titleAr: string;
+  badge?: string;
+  contentAr?: string;
+  isHidden?: boolean;
+  customUrl?: string;
+}
+
 export interface SiteSettings {
   logoUrl: string;
   siteTitle: string;
@@ -124,6 +133,7 @@ export interface SiteSettings {
   adminEmail: string;
   deliveryFee?: number; // Delivery fee when customer chooses delivery
   paymentMethods?: PaymentMethod[]; // Configurable payment options
+  quickLinks?: QuickLinkItem[]; // Quick links page settings (editable & hideable)
   isStoreOpen?: boolean; // Toggle store status (open/closed)
   closedStoreNotice?: string; // Custom message displayed when store is closed
   isAnimatedBackgroundEnabled?: boolean; // Toggle animated green gradient background

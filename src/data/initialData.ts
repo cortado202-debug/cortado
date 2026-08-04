@@ -1,4 +1,4 @@
-import { Category, Product, PromoCode, SiteSettings } from '../types';
+import { Category, Product, PromoCode, SiteSettings, QuickLinkItem } from '../types';
 
 export const INITIAL_CATEGORIES: Category[] = [
   {
@@ -3102,6 +3102,72 @@ export const INITIAL_PRODUCTS: Product[] = [
 
 export const INITIAL_PROMO_CODES: PromoCode[] = [];
 
+export const DEFAULT_QUICK_LINKS: QuickLinkItem[] = [
+  {
+    id: 'about',
+    titleAr: 'تعريف Cortado Café',
+    badge: 'الرئيسية',
+    isHidden: false,
+    contentAr: 'Cortado Café هو مقهى مختص ومخبز فاخر يقدم تجربة إيطالية وعالمية فريدة لعشاق القهوة الأصيلة والحلويات المبتكرة. نتميز بتقديم أجود أنواع البن المختص المحمص بحرفية.'
+  },
+  {
+    id: 'who-we-are',
+    titleAr: 'من نحن (Who We Are)',
+    badge: 'هويتنا',
+    isHidden: false,
+    contentAr: 'بدأ مقهى كورتادو كافيه بشغف حقيقي تجاه القهوة المختصة. انطلقنا من رؤية واضحة لإنشاء مساحة تجمع بين دقة تحضير القهوة وحرارة الضيافة أصالة.'
+  },
+  {
+    id: 'services',
+    titleAr: 'خدماتنا (Our Services)',
+    badge: 'خدماتنا',
+    isHidden: false,
+    contentAr: 'نقدم مشروبات القهوة المختصة، المخبوزات والحلويات الطازجة يومياً، خدمة التوصيل السريع، والطلبات الخاصة والفعاليات.'
+  },
+  {
+    id: 'faq',
+    titleAr: 'الأسئلة الشائعة (FAQ)',
+    badge: 'أسئلة وأجوبة',
+    isHidden: false,
+    contentAr: 'إجابات على أكثر الأسئلة شيوعاً حول مقهى كورتادو كافيه، ساعات العمل، الموقع الرسمي، والتوصيل.'
+  },
+  {
+    id: 'contact',
+    titleAr: 'اتصل بنا (Contact Us)',
+    badge: 'تواصل معنا',
+    isHidden: false,
+    contentAr: 'معلومات التواصل المباشر مع إدارة كورتادو كافيه عبر البريد الإلكتروني والهاتف والموقع الرسمي.'
+  },
+  {
+    id: 'general-info',
+    titleAr: 'معلومات عامة (General Info)',
+    badge: 'دليل النشاط',
+    isHidden: false,
+    contentAr: 'بيانات النشاط: Hillsboro, Oregon, USA. نوع النشاط: Coffee Shop & Specialty Bakery. الموقع الرسمي: https://cortadocafe.com'
+  },
+  {
+    id: 'story',
+    titleAr: 'قصتنا (Brand Story)',
+    badge: 'القصة والرؤية',
+    isHidden: false,
+    contentAr: 'قصة انطلاق كورتادو كافيه برؤية ملهمة لتقديم كوب قهوة لا يُنسى واختيار أجود محاصيل البن من المزارع العالمية.'
+  },
+  {
+    id: 'privacy',
+    titleAr: 'سياسة الخصوصية (Privacy Policy)',
+    badge: 'الأمان والخصوصية',
+    isHidden: false,
+    contentAr: 'التزامنا الكامل بحماية وتشفير بيانات زوارنا وعملائنا الكرام وعدم مشاركتها مع أي طرف ثالث.'
+  },
+  {
+    id: 'sitemap',
+    titleAr: 'خريطة الموقع (Site Map)',
+    badge: 'فهرس الصفحات',
+    isHidden: false,
+    contentAr: 'دليل شامل لجميع أركان وصفحات متجر كورتادو كافيه الإلكتروني.'
+  }
+];
+
 export const INITIAL_SETTINGS: SiteSettings = {
   logoUrl: 'data:image/svg+xml;utf8,<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 500 500"><circle cx="250" cy="250" r="240" fill="%2300A859"/><g transform="rotate(-5 250 240)"><path d="M125 110 C125 100, 150 90, 250 90 C350 90, 375 100, 375 110 L395 135 C400 142, 395 152, 375 152 L125 152 C105 152, 100 142, 105 135 Z" fill="white"/><path d="M140 162 L360 162 L335 370 L165 370 Z" fill="white"/><path d="M135 200 L365 210 L350 310 L150 300 Z" fill="none" stroke="%2300A859" stroke-width="12"/><text x="250" y="278" text-anchor="middle" fill="%2300A859" font-family="\'Brush Script MT\', \'Dancing Script\', cursive, sans-serif" font-size="78" font-weight="bold" transform="rotate(-4 250 278)">Cortado</text><text x="250" y="352" text-anchor="middle" fill="%2300A859" font-family="\'Cairo\', sans-serif" font-size="36" font-weight="900" letter-spacing="4">CAFÉ</text><path d="M220 370 L245 415 L270 370 Z" fill="white"/></g></svg>',
   siteTitle: 'كورتادو كافيه',
@@ -3133,6 +3199,7 @@ export const INITIAL_SETTINGS: SiteSettings = {
   },
   adminEmail: 'cortado202@gmail.com',
   deliveryFee: 15,
+  quickLinks: DEFAULT_QUICK_LINKS,
   isStoreOpen: true,
   isAnimatedBackgroundEnabled: true,
   closedStoreNotice: 'المتجر مغلق حالياً، لا نتلقى طلبات جديدة في الوقت الحالي. نعتذر منك ونسعد بخدمتك فور إعادة فتح المتجر! ☕',
