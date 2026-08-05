@@ -3143,7 +3143,7 @@ export const DEFAULT_QUICK_LINKS: QuickLinkItem[] = [
     titleAr: 'معلومات عامة (General Info)',
     badge: 'دليل النشاط',
     isHidden: false,
-    contentAr: 'بيانات النشاط: Hillsboro, Oregon, USA. نوع النشاط: Coffee Shop & Specialty Bakery. الموقع الرسمي: https://cortadocafe.com'
+    contentAr: 'بيانات النشاط: Hillsboro, Oregon, USA. نوع النشاط: Coffee Shop & Specialty Bakery. الموقع الرسمي: https://www.cortadocafe.online'
   },
   {
     id: 'story',

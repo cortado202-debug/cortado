@@ -89,12 +89,12 @@ export const INFO_PAGES: InfoPage[] = [
               <span className="font-bold text-sm text-[#2A2118]">الموقع الرسمي لـ Cortado Café:</span>
             </div>
             <a 
-              href="https://cortadocafe.com" 
+              href="https://www.cortadocafe.online" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-xs font-mono font-bold text-[#00A859] hover:underline flex items-center gap-1 bg-white px-3 py-1.5 rounded-xl border border-[#00A859]/30"
             >
-              <span>https://cortadocafe.com</span>
+              <span>https://www.cortadocafe.online</span>
               <ExternalLink className="w-3.5 h-3.5" />
             </a>
           </div>
@@ -237,7 +237,7 @@ export const INFO_PAGES: InfoPage[] = [
             <span>س2: ما هو الموقع الرسمي لـ Cortado Café؟</span>
           </h4>
           <p className="text-xs text-[#523621] leading-relaxed pr-6">
-            ج: الموقع الرسمي المعتمد هو <strong className="text-[#00A859]">https://cortadocafe.com</strong> حيث يمكنك تصفح القائمة الكاملة والطلب مباشرة.
+            ج: الموقع الرسمي المعتمد هو <strong className="text-[#00A859]">https://www.cortadocafe.online</strong> حيث يمكنك تصفح القائمة الكاملة والطلب مباشرة.
           </p>
         </div>
 
@@ -299,12 +299,12 @@ export const INFO_PAGES: InfoPage[] = [
               <span>الموقع الرسمي</span>
             </div>
             <a 
-              href="https://cortadocafe.com" 
+              href="https://www.cortadocafe.online" 
               target="_blank" 
               rel="noopener noreferrer"
               className="text-xs font-mono text-[#00A859] font-bold hover:underline flex items-center gap-1"
             >
-              <span>https://cortadocafe.com</span>
+              <span>https://www.cortadocafe.online</span>
               <ExternalLink className="w-3 h-3" />
             </a>
           </div>
@@ -359,8 +359,8 @@ export const INFO_PAGES: InfoPage[] = [
             </div>
             <div className="py-2.5 flex justify-between items-center">
               <span className="font-bold text-[#523621]">رابط الموقع الرسمي:</span>
-              <a href="https://cortadocafe.com" target="_blank" rel="noopener noreferrer" className="font-mono font-bold text-[#00A859] hover:underline">
-                https://cortadocafe.com
+              <a href="https://www.cortadocafe.online" target="_blank" rel="noopener noreferrer" className="font-mono font-bold text-[#00A859] hover:underline">
+                https://www.cortadocafe.online
               </a>
             </div>
           </div>
@@ -638,7 +638,7 @@ export const InfoModal: React.FC<InfoModalProps> = ({ isOpen: controlledIsOpen, 
           <div className="bg-white border-t border-[#E8E2D8] px-4 py-3 flex items-center justify-between text-xs text-[#523621] font-['Cairo'] shrink-0 flex-wrap gap-2">
             <div className="flex items-center gap-2">
               <span className="w-2 h-2 rounded-full bg-[#00A859]" />
-              <span className="font-bold">الموقع الرسمي: https://cortadocafe.com</span>
+              <span className="font-bold">الموقع الرسمي: https://www.cortadocafe.online</span>
             </div>
             <button
               onClick={handleClose}
