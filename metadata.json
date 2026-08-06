@@ -1,6 +1,6 @@
 {
-  "name": "كورتادو كافيه | Cortado Coffee",
-  "description": "تجربة قهوة فاخرة بلمسة ثلاثية الأبعاد، قائمة مشروبات وحلويات تفاعلية، نظام أكواد خصم، ولوحة تحكم متكاملة للإدارة والطلبات.",
+  "name": "ADIX MEDIA",
+  "description": "موقع شركة أديكس ميديا للحلول الرقمية والتسويق، تصميم المواقع والمتاجر، إدارة حسابات التواصل والإعلانات المدفوعة.",
   "requestFramePermissions": [],
   "majorCapabilities": ["MAJOR_CAPABILITY_SERVER_SIDE_GEMINI_API"]
 }
