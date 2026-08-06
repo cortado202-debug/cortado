@@ -216,7 +216,7 @@ export const Footer: React.FC = () => {
 
           {/* ADIX MEDIA LOGO (LAST ON MOBILE) */}
           <a
-            href="https://wa.me/962779769501"
+            href="https://www.adixmedia.website/"
             target="_blank"
             rel="noopener noreferrer"
             className="order-3 md:order-2 flex items-center hover:opacity-90 transition-opacity group cursor-pointer"

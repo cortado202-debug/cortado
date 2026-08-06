@@ -11,7 +11,16 @@ import {
   ChevronLeft, 
   ShoppingBag, 
   Flame, 
-  CheckCircle2
+  CheckCircle2,
+  Sparkles,
+  Cookie,
+  GlassWater,
+  CupSoda,
+  Milk,
+  IceCream,
+  Croissant,
+  Utensils,
+  Heart
 } from 'lucide-react';
 
 export const MenuSection: React.FC = () => {
@@ -175,7 +184,16 @@ export const MenuSection: React.FC = () => {
       case 'Snowflake': return <Snowflake className="w-5 h-5" />;
       case 'Coffee': return <Coffee className="w-5 h-5" />;
       case 'Cake': return <Cake className="w-5 h-5" />;
-      case 'Sparkles': return <Coffee className="w-5 h-5" />;
+      case 'Sparkles': return <Sparkles className="w-5 h-5" />;
+      case 'Flame': return <Flame className="w-5 h-5" />;
+      case 'Cookie': return <Cookie className="w-5 h-5" />;
+      case 'GlassWater': return <GlassWater className="w-5 h-5" />;
+      case 'CupSoda': return <CupSoda className="w-5 h-5" />;
+      case 'Milk': return <Milk className="w-5 h-5" />;
+      case 'IceCream': return <IceCream className="w-5 h-5" />;
+      case 'Croissant': return <Croissant className="w-5 h-5" />;
+      case 'Utensils': return <Utensils className="w-5 h-5" />;
+      case 'Heart': return <Heart className="w-5 h-5" />;
       default: return <Coffee className="w-5 h-5" />;
     }
   };
