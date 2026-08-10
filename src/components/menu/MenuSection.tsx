@@ -325,9 +325,12 @@ export const MenuSection: React.FC = () => {
                 {currentCategoryProducts.map((prod, idx) => {
                   const isSelected = idx === active3DIndex;
                   return (
-                    <button
+                    <div
                       key={prod.id}
+                      role="button"
+                      tabIndex={0}
                       onClick={() => setActive3DIndex(idx)}
+                      onKeyDown={(e) => { if (e.key === 'Enter' || e.key === ' ') setActive3DIndex(idx); }}
                       className={`flex items-center gap-3 px-3 py-2.5 rounded-2xl border transition-all duration-150 text-right cursor-pointer select-none shadow-xs ${
                         isSelected 
                           ? 'bg-[#00A859] text-white border-[#00A859] shadow-md scale-[1.02]' 
@@ -363,7 +366,7 @@ export const MenuSection: React.FC = () => {
                       >
                         <ShoppingBag className="w-3.5 h-3.5 sm:w-4 sm:h-4" />
                       </button>
-                    </button>
+                    </div>
                   );
                 })}
               </motion.div>

@@ -72,7 +72,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "اسبريسو",
     "nameEn": "اسبريسو",
-    "price": 7000,
+    "price": 70,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حبوب بن أرابيكا 100%",
@@ -84,12 +84,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-292",
         "name": "عادي",
-        "price": 7000
+        "price": 70
       },
       {
         "id": "sz-291",
         "name": "دبل",
-        "price": 10000
+        "price": 100
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530648/ih4tjrbg1ayntnvlz6cv.jpg",
@@ -102,7 +102,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "امريكانو",
     "nameEn": "امريكانو",
-    "price": 8000,
+    "price": 80,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حبوب بن أرابيكا 100%",
@@ -114,12 +114,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-290",
         "name": "عادي",
-        "price": 8000
+        "price": 80
       },
       {
         "id": "sz-289",
         "name": "دبل",
-        "price": 14000
+        "price": 140
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688808/q4ccxjgknnlsfsukufpe.jpg",
@@ -132,7 +132,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "قهوة تركية",
     "nameEn": "قهوة تركية",
-    "price": 7000,
+    "price": 70,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -144,12 +144,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-236",
         "name": "عادي",
-        "price": 7000
+        "price": 70
       },
       {
         "id": "sz-237",
         "name": "دبل",
-        "price": 10000
+        "price": 100
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688766/pizcthiafenad5gyigpz.jpg",
@@ -162,7 +162,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "نسكافيه",
     "nameEn": "نسكافيه",
-    "price": 6000,
+    "price": 60,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو غنية",
@@ -174,12 +174,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-285",
         "name": "عادي",
-        "price": 6000
+        "price": 60
       },
       {
         "id": "sz-286",
         "name": "دبل",
-        "price": 8000
+        "price": 80
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688901/i7tmx87k5zjknsbu1prp.jpg",
@@ -192,7 +192,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "فرنسي",
     "nameEn": "فرنسي",
-    "price": 10000,
+    "price": 100,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو غنية",
@@ -204,12 +204,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-246",
         "name": "عادي",
-        "price": 10000
+        "price": 100
       },
       {
         "id": "sz-247",
         "name": "دبل",
-        "price": 14000
+        "price": 140
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688878/aqni2wqu0egekidvshqu.jpg",
@@ -222,7 +222,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "اسبريسو مع نسلة",
     "nameEn": "اسبريسو مع نسلة",
-    "price": 9500,
+    "price": 95,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حبوب بن أرابيكا 100%",
@@ -234,12 +234,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-242",
         "name": "عادي",
-        "price": 9500
+        "price": 95
       },
       {
         "id": "sz-243",
         "name": "دبل",
-        "price": 12500
+        "price": 125
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688842/zgrtcweo0jwqtjmcy16k.jpg",
@@ -252,7 +252,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "اسبريسو مع مبيض",
     "nameEn": "اسبريسو مع مبيض",
-    "price": 9500,
+    "price": 95,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حبوب بن أرابيكا 100%",
@@ -264,12 +264,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-244",
         "name": "عادي",
-        "price": 9500
+        "price": 95
       },
       {
         "id": "sz-245",
         "name": "دبل",
-        "price": 12500
+        "price": 125
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688857/cd4c1hvodjhwfvaary8p.jpg",
@@ -282,7 +282,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "لاتيه",
     "nameEn": "لاتيه",
-    "price": 12000,
+    "price": 120,
     "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
     "ingredients": [
       "جرعة إسبريسو غنية",
@@ -294,12 +294,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-240",
         "name": "عادي",
-        "price": 12000
+        "price": 120
       },
       {
         "id": "sz-241",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688827/xcpgiqsuc2unzh5kkls2.jpg",
@@ -312,7 +312,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "3*1",
     "nameEn": "3*1",
-    "price": 10000,
+    "price": 100,
     "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -324,12 +324,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-234",
         "name": "عادي",
-        "price": 10000
+        "price": 100
       },
       {
         "id": "sz-235",
         "name": "دبل",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688714/keo3gt71orgidzaqdlfe.jpg",
@@ -342,7 +342,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "هوت شوكلت",
     "nameEn": "هوت شوكلت",
-    "price": 12000,
+    "price": 120,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بودرة كاكاو سويسري 100%",
@@ -354,12 +354,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-216",
         "name": "عادي",
-        "price": 12000
+        "price": 120
       },
       {
         "id": "sz-217",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688358/v5adlpsmjbxl2vt9zj5q.jpg",
@@ -372,7 +372,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "موكا شوكولا",
     "nameEn": "موكا شوكولا",
-    "price": 14000,
+    "price": 140,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بودرة كاكاو سويسري 100%",
@@ -384,12 +384,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-182",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       },
       {
         "id": "sz-183",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531301/sahcplsbuv94qxmee9k3.jpg",
@@ -402,7 +402,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "موكا وايت",
     "nameEn": "موكا وايت",
-    "price": 14000,
+    "price": 140,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -414,12 +414,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-218",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       },
       {
         "id": "sz-219",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688422/mho1snnexfdsdirqcfpj.jpg",
@@ -432,7 +432,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "أعشاب ساخنة",
     "nameEn": "أعشاب ساخنة",
-    "price": 5000,
+    "price": 50,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "أوراق طبيعية أصلية",
@@ -444,12 +444,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-232",
         "name": "عادي",
-        "price": 5000
+        "price": 50
       },
       {
         "id": "sz-233",
         "name": "دبل",
-        "price": 10000
+        "price": 100
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688580/bkovvlmm26ud7o8dfynj.jpg",
@@ -462,7 +462,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "كابتشينو",
     "nameEn": "كابتشينو",
-    "price": 10000,
+    "price": 100,
     "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
     "ingredients": [
       "جرعة إسبريسو غنية",
@@ -474,12 +474,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-164",
         "name": "عادي",
-        "price": 10000
+        "price": 100
       },
       {
         "id": "sz-165",
         "name": "دبل",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530881/ayjj3acy3dhnvvtmquvi.jpg",
@@ -492,7 +492,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "ميكاتو",
     "nameEn": "ميكاتو",
-    "price": 14000,
+    "price": 140,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -504,12 +504,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-230",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       },
       {
         "id": "sz-231",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688558/kbqvk9ml37dig6p7fj7u.jpg",
@@ -522,7 +522,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "شاي",
     "nameEn": "شاي",
-    "price": 5000,
+    "price": 50,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "أوراق طبيعية أصلية",
@@ -534,12 +534,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-220",
         "name": "عادي",
-        "price": 5000
+        "price": 50
       },
       {
         "id": "sz-221",
         "name": "دبل",
-        "price": 8000
+        "price": 80
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688464/glbkkrmqkm6dipqmw6jv.jpg",
@@ -552,7 +552,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "شاي حليب",
     "nameEn": "شاي حليب",
-    "price": 10000,
+    "price": 100,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "أوراق طبيعية أصلية",
@@ -564,12 +564,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-228",
         "name": "عادي",
-        "price": 10000
+        "price": 100
       },
       {
         "id": "sz-229",
         "name": "دبل",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688540/xzt6i8epw0uvrewhwled.jpg",
@@ -582,7 +582,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "ميلو حليب",
     "nameEn": "ميلو حليب",
-    "price": 14000,
+    "price": 140,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -594,12 +594,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-226",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       },
       {
         "id": "sz-227",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688523/jcqadc8r2ifjaa1cx6fo.jpg",
@@ -612,7 +612,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "نسكافيه حليب",
     "nameEn": "نسكافيه حليب",
-    "price": 10000,
+    "price": 100,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو غنية",
@@ -624,12 +624,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-224",
         "name": "عادي",
-        "price": 10000
+        "price": 100
       },
       {
         "id": "sz-225",
         "name": "دبل",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688502/bxurkd0ebp8htjri0gms.jpg",
@@ -642,7 +642,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "موكاتشينو",
     "nameEn": "موكاتشينو",
-    "price": 14000,
+    "price": 140,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -654,12 +654,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-222",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       },
       {
         "id": "sz-223",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688482/rsdgjn6vd6fbipxwomzv.jpg",
@@ -672,7 +672,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "كورتادو",
     "nameEn": "كورتادو",
-    "price": 14000,
+    "price": 140,
     "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -684,12 +684,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-214",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       },
       {
         "id": "sz-215",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688339/tzwsuvlmi7p2jft4qw4q.jpg",
@@ -702,7 +702,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "هوت لوتس",
     "nameEn": "هوت لوتس",
-    "price": 12000,
+    "price": 120,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بودرة كاكاو سويسري 100%",
@@ -714,12 +714,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-213",
         "name": "عادي",
-        "price": 12000
+        "price": 120
       },
       {
         "id": "sz-212",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688319/kvlwnmaha1pcxkxnv3tx.jpg",
@@ -732,7 +732,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "فلات وايت",
     "nameEn": "فلات وايت",
-    "price": 12000,
+    "price": 120,
     "descriptionAr": "يمكن اضافة نكهات (كرميل-فانيلا-بيستاشيو-بندق-جوز الهند)",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -744,12 +744,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-210",
         "name": "عادي",
-        "price": 12000
+        "price": 120
       },
       {
         "id": "sz-211",
         "name": "دبل",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688295/lqlc9wpfg3zfwbtvhqwy.jpg",
@@ -762,7 +762,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب شوكولا",
     "nameEn": "كريب شوكولا",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -774,7 +774,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-293",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294259/aqxsgxgvl2wmtxyregh7.jpg",
@@ -787,7 +787,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب نوتيلا",
     "nameEn": "كريب نوتيلا",
-    "price": 45000,
+    "price": 450,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -799,7 +799,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-294",
         "name": "عادي",
-        "price": 45000
+        "price": 450
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294274/rq1aa60kowdmdfttlkxd.jpg",
@@ -812,7 +812,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب لوتس",
     "nameEn": "كريب لوتس",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -824,7 +824,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-295",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294284/l7ulax5vgukfzyymshwi.jpg",
@@ -837,7 +837,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب دبي",
     "nameEn": "كريب دبي",
-    "price": 45000,
+    "price": 450,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -849,7 +849,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-296",
         "name": "عادي",
-        "price": 45000
+        "price": 450
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294298/bwuqvp21gmbvji73ho09.jpg",
@@ -862,7 +862,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب رول",
     "nameEn": "كريب رول",
-    "price": 45000,
+    "price": 450,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -874,7 +874,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-297",
         "name": "عادي",
-        "price": 45000
+        "price": 450
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294312/fplvh3x1nkn2nam1crs7.jpg",
@@ -887,7 +887,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب سوشي",
     "nameEn": "كريب سوشي",
-    "price": 50000,
+    "price": 500,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -899,7 +899,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-298",
         "name": "عادي",
-        "price": 50000
+        "price": 500
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294334/zhqdukjg7jntxdxnkj4d.jpg",
@@ -912,7 +912,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب بيستاشيو",
     "nameEn": "كريب بيستاشيو",
-    "price": 40000,
+    "price": 400,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -924,7 +924,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-299",
         "name": "عادي",
-        "price": 40000
+        "price": 400
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294350/oczmy2nn5lxmw33036lh.jpg",
@@ -937,7 +937,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "كريب فيتوتشيني",
     "nameEn": "كريب فيتوتشيني",
-    "price": 45000,
+    "price": 450,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "عجين كريب طازج وخفيف",
@@ -949,7 +949,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-300",
         "name": "عادي",
-        "price": 45000
+        "price": 450
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294370/wwowanr8uvyswq6hd2he.jpg",
@@ -962,7 +962,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "بان كيك",
     "nameEn": "بان كيك",
-    "price": 45000,
+    "price": 450,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "شوكولاتة ذائبة 70%",
@@ -974,7 +974,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-304",
         "name": "عادي",
-        "price": 45000
+        "price": 450
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294450/aye1ls8v0lkipbnlrw23.jpg",
@@ -987,7 +987,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "ميني بان كيك",
     "nameEn": "ميني بان كيك",
-    "price": 30000,
+    "price": 300,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "شوكولاتة ذائبة 70%",
@@ -999,7 +999,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-305",
         "name": "عادي",
-        "price": 30000
+        "price": 300
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294460/rji0mibzw1mbobmwdaqy.jpg",
@@ -1012,7 +1012,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "موز و حليب",
     "nameEn": "موز و حليب",
-    "price": 16000,
+    "price": 160,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1025,7 +1025,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-209",
         "name": "عادي",
-        "price": 16000
+        "price": 160
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688278/qa43ou5oedozlwuin6sr.jpg",
@@ -1038,7 +1038,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "موز و حليب و شوكولا",
     "nameEn": "موز و حليب و شوكولا",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1051,7 +1051,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-208",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688261/hjiewnb1lvfsbhj9tgyn.jpg",
@@ -1064,7 +1064,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "موز و حليب و فريز",
     "nameEn": "موز و حليب و فريز",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1077,7 +1077,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-207",
         "name": "عادي",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688244/orj7f9dwktlnsnuiutay.jpg",
@@ -1090,7 +1090,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "عصير قريز",
     "nameEn": "عصير قريز",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1103,7 +1103,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-205",
         "name": "عادي",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688203/exx5ipev6zrnh54cf6xr.jpg",
@@ -1116,7 +1116,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "كوكتيل فواكه",
     "nameEn": "كوكتيل فواكه",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1129,7 +1129,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-206",
         "name": "عادي",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688224/irjpxhjewite0fvpnmxm.jpg",
@@ -1142,7 +1142,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "عصير رمان",
     "nameEn": "عصير رمان",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1155,7 +1155,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-203",
         "name": "عادي",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688164/ovqnbyqkwsjg8405uexa.jpg",
@@ -1168,7 +1168,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "عصير اناناس",
     "nameEn": "عصير اناناس",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1181,7 +1181,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-202",
         "name": "عادي",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688151/hzgstkazb1em87hx5dfs.jpg",
@@ -1194,7 +1194,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "عصير بولو",
     "nameEn": "عصير بولو",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1207,7 +1207,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-204",
         "name": "عادي",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688180/qi3jyinxtmkyzn3sm1og.jpg",
@@ -1220,7 +1220,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-3",
     "nameAr": "عصير مانجو",
     "nameEn": "عصير مانجو",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "قطع فواكه طبيعية طازجة",
@@ -1233,7 +1233,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-201",
         "name": "عادي",
-        "price": 18000
+        "price": 180
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688134/y9psqsirnihdkjojeild.jpg",
@@ -1246,7 +1246,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "تشيز براونيز",
     "nameEn": "تشيز براونيز",
-    "price": 17000,
+    "price": 170,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جبنة كريمية فاخرة",
@@ -1257,7 +1257,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-301",
         "name": "عادي",
-        "price": 17000
+        "price": 170
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294386/ndwzmzabqecwp4xpzjr1.jpg",
@@ -1270,7 +1270,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "كاسترد اوريو",
     "nameEn": "كاسترد اوريو",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "كريمة خفق طازجة",
@@ -1281,7 +1281,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-302",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294407/xi9cptztz3hw5aesrpe4.jpg",
@@ -1294,7 +1294,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "كاسترد لوتس",
     "nameEn": "كاسترد لوتس",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "كريمة خفق طازجة",
@@ -1305,7 +1305,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-306",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294489/xes3yxoxouczrwoed9ng.jpg",
@@ -1318,7 +1318,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "سان سباستيان",
     "nameEn": "سان سباستيان",
-    "price": 30000,
+    "price": 300,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "كريمة خفق طازجة",
@@ -1329,7 +1329,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-303",
         "name": "عادي",
-        "price": 30000
+        "price": 300
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294431/roow4je3mlzuq6pmytef.jpg",
@@ -1342,7 +1342,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "قشطوطة",
     "nameEn": "قشطوطة",
-    "price": 27000,
+    "price": 270,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "كريمة خفق طازجة",
@@ -1353,7 +1353,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-308",
         "name": "عادي",
-        "price": 27000
+        "price": 270
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294548/jn3yxk27aoa01p63ixid.jpg",
@@ -1366,7 +1366,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "براونيز",
     "nameEn": "براونيز",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "كريمة خفق طازجة",
@@ -1377,7 +1377,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-307",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294519/nevdmbc8ar3eenxz7cru.jpg",
@@ -1390,7 +1390,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك كورتادو",
     "nameEn": "ميلك شيك كورتادو",
-    "price": 30000,
+    "price": 300,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1402,12 +1402,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-197",
         "name": "وسط",
-        "price": 30000
+        "price": 300
       },
       {
         "id": "sz-198",
         "name": "كبير",
-        "price": 40000
+        "price": 400
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688096/sfhhcu0enqkbkqe8uio4.jpg",
@@ -1420,7 +1420,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك اوريو",
     "nameEn": "ميلك شيك اوريو",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1432,12 +1432,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-171",
         "name": "وسط",
-        "price": 20000
+        "price": 200
       },
       {
         "id": "sz-172",
         "name": "كبير",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530998/cndq7noq2l4nurow1cmn.jpg",
@@ -1450,7 +1450,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك فريز",
     "nameEn": "ميلك شيك فريز",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1462,12 +1462,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-169",
         "name": "وسط",
-        "price": 20000
+        "price": 200
       },
       {
         "id": "sz-170",
         "name": "كبير",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530982/q3vxj3lwasfnx1jjdgie.jpg",
@@ -1480,7 +1480,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك فانيلا",
     "nameEn": "ميلك شيك فانيلا",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1492,12 +1492,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-174",
         "name": "وسط",
-        "price": 20000
+        "price": 200
       },
       {
         "id": "sz-173",
         "name": "كبير",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531013/ez2zrrs1d7yzwxzmroeh.jpg",
@@ -1510,7 +1510,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك مانجو",
     "nameEn": "ميلك شيك مانجو",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1522,12 +1522,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-200",
         "name": "وسط",
-        "price": 20000
+        "price": 200
       },
       {
         "id": "sz-199",
         "name": "كبير",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688108/bkmrfaxtuyz0hqyif9nu.jpg",
@@ -1540,7 +1540,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك سنيكرز",
     "nameEn": "ميلك شيك سنيكرز",
-    "price": 22000,
+    "price": 220,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1552,12 +1552,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-178",
         "name": "وسط",
-        "price": 22000
+        "price": 220
       },
       {
         "id": "sz-177",
         "name": "كبير",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531078/m3aa7hjwychaz1iaofzt.jpg",
@@ -1570,7 +1570,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك باونتي",
     "nameEn": "ميلك شيك باونتي",
-    "price": 22000,
+    "price": 220,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1582,12 +1582,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-195",
         "name": "وسط",
-        "price": 22000
+        "price": 220
       },
       {
         "id": "sz-196",
         "name": "كبير",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688080/fl2gulo3zgjs7ee744xp.jpg",
@@ -1600,7 +1600,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك كندر",
     "nameEn": "ميلك شيك كندر",
-    "price": 22000,
+    "price": 220,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1612,12 +1612,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-194",
         "name": "وسط",
-        "price": 22000
+        "price": 220
       },
       {
         "id": "sz-193",
         "name": "كبير",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781687870/dmo7cmdltuf3oc1fqpth.jpg",
@@ -1630,7 +1630,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك لوتس",
     "nameEn": "ميلك شيك لوتس",
-    "price": 22000,
+    "price": 220,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1642,12 +1642,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-192",
         "name": "وسط",
-        "price": 22000
+        "price": 220
       },
       {
         "id": "sz-191",
         "name": "كبير",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781687828/ehgyf1bgrfnokvmfoony.jpg",
@@ -1660,7 +1660,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك شوكولا",
     "nameEn": "ميلك شيك شوكولا",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -1672,12 +1672,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-309",
         "name": "وسط",
-        "price": 20000
+        "price": 200
       },
       {
         "id": "sz-310",
         "name": "كبير",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294584/e2gizijszcsphtcvjeyw.jpg",
@@ -1690,8 +1690,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-7",
     "nameAr": "سفن أب",
     "nameEn": "سفن أب",
-    "price": 14000,
-    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +4000 ل.س",
+    "price": 140,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +40 ل.س",
     "ingredients": [
       "مياه غازية منعشة",
       "أوراق نعناع طازجة",
@@ -1703,7 +1703,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-280",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689483/fj7adljsuspvy4vdm4fq.jpg",
@@ -1716,8 +1716,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-7",
     "nameAr": "جاك",
     "nameEn": "جاك",
-    "price": 80000,
-    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "price": 800,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +70 ل.س",
     "ingredients": [
       "مياه غازية منعشة",
       "أوراق نعناع طازجة",
@@ -1729,7 +1729,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-277",
         "name": "عادي",
-        "price": 80000
+        "price": 800
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689450/degfm1hx2kktgtsxjl8o.jpg",
@@ -1742,8 +1742,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-7",
     "nameAr": "ميرندا",
     "nameEn": "ميرندا",
-    "price": 5000,
-    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +4000 ل.س",
+    "price": 50,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +40 ل.س",
     "ingredients": [
       "مياه غازية منعشة",
       "أوراق نعناع طازجة",
@@ -1755,7 +1755,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-276",
         "name": "عادي",
-        "price": 5000
+        "price": 50
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689438/vz0s619wyl8d5hmpqrvr.jpg",
@@ -1768,8 +1768,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-7",
     "nameAr": "ريد بول",
     "nameEn": "ريد بول",
-    "price": 20000,
-    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "price": 200,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +70 ل.س",
     "ingredients": [
       "مياه غازية منعشة",
       "أوراق نعناع طازجة",
@@ -1781,7 +1781,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-279",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689474/lucbiblp8cv99liwyho1.jpg",
@@ -1794,8 +1794,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-7",
     "nameAr": "بايسن",
     "nameEn": "بايسن",
-    "price": 16000,
-    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "price": 160,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +70 ل.س",
     "ingredients": [
       "مياه غازية منعشة",
       "أوراق نعناع طازجة",
@@ -1807,7 +1807,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-278",
         "name": "عادي",
-        "price": 16000
+        "price": 160
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689462/d4r7ilshyfomra9ptlkk.jpg",
@@ -1820,8 +1820,8 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-7",
     "nameAr": "زويا",
     "nameEn": "زويا",
-    "price": 7000,
-    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +7000 ل.س",
+    "price": 70,
+    "descriptionAr": "يمكن اضافة نكهات (ليمون ونعنع-فريز-كيوي-علكة-اناناس-مانجو-بلو بيري-بلو هاواي-باشن فروت-جراندين-دراق-بطيخ) +70 ل.س",
     "ingredients": [
       "مياه غازية منعشة",
       "أوراق نعناع طازجة",
@@ -1833,7 +1833,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-275",
         "name": "عادي",
-        "price": 7000
+        "price": 70
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689428/bs1dksnyfm1pjvucviit.jpg",
@@ -1846,7 +1846,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "كرواسان فرنسي",
     "nameEn": "كرواسان فرنسي",
-    "price": 7000,
+    "price": 70,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -1858,7 +1858,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-190",
         "name": "عادي",
-        "price": 7000
+        "price": 70
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531510/xcqzlftfsjb8sbctsqgl.jpg",
@@ -1871,7 +1871,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "سينابون وايت",
     "nameEn": "سينابون وايت",
-    "price": 10000,
+    "price": 100,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -1883,7 +1883,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-187",
         "name": "عادي",
-        "price": 10000
+        "price": 100
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531453/t79jxfiixkpoyov03qsw.jpg",
@@ -1896,7 +1896,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "سينابون لوتس",
     "nameEn": "سينابون لوتس",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -1908,7 +1908,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-269",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689321/nvwk1cytgtj5vnwqumvi.jpg",
@@ -1921,7 +1921,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس موكا كراميل",
     "nameEn": "ايس موكا كراميل",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -1933,7 +1933,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-152",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530509/gqd90d9kwha2evbhyijd.jpg",
@@ -1946,7 +1946,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس موكا كيندر",
     "nameEn": "ايس موكا كيندر",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -1958,7 +1958,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-153",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530536/vp55b2xzfwplf3lix6ns.jpg",
@@ -1971,7 +1971,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس موكا لوتس",
     "nameEn": "ايس موكا لوتس",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -1983,7 +1983,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-154",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530556/tvnxzvmtilezzy1i0rvd.jpg",
@@ -1996,7 +1996,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس موكا باونتي",
     "nameEn": "ايس موكا باونتي",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2008,7 +2008,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-273",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689396/tacvm0uujeejts1hhkjg.jpg",
@@ -2021,7 +2021,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس موكا وايت",
     "nameEn": "ايس موكا وايت",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2033,7 +2033,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-155",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530611/trvg8r32b0icns5qpq7s.jpg",
@@ -2046,7 +2046,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس موكا شوكولا",
     "nameEn": "ايس موكا شوكولا",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2058,7 +2058,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-156",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530630/y4lem6nu4yhp11j3enuh.jpg",
@@ -2071,7 +2071,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس موكا سنيكرز",
     "nameEn": "ايس موكا سنيكرز",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2083,7 +2083,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-159",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530682/iaps5r21qhj8sjleu0gj.jpg",
@@ -2096,7 +2096,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس شيكن وايت موكا",
     "nameEn": "ايس شيكن وايت موكا",
-    "price": 25000,
+    "price": 250,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2108,7 +2108,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-274",
         "name": "عادي",
-        "price": 25000
+        "price": 250
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689413/yga6swsoborom9kx7sj0.jpg",
@@ -2121,7 +2121,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس امريكانو",
     "nameEn": "ايس امريكانو",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2133,7 +2133,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-168",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530956/lfomg4saea3v8dy8pgbj.jpg",
@@ -2146,7 +2146,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس لاتيه",
     "nameEn": "ايس لاتيه",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "يمكن اضافة نكهات (كراميل-فريز-فانيليا-بيستاشيو-لوتس)",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2158,7 +2158,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-163",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530854/zdgkz0iocni1a7dm278y.jpg",
@@ -2171,7 +2171,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس تي",
     "nameEn": "ايس تي",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "يمكن اضافة نكهات (دراق-باشن فروت-فريز-روز بيري)",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2183,7 +2183,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-167",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530941/escelgteojjfkr4ibotq.jpg",
@@ -2196,7 +2196,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "سبانش لاتيه",
     "nameEn": "سبانش لاتيه",
-    "price": 22000,
+    "price": 220,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2208,7 +2208,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-161",
         "name": "عادي",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530739/niioc56joh34pknh5jr2.jpg",
@@ -2221,7 +2221,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "فراب كراميل",
     "nameEn": "فراب كراميل",
-    "price": 22000,
+    "price": 220,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2233,7 +2233,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-271",
         "name": "عادي",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689356/iy8ztu9zb1ikc13ayhai.jpg",
@@ -2246,7 +2246,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "فرابتشينو",
     "nameEn": "فرابتشينو",
-    "price": 22000,
+    "price": 220,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2258,7 +2258,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-160",
         "name": "عادي",
-        "price": 22000
+        "price": 220
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530710/nnszamoeukhnwj6t3f43.jpg",
@@ -2271,7 +2271,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ماتشا",
     "nameEn": "ماتشا",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2283,7 +2283,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-162",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530778/dh3zcpkcljnlldqrexkk.jpg",
@@ -2296,7 +2296,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "آيس شوكلت",
     "nameEn": "آيس شوكلت",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2308,7 +2308,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-166",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779530916/acyyddavgwauihef6xo1.jpg",
@@ -2321,7 +2321,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "ايس ميلو",
     "nameEn": "ايس ميلو",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2333,7 +2333,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-272",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689373/zgt2bqboac3jza6l23jw.jpg",
@@ -2346,7 +2346,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-8",
     "nameAr": "رول عربي فستق حلبي",
     "nameEn": "رول عربي فستق حلبي",
-    "price": 80000,
+    "price": 800,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حليب طازج كامل الدسم",
@@ -2359,7 +2359,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-267",
         "name": "عادي",
-        "price": 80000
+        "price": 800
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689291/tuxwefk1erydyevlu6rp.jpg",
@@ -2372,7 +2372,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-8",
     "nameAr": "رول بوظة فواكه",
     "nameEn": "رول بوظة فواكه",
-    "price": 55000,
+    "price": 550,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حليب طازج كامل الدسم",
@@ -2385,7 +2385,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-266",
         "name": "عادي",
-        "price": 55000
+        "price": 550
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689279/rnce8wvqrwfkoq12amm8.jpg",
@@ -2398,7 +2398,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-8",
     "nameAr": "رول بوظة مكسرات",
     "nameEn": "رول بوظة مكسرات",
-    "price": 60000,
+    "price": 600,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حليب طازج كامل الدسم",
@@ -2411,7 +2411,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-268",
         "name": "عادي",
-        "price": 60000
+        "price": 600
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689304/dkm3fnwxgroku9vayrvy.jpg",
@@ -2424,7 +2424,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-8",
     "nameAr": "رول بوظة شوكولا و مكسرات",
     "nameEn": "رول بوظة شوكولا و مكسرات",
-    "price": 70000,
+    "price": 700,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حليب طازج كامل الدسم",
@@ -2437,7 +2437,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-265",
         "name": "عادي",
-        "price": 70000
+        "price": 700
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689268/mvrnhbyvme3rzs3k3nig.jpg",
@@ -2450,7 +2450,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-8",
     "nameAr": "كورنيه سبيشل",
     "nameEn": "كورنيه سبيشل",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حليب طازج كامل الدسم",
@@ -2463,7 +2463,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-261",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689176/slcdfqqu7lcsne1basst.jpg",
@@ -2476,7 +2476,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-8",
     "nameAr": "بوظة كرات",
     "nameEn": "بوظة كرات",
-    "price": 5000,
+    "price": 50,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "حليب طازج كامل الدسم",
@@ -2489,7 +2489,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-263",
         "name": "عادي",
-        "price": 5000
+        "price": 50
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689228/couxuid5yuq6dps3k6ve.jpg",
@@ -2502,7 +2502,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "V60 ساخن",
     "nameEn": "V60 ساخن",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بن أصلية فاخرة",
@@ -2514,7 +2514,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-259",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689124/soyd4jpmpzieqqvzhtsr.jpg",
@@ -2527,7 +2527,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "ماتشا لاتيه",
     "nameEn": "ماتشا لاتيه",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو غنية",
@@ -2539,7 +2539,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-264",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689246/rwqzhif3tkcdtlv8mvtn.jpg",
@@ -2552,7 +2552,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-1",
     "nameAr": "سبانش لاتيه",
     "nameEn": "سبانش لاتيه",
-    "price": 14000,
+    "price": 140,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو غنية",
@@ -2564,7 +2564,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-262",
         "name": "عادي",
-        "price": 14000
+        "price": 140
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689198/zlkevutvemvyjsgv90is.jpg",
@@ -2577,7 +2577,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل شوكولا",
     "nameEn": "وافل شوكولا",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2589,7 +2589,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-258",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689108/xuzjbpsknpt2agvpcsjw.jpg",
@@ -2602,7 +2602,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل سنكرز",
     "nameEn": "وافل سنكرز",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2614,7 +2614,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-253",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689032/t17sxqnc6cwxiuxqlj1m.jpg",
@@ -2627,7 +2627,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل فواكه",
     "nameEn": "وافل فواكه",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2639,7 +2639,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-257",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689085/xz6vmnuji1qmpn9umnuh.jpg",
@@ -2652,7 +2652,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل لوتس",
     "nameEn": "وافل لوتس",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2664,7 +2664,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-256",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689072/bxeubeiznq9sjmln71q1.jpg",
@@ -2677,7 +2677,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل بستاشيو",
     "nameEn": "وافل بستاشيو",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2689,7 +2689,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-255",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689061/aifipgajg8ncq52celwf.jpg",
@@ -2702,7 +2702,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل نوتيلا",
     "nameEn": "وافل نوتيلا",
-    "price": 40000,
+    "price": 400,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2714,7 +2714,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-140",
         "name": "عادي",
-        "price": 40000
+        "price": 400
       }
     ],
     "imageUrl": ".",
@@ -2727,7 +2727,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل فريز",
     "nameEn": "وافل فريز",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2739,7 +2739,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-252",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688988/wgbtmv9yf9ucmugturun.jpg",
@@ -2752,7 +2752,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل كاب",
     "nameEn": "وافل كاب",
-    "price": 35000,
+    "price": 350,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2764,7 +2764,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-254",
         "name": "عادي",
-        "price": 35000
+        "price": 350
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689047/gjujfrt3r7efizdilegx.jpg",
@@ -2777,7 +2777,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-2",
     "nameAr": "وافل مارس",
     "nameEn": "وافل مارس",
-    "price": 30000,
+    "price": 300,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "وافل مقرمش طازج",
@@ -2789,7 +2789,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-251",
         "name": "عادي",
-        "price": 30000
+        "price": 300
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688973/bz8ehf5slls2dpecxfvv.jpg",
@@ -2802,7 +2802,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-6",
     "nameAr": "V60 ايس",
     "nameEn": "V60 ايس",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جرعة إسبريسو مركزة (Double Shot)",
@@ -2814,7 +2814,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-260",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781689156/ifqdxrdnpi5ok3c1kqyn.jpg",
@@ -2827,7 +2827,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "معروك كبير",
     "nameEn": "معروك كبير",
-    "price": 60000,
+    "price": 600,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -2839,7 +2839,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-250",
         "name": "عادي",
-        "price": 60000
+        "price": 600
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1781688953/pmaatwept19lwtlxqibp.jpg",
@@ -2852,7 +2852,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "معروك صغير",
     "nameEn": "معروك صغير",
-    "price": 30000,
+    "price": 300,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -2864,7 +2864,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-315",
         "name": "عادي",
-        "price": 30000
+        "price": 300
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1782294856/igehqnw1nvdm8mdh2rzt.jpg",
@@ -2877,7 +2877,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "تيراميسو",
     "nameEn": "تيراميسو",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "بسكويت ليدي فينجر إيطالي",
@@ -2889,7 +2889,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-184",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531331/ccoqrxzh8mon9mfejrjm.jpg",
@@ -2902,7 +2902,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-5",
     "nameAr": "ميلك شيك مانجو",
     "nameEn": "ميلك شيك مانجو",
-    "price": 18000,
+    "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "آيس كريم طبيعي فاخر",
@@ -2914,12 +2914,12 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-175",
         "name": "وسط",
-        "price": 18000
+        "price": 180
       },
       {
         "id": "sz-176",
         "name": "كبير",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531061/xsgvmypu9btfw80enfcu.jpg",
@@ -2932,7 +2932,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "تشيز كيك اوريو",
     "nameEn": "تشيز كيك اوريو",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جبنة كريمية فاخرة",
@@ -2943,7 +2943,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-179",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531206/uiauagkbr5gqxy4kwqa0.jpg",
@@ -2956,7 +2956,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "تشيز كيك لوتس",
     "nameEn": "تشيز كيك لوتس",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جبنة كريمية فاخرة",
@@ -2967,7 +2967,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-180",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531225/qkw7mumm7guh7ku6u04t.jpg",
@@ -2980,7 +2980,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "تشيز كيك فريز",
     "nameEn": "تشيز كيك فريز",
-    "price": 15000,
+    "price": 150,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "جبنة كريمية فاخرة",
@@ -2991,7 +2991,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-181",
         "name": "عادي",
-        "price": 15000
+        "price": 150
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531281/rwfndxkhm65f5edrfjvd.jpg",
@@ -3004,7 +3004,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-4",
     "nameAr": "ريد فلفيت",
     "nameEn": "ريد فلفيت",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "كريمة خفق طازجة",
@@ -3015,7 +3015,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-185",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531388/bs2ujgbdxzobvcgodfmm.jpg",
@@ -3028,7 +3028,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "سينابون سادة",
     "nameEn": "سينابون سادة",
-    "price": 6000,
+    "price": 60,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -3040,7 +3040,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-186",
         "name": "عادي",
-        "price": 6000
+        "price": 60
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531439/gpafvevp7zmpsdtd4mz1.jpg",
@@ -3053,7 +3053,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "سينابون بالجوز",
     "nameEn": "سينابون بالجوز",
-    "price": 8000,
+    "price": 80,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -3065,7 +3065,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-188",
         "name": "عادي",
-        "price": 8000
+        "price": 80
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531469/wtabxppvsaxlm2atftqi.jpg",
@@ -3078,7 +3078,7 @@ export const INITIAL_PRODUCTS: Product[] = [
     "categoryId": "cat-9",
     "nameAr": "افوكادو",
     "nameEn": "افوكادو",
-    "price": 20000,
+    "price": 200,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [
       "دقيق قمح صلب ممتاز",
@@ -3090,7 +3090,7 @@ export const INITIAL_PRODUCTS: Product[] = [
       {
         "id": "sz-189",
         "name": "عادي",
-        "price": 20000
+        "price": 200
       }
     ],
     "imageUrl": "https://res.cloudinary.com/dojkyl0e9/image/upload/v1779531498/fnideweji3niyleyo03k.jpg",

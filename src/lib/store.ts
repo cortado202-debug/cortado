@@ -630,6 +630,16 @@ export const useStore = create<StoreState>()(
           }
           if (!state.products || state.products.length === 0) {
             state.products = INITIAL_PRODUCTS;
+          } else {
+            // Auto-sanitize legacy prices >= 1000 (remove two zeroes)
+            state.products = state.products.map(p => ({
+              ...p,
+              price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+              sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
+                ...s,
+                price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+              })) : p.sizes
+            }));
           }
           if (!state.settings) {
             state.settings = INITIAL_SETTINGS;

@@ -602,14 +602,14 @@ export const AdminDashboard: React.FC = () => {
     setProdNameAr('');
     setProdNameEn('');
     setProdCat('cold');
-    setProdPrice(7000);
+    setProdPrice(70);
     setProdDesc('');
     setProdIngredients('إسبريسو مختص, حليب طازج');
     setProdImageUrl('https://images.unsplash.com/photo-1517701604599-bb29b565090c?auto=format&fit=crop&w=800&q=80');
     setProdCupColor('#321D12');
     setProdSizes([
-      { name: 'عادي', price: 7000 },
-      { name: 'دبل', price: 10000 }
+      { name: 'عادي', price: 70 },
+      { name: 'دبل', price: 100 }
     ]);
     setShowProductModal(true);
   };
@@ -619,17 +619,18 @@ export const AdminDashboard: React.FC = () => {
     setProdNameAr(prod.nameAr);
     setProdNameEn(prod.nameEn);
     setProdCat(prod.categoryId);
-    setProdPrice(prod.price);
+    setProdPrice(prod.price >= 1000 ? Math.round(prod.price / 100) : prod.price);
     setProdDesc(prod.descriptionAr);
     setProdIngredients(prod.ingredients.join(', '));
     setProdImageUrl(prod.imageUrl);
     setProdCupColor(prod.cupColor || '#321D12');
     if (prod.sizes && prod.sizes.length > 0) {
-      setProdSizes(prod.sizes.map(s => ({ name: s.name, price: s.price })));
+      setProdSizes(prod.sizes.map(s => ({ name: s.name, price: s.price >= 1000 ? Math.round(s.price / 100) : s.price })));
     } else {
+      const p = prod.price >= 1000 ? Math.round(prod.price / 100) : (prod.price || 70);
       setProdSizes([
-        { name: 'عادي', price: prod.price || 7000 },
-        { name: 'دبل', price: Math.round((prod.price || 7000) * 1.4) }
+        { name: 'عادي', price: p },
+        { name: 'دبل', price: Math.round(p * 1.4) }
       ]);
     }
     setShowProductModal(true);
@@ -2748,7 +2749,7 @@ export const AdminDashboard: React.FC = () => {
                   </label>
                   <button
                     type="button"
-                    onClick={() => setProdSizes([...prodSizes, { name: '', price: prodPrice || 7000 }])}
+                    onClick={() => setProdSizes([...prodSizes, { name: '', price: prodPrice || 70 }])}
                     className="text-[11px] bg-[#00A859]/20 text-[#00A859] border border-[#00A859]/40 px-2.5 py-1 rounded-lg hover:bg-[#00A859] hover:text-white transition-all font-bold flex items-center gap-1 cursor-pointer"
                   >
                     <Plus className="w-3.5 h-3.5" />
@@ -2761,7 +2762,7 @@ export const AdminDashboard: React.FC = () => {
                     لا توجد أحجام مضافة حالياً.{' '}
                     <button 
                       type="button"
-                      onClick={() => setProdSizes([{ name: 'عادي', price: prodPrice || 7000 }, { name: 'دبل', price: Math.round((prodPrice || 7000) * 1.4) }])}
+                      onClick={() => setProdSizes([{ name: 'عادي', price: prodPrice || 70 }, { name: 'دبل', price: Math.round((prodPrice || 70) * 1.4) }])}
                       className="text-[#00A859] underline font-bold mx-1 cursor-pointer"
                     >
                       إضافة "عادي" و "دبل" تلقائياً

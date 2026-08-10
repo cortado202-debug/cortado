@@ -20,11 +20,24 @@ try {
   console.warn('Read-only filesystem detected, using in-memory store:', err);
 }
 
+// Helper to sanitize prices (remove two zeroes if legacy price >= 1000)
+function sanitizeProductPrices(products: any[]) {
+  if (!Array.isArray(products)) return [];
+  return products.map((p: any) => ({
+    ...p,
+    price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+    sizes: Array.isArray(p.sizes) ? p.sizes.map((s: any) => ({
+      ...s,
+      price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+    })) : p.sizes
+  }));
+}
+
 // Default initial store state fallback loaded from full store initial data
 const defaultStoreData = {
   settings: INITIAL_SETTINGS,
   categories: INITIAL_CATEGORIES,
-  products: INITIAL_PRODUCTS,
+  products: sanitizeProductPrices(INITIAL_PRODUCTS),
   promoCodes: INITIAL_PROMO_CODES,
   orders: [],
   customers: [],
@@ -40,7 +53,7 @@ function loadStoreDb() {
       return {
         settings: parsed.settings ? { ...INITIAL_SETTINGS, ...parsed.settings } : INITIAL_SETTINGS,
         categories: Array.isArray(parsed.categories) && parsed.categories.length > 0 ? parsed.categories : INITIAL_CATEGORIES,
-        products: Array.isArray(parsed.products) && parsed.products.length > 0 ? parsed.products : INITIAL_PRODUCTS,
+        products: Array.isArray(parsed.products) && parsed.products.length > 0 ? sanitizeProductPrices(parsed.products) : sanitizeProductPrices(INITIAL_PRODUCTS),
         promoCodes: Array.isArray(parsed.promoCodes) ? parsed.promoCodes : INITIAL_PROMO_CODES,
         orders: Array.isArray(parsed.orders) ? parsed.orders : [],
         customers: Array.isArray(parsed.customers) ? parsed.customers : [],
@@ -124,6 +137,7 @@ async function startServer() {
           products = Array.from(map.values());
         }
       }
+      products = sanitizeProductPrices(products);
 
       // 4. PromoCodes (smart non-destructive merge by code or id)
       let promoCodes = inMemoryStore.promoCodes || [];

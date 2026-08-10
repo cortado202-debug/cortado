@@ -309,7 +309,15 @@ async function fetchServerStoreData() {
       useStore.setState({ categories: data.categories });
     }
     if (Array.isArray(data.products) && data.products.length > 0) {
-      useStore.setState({ products: data.products });
+      const sanitizedProducts = data.products.map((p: Product) => ({
+        ...p,
+        price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+        sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
+          ...s,
+          price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+        })) : p.sizes
+      }));
+      useStore.setState({ products: sanitizedProducts });
     }
     if (Array.isArray(data.promoCodes)) {
       const current = useStore.getState().promoCodes || [];
@@ -455,16 +463,24 @@ export function initFirestoreSync() {
       if (snap.exists()) {
         const data = snap.data();
         if (data && Array.isArray(data.items) && data.items.length > 0) {
-          useStore.setState({ products: data.items });
+          const sanitizedProducts = data.items.map((p: Product) => ({
+            ...p,
+            price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+            sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
+              ...s,
+              price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+            })) : p.sizes
+          }));
+          useStore.setState({ products: sanitizedProducts });
         }
       }
     }).catch((e) => console.warn('Initial Firestore products fetch error:', e));
   }
 
-  // 4. Poll server every 3 seconds for updates
+  // 4. Poll server every 2 seconds for updates
   setInterval(() => {
     fetchServerStoreData();
-  }, 3000);
+  }, 2000);
 
   if (!db) return;
 
@@ -525,7 +541,15 @@ export function initFirestoreSync() {
       if (snapshot.exists()) {
         const data = snapshot.data();
         if (data && Array.isArray(data.items)) {
-          useStore.setState({ products: data.items });
+          const sanitizedProducts = data.items.map((p: Product) => ({
+            ...p,
+            price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+            sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
+              ...s,
+              price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+            })) : p.sizes
+          }));
+          useStore.setState({ products: sanitizedProducts });
         }
       }
     }, (err) => {
