@@ -332,6 +332,7 @@ export const useStore = create<StoreState>()(
     });
 
     set({ promoCodes: updated });
+    pushPromoCodesToCloud(updated);
     return { success: true, message: 'تم حرق/استخدام الكود بنجاح!' };
   },
 
@@ -394,6 +395,7 @@ export const useStore = create<StoreState>()(
         return p;
       });
       set({ promoCodes: updatedPromos });
+      pushPromoCodesToCloud(updatedPromos);
     }
 
     // Record customer if new

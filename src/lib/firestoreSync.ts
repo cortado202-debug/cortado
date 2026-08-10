@@ -36,6 +36,55 @@ function loadPromoCodesFromLocalStorage(): PromoCode[] {
   return [];
 }
 
+// Smart non-destructive merger for Promo Codes to preserve created and burned/used states across devices
+export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCode[], isExplicitDelete = false): PromoCode[] {
+  if (isExplicitDelete) return incomingList || [];
+  if (!Array.isArray(incomingList)) return existingList || [];
+  if (!Array.isArray(existingList) || existingList.length === 0) return incomingList;
+
+  const map = new Map<string, PromoCode>();
+
+  // 1. Existing list
+  existingList.forEach(p => {
+    if (p && (p.code || p.id)) {
+      const key = (p.code || p.id).toUpperCase().trim();
+      map.set(key, { ...p });
+    }
+  });
+
+  // 2. Incoming list with smart attribute merging
+  incomingList.forEach(p => {
+    if (p && (p.code || p.id)) {
+      const key = (p.code || p.id).toUpperCase().trim();
+      const existing = map.get(key);
+      if (!existing) {
+        map.set(key, { ...p });
+      } else {
+        const isUsedCombined = Boolean(existing.isUsed || p.isUsed);
+        const maxUsedCount = Math.max(existing.usedCount || 0, p.usedCount || 0);
+        const usedAtCombined = p.usedAt || existing.usedAt;
+        const usedByUsersCombined = Array.from(new Set([...(existing.usedByUsers || []), ...(p.usedByUsers || [])]));
+
+        map.set(key, {
+          ...existing,
+          ...p,
+          isActive: typeof p.isActive === 'boolean' ? p.isActive : existing.isActive,
+          discountType: p.discountType || existing.discountType,
+          discountValue: p.discountValue ?? existing.discountValue,
+          minOrderValue: p.minOrderValue ?? existing.minOrderValue,
+          maxDiscountAmount: p.maxDiscountAmount ?? existing.maxDiscountAmount,
+          isUsed: isUsedCombined,
+          usedCount: maxUsedCount,
+          usedAt: usedAtCombined,
+          usedByUsers: usedByUsersCombined
+        });
+      }
+    }
+  });
+
+  return Array.from(map.values());
+}
+
 // Setup BroadcastChannel for zero-latency sync across tabs on same device
 let broadcastChannel: BroadcastChannel | null = null;
 try {
@@ -264,19 +313,7 @@ async function fetchServerStoreData() {
     }
     if (Array.isArray(data.promoCodes)) {
       const current = useStore.getState().promoCodes || [];
-      const map = new Map<string, any>();
-      // Keep existing local promos
-      current.forEach(p => {
-        if (p && (p.code || p.id)) map.set(p.code || p.id, p);
-      });
-      // Merge with server promos
-      data.promoCodes.forEach((p: any) => {
-        if (p && (p.code || p.id)) {
-          const key = p.code || p.id;
-          map.set(key, { ...(map.get(key) || {}), ...p });
-        }
-      });
-      const merged = Array.from(map.values());
+      const merged = mergePromoCodes(current, data.promoCodes);
       useStore.setState({ promoCodes: merged });
       savePromoCodesToLocalStorage(merged);
     }
@@ -306,17 +343,8 @@ export function initFirestoreSync() {
       const localPromos = loadPromoCodesFromLocalStorage();
       if (localPromos && localPromos.length > 0) {
         const current = useStore.getState().promoCodes || [];
-        const map = new Map<string, any>();
-        current.forEach(p => {
-          if (p && (p.code || p.id)) map.set(p.code || p.id, p);
-        });
-        localPromos.forEach(p => {
-          if (p && (p.code || p.id)) {
-            const key = p.code || p.id;
-            map.set(key, { ...(map.get(key) || {}), ...p });
-          }
-        });
-        useStore.setState({ promoCodes: Array.from(map.values()) });
+        const merged = mergePromoCodes(current, localPromos);
+        useStore.setState({ promoCodes: merged });
       }
     } catch (e) {
       console.warn('Error reading cached settings/promos from localStorage:', e);
@@ -389,10 +417,7 @@ export function initFirestoreSync() {
         const data = snap.data();
         if (data && Array.isArray(data.items) && data.items.length > 0) {
           const currentPromos = useStore.getState().promoCodes || [];
-          const map = new Map<string, any>();
-          currentPromos.forEach(p => map.set(p.code, p));
-          data.items.forEach((p: any) => map.set(p.code, { ...(map.get(p.code) || {}), ...p }));
-          const merged = Array.from(map.values());
+          const merged = mergePromoCodes(currentPromos, data.items);
           useStore.setState({ promoCodes: merged });
           savePromoCodesToLocalStorage(merged);
         }
@@ -516,11 +541,9 @@ export function initFirestoreSync() {
         const data = snapshot.data();
         if (data && Array.isArray(data.items)) {
           const currentPromos = useStore.getState().promoCodes || [];
-          const map = new Map<string, any>();
-          currentPromos.forEach(p => map.set(p.code, p));
-          data.items.forEach((p: any) => map.set(p.code, { ...(map.get(p.code) || {}), ...p }));
-          const merged = Array.from(map.values());
+          const merged = mergePromoCodes(currentPromos, data.items);
           useStore.setState({ promoCodes: merged });
+          savePromoCodesToLocalStorage(merged);
         }
       }
     }, (err) => {

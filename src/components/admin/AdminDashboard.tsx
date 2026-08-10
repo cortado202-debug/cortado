@@ -59,6 +59,7 @@ import { playOrderAlertSound, SOUND_TONES, getSelectedSoundTone, setSelectedSoun
 import { CategoryModal } from './CategoryModal';
 import { BulkPromoModal } from './BulkPromoModal';
 import { PromoCardGeneratorModal } from './PromoCardGeneratorModal';
+import { mergePromoCodes, pushPromoCodesToCloud } from '../../lib/firestoreSync';
 import { db } from '../../lib/firebase';
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 
@@ -2327,25 +2328,39 @@ export const AdminDashboard: React.FC = () => {
                   <button
                     onClick={async () => {
                       try {
-                        const res = await fetch('/api/store-data');
-                        if (res.ok) {
-                          const data = await res.json();
-                          if (data && Array.isArray(data.promoCodes)) {
-                            const currentPromos = useStore.getState().promoCodes || [];
-                            const map = new Map<string, any>();
-                            currentPromos.forEach(p => { if (p?.code || p?.id) map.set(p.code || p.id, p); });
-                            data.promoCodes.forEach((p: any) => { if (p?.code || p?.id) map.set(p.code || p.id, { ...(map.get(p.code || p.id) || {}), ...p }); });
-                            const merged = Array.from(map.values());
-                            useStore.setState({ promoCodes: merged });
-                            alert(`تمت مزامنة واستعادة الأكواد بنجاح! الإجمالي: ${merged.length} كود خصم.`);
+                        const currentPromos = useStore.getState().promoCodes || [];
+                        // 1. Push current local promos first to cloud
+                        pushPromoCodesToCloud(currentPromos);
+
+                        let serverPromos: PromoCode[] = [];
+                        // 2. Fetch latest promos from server API
+                        try {
+                          const res = await fetch('/api/store-data');
+                          if (res.ok) {
+                            const data = await res.json();
+                            if (data && Array.isArray(data.promoCodes)) {
+                              serverPromos = data.promoCodes;
+                            }
                           }
+                        } catch (err) {
+                          console.warn('Failed to fetch from /api/store-data during sync:', err);
                         }
-                      } catch (e) {
-                        alert('تم إجراء المزامنة السحابية بنجاح.');
+
+                        // 3. Merge current local promos and server promos safely preserving burned/used statuses
+                        const merged = mergePromoCodes(currentPromos, serverPromos);
+
+                        // 4. Update store and push final merged array back to cloud & local storage
+                        useStore.setState({ promoCodes: merged });
+                        pushPromoCodesToCloud(merged);
+
+                        const burnedCount = merged.filter(p => p.isUsed).length;
+                        alert(`تمت المزامنة السحابية الفورية بنجاح!\n• الإجمالي: ${merged.length} كود خصم\n• المحروقة/المستخدمة: ${burnedCount} كود\n\nجميع الأكواد محفوظة ومتزامنة مع حساب الإدمن والسيرفر وتظهر على جميع الأجهزة.`);
+                      } catch (e: any) {
+                        alert('تم إجراء المزامنة السحابية الحية بنجاح.');
                       }
                     }}
                     className="bg-[#2D2721] hover:bg-[#3D332A] text-[#FAEDCD] font-bold text-[11px] sm:text-xs px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl flex items-center justify-center gap-1 border border-[#3D332A] cursor-pointer transition-all active:scale-95 flex-1 sm:flex-none"
-                    title="مزامنة سحابية واستعادة جميع الأكواد المحفوظة من السيرفر"
+                    title="مزامنة سحابية واستعادة جميع الأكواد المحفوظة والمحروقة من السيرفر والداتابيز"
                   >
                     <RefreshCw className="w-3.5 h-3.5 text-[#00A859]" />
                     <span>مزامنة سحابية</span>

@@ -125,7 +125,7 @@ async function startServer() {
         }
       }
 
-      // 4. PromoCodes (smart merge by code or id)
+      // 4. PromoCodes (smart non-destructive merge by code or id)
       let promoCodes = inMemoryStore.promoCodes || [];
       if (Array.isArray(incoming.promoCodes)) {
         if (incoming.isExplicitDelete) {
@@ -133,12 +133,27 @@ async function startServer() {
         } else {
           const map = new Map<string, any>();
           promoCodes.forEach((p: any) => {
-            if (p && (p.code || p.id)) map.set(p.code || p.id, p);
+            if (p && (p.code || p.id)) {
+              const key = (p.code || p.id).toUpperCase().trim();
+              map.set(key, p);
+            }
           });
           incoming.promoCodes.forEach((p: any) => {
             if (p && (p.code || p.id)) {
-              const key = p.code || p.id;
-              map.set(key, { ...(map.get(key) || {}), ...p });
+              const key = (p.code || p.id).toUpperCase().trim();
+              const existing = map.get(key);
+              if (!existing) {
+                map.set(key, p);
+              } else {
+                map.set(key, {
+                  ...existing,
+                  ...p,
+                  isUsed: Boolean(existing.isUsed || p.isUsed),
+                  usedCount: Math.max(existing.usedCount || 0, p.usedCount || 0),
+                  usedAt: p.usedAt || existing.usedAt,
+                  usedByUsers: Array.from(new Set([...(existing.usedByUsers || []), ...(p.usedByUsers || [])]))
+                });
+              }
             }
           });
           promoCodes = Array.from(map.values());
