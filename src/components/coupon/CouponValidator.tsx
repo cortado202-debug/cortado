@@ -2,6 +2,7 @@ import React, { useState, useEffect } from 'react';
 import confetti from 'canvas-confetti';
 import { motion, AnimatePresence } from 'motion/react';
 import { useStore } from '../../lib/store';
+import { mergePromoCodes, pushPromoCodesToCloud } from '../../lib/firestoreSync';
 import { ShieldCheck, CheckCircle2, AlertCircle, Flame, KeyRound, X, Ticket } from 'lucide-react';
 
 export const CouponValidator: React.FC = () => {
@@ -35,12 +36,29 @@ export const CouponValidator: React.FC = () => {
     });
   };
 
-  const handleVerifyCode = (e: React.FormEvent) => {
+  const handleVerifyCode = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!inputCode.trim()) return;
 
     const clean = inputCode.trim().toUpperCase();
-    const found = promoCodes.find(p => p.code === clean);
+
+    // 1. Live server fetch to ensure instant cross-device status sync
+    try {
+      const res = await fetch('/api/store-data');
+      if (res.ok) {
+        const data = await res.json();
+        if (data && Array.isArray(data.promoCodes)) {
+          const currentPromos = useStore.getState().promoCodes || [];
+          const merged = mergePromoCodes(currentPromos, data.promoCodes);
+          useStore.setState({ promoCodes: merged });
+        }
+      }
+    } catch {
+      // Ignore network errors, fall back to current store state
+    }
+
+    const currentPromos = useStore.getState().promoCodes || [];
+    const found = currentPromos.find(p => (p.code || p.id || '').trim().toUpperCase() === clean);
 
     if (!found) {
       setCheckedPromo(null);
@@ -52,7 +70,7 @@ export const CouponValidator: React.FC = () => {
     if (found.isUsed) {
       setFeedback({ 
         success: false, 
-        text: `⚠️ هذا الكود مستخدم بالفعل من قبل بتاريخ (${found.usedAt || 'سابقاً'})` 
+        text: `⚠️ هذا الكود محروق ومستخدم بالفعل من قبل بتاريخ (${found.usedAt || 'سابقاً'})` 
       });
     } else {
       setFeedback({ 
@@ -64,14 +82,21 @@ export const CouponValidator: React.FC = () => {
 
   const handleBurnCode = (codeStr: string) => {
     const res = burnPromoCode(codeStr);
-    setFeedback({ success: res.success, text: res.message });
+    const currentPromos = useStore.getState().promoCodes || [];
+    const updated = currentPromos.find(p => (p.code || p.id || '').trim().toUpperCase() === codeStr.trim().toUpperCase());
 
-    if (res.success) {
+    if (res.success && updated) {
       triggerConfetti();
-      const updated = promoCodes.find(p => p.code === codeStr);
-      if (updated) {
-        setCheckedPromo({ ...updated, isUsed: true, usedAt: new Date().toLocaleTimeString('ar-SA') });
-      }
+      setCheckedPromo(updated);
+      setFeedback({ 
+        success: false, 
+        text: `🔥 تم حرق الكود بنجاح وتحديثه سحابياً على جميع الأجهزة! بتاريخ (${updated.usedAt || 'الآن'})` 
+      });
+      // Force immediate push to server & cloud
+      pushPromoCodesToCloud(currentPromos);
+    } else {
+      setFeedback({ success: res.success, text: res.message });
+      if (updated) setCheckedPromo(updated);
     }
   };
 

@@ -256,7 +256,7 @@ export const useStore = create<StoreState>()(
   applyPromoCode: (codeStr) => {
     const { promoCodes, cart, userSession } = get();
     const cleanCode = codeStr.trim().toUpperCase();
-    const promo = promoCodes.find(p => p.code === cleanCode && p.isActive);
+    const promo = promoCodes.find(p => (p.code || p.id || '').trim().toUpperCase() === cleanCode && p.isActive);
 
     if (!promo) {
       set({ appliedPromo: null });
@@ -266,7 +266,7 @@ export const useStore = create<StoreState>()(
     // Check if code was already burned/used
     if (promo.isUsed) {
       set({ appliedPromo: null });
-      return { success: false, message: 'عذراً، هذا الكود تم استخدامه من قبل وغير صالح للاستعمال مرة أخرى.' };
+      return { success: false, message: 'عذراً، هذا الكود تم استخدامه وحرقه من قبل وغير صالح للاستعمال مرة أخرى.' };
     }
 
     // Check expiry
@@ -309,23 +309,24 @@ export const useStore = create<StoreState>()(
   burnPromoCode: (codeStr) => {
     const { promoCodes } = get();
     const cleanCode = codeStr.trim().toUpperCase();
-    const promo = promoCodes.find(p => p.code === cleanCode);
+    const promo = promoCodes.find(p => (p.code || p.id || '').trim().toUpperCase() === cleanCode);
 
     if (!promo) {
       return { success: false, message: 'رمز الكود غير موجود في النظام' };
     }
 
     if (promo.isUsed) {
-      return { success: false, message: `الكود مستخدم من قبل بتاريخ (${promo.usedAt || 'غير متاح'})` };
+      return { success: false, message: `الكود مستخدم ومحروق من قبل بتاريخ (${promo.usedAt || 'سابقاً'})` };
     }
 
+    const nowStr = new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'numeric' });
     const updated = promoCodes.map(p => {
-      if (p.code === cleanCode) {
+      if ((p.code || p.id || '').trim().toUpperCase() === cleanCode) {
         return {
           ...p,
           isUsed: true,
-          usedCount: p.usedCount + 1,
-          usedAt: new Date().toLocaleTimeString('ar-SA', { hour: '2-digit', minute: '2-digit', day: 'numeric', month: 'numeric' })
+          usedCount: (p.usedCount || 0) + 1,
+          usedAt: nowStr
         };
       }
       return p;
