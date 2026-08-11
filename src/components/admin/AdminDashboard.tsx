@@ -9,6 +9,7 @@ import {
   Coffee, 
   ShoppingBag, 
   Users, 
+  User, 
   Ticket, 
   Plus, 
   Trash2, 
@@ -2277,178 +2278,215 @@ export const AdminDashboard: React.FC = () => {
           {/* TAB 5: CUSTOMERS MANAGER (REGISTERED VS GUEST CUSTOMERS) */}
           {activeAdminTab === 'customers' && (
             <div className="space-y-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-[#26201B] p-4 rounded-2xl border border-[#3D332A]">
-                <div>
-                  <h3 className="font-bold text-base text-[#FAEDCD] flex items-center gap-2">
-                    <User className="w-5 h-5 text-[#00A859]" />
-                    <span>قائمة العملاء وإدارة الزوار</span>
-                  </h3>
-                  <p className="text-xs text-[#FAEDCD]/60 mt-0.5">
-                    جميع بيانات العملاء المسجلين والزوار الذين طلبوا بدون تسجيل دخول محفوظة ومزامنة.
-                  </p>
-                </div>
+              {(() => {
+                const safeCustomers = Array.isArray(customers) ? customers.filter(Boolean) : [];
+                const safeOrders = Array.isArray(orders) ? orders.filter(Boolean) : [];
 
-                {/* SUB TAB TOGGLE BUTTONS */}
-                <div className="flex items-center gap-2 bg-[#181512] p-1 rounded-xl border border-[#3D332A] w-full sm:w-auto">
-                  <button
-                    type="button"
-                    onClick={() => setCustomerSubTab('registered')}
-                    className={`px-4 py-2 rounded-lg font-bold text-xs transition-all cursor-pointer flex-1 sm:flex-none ${
-                      customerSubTab === 'registered'
-                        ? 'bg-[#00A859] text-white shadow-xs'
-                        : 'text-[#FAEDCD]/70 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span>العملاء المسجلين ({customers.filter(c => c.isRegistered !== false && !c.uid.startsWith('guest-')).length})</span>
-                  </button>
-                  <button
-                    type="button"
-                    onClick={() => setCustomerSubTab('guests')}
-                    className={`px-4 py-2 rounded-lg font-bold text-xs transition-all cursor-pointer flex-1 sm:flex-none ${
-                      customerSubTab === 'guests'
-                        ? 'bg-[#00A859] text-white shadow-xs'
-                        : 'text-[#FAEDCD]/70 hover:text-white hover:bg-white/5'
-                    }`}
-                  >
-                    <span>العملاء غير المسجلين (الزوار 🛍️)</span>
-                  </button>
-                </div>
-              </div>
+                const registeredCusts = safeCustomers.filter(c => {
+                  if (!c) return false;
+                  const uidStr = c.uid ? String(c.uid) : '';
+                  return c.isRegistered !== false && !uidStr.startsWith('guest-');
+                });
 
-              {/* VIEW 1: REGISTERED CUSTOMERS */}
-              {customerSubTab === 'registered' ? (
-                <div className="overflow-x-auto bg-[#221C17] rounded-2xl border border-[#2D2721] p-4 shadow-md">
-                  <table className="w-full text-right text-xs">
-                    <thead>
-                      <tr className="border-b border-[#2D2721] text-[#D4A373]">
-                        <th className="pb-3 font-bold">العميل المسجل</th>
-                        <th className="pb-3 font-bold">البريد الإلكتروني</th>
-                        <th className="pb-3 font-bold">رقم الجوال</th>
-                        <th className="pb-3 font-bold">تاريخ الانضمام</th>
-                        <th className="pb-3 font-bold">عدد الطلبات</th>
-                      </tr>
-                    </thead>
-                    <tbody className="divide-y divide-[#2D2721]">
-                      {customers.filter(c => c.isRegistered !== false && !c.uid.startsWith('guest-')).length === 0 ? (
-                        <tr>
-                          <td colSpan={5} className="py-8 text-center text-[#FAEDCD]/50 font-medium">
-                            لا يوجد عملاء مسجلين بحسابات حتى الآن
-                          </td>
-                        </tr>
-                      ) : (
-                        customers.filter(c => c.isRegistered !== false && !c.uid.startsWith('guest-')).map((c) => (
-                          <tr key={c.uid} className="hover:bg-white/5 transition-colors">
-                            <td className="py-3 flex items-center gap-2">
-                              {c.photoURL ? (
-                                <img src={c.photoURL} alt={c.name} className="w-7 h-7 rounded-full object-cover" />
-                              ) : (
-                                <div className="w-7 h-7 rounded-full bg-[#D4A373] text-[#181512] flex items-center justify-center font-extrabold text-xs">
-                                  {c.name ? c.name.charAt(0) : 'ك'}
-                                </div>
-                              )}
-                              <span className="font-bold text-white">{c.name}</span>
-                            </td>
-                            <td className="py-3 font-mono text-[#FAEDCD]/80">{c.email || '—'}</td>
-                            <td className="py-3 font-mono text-[#00A859] font-bold">{c.phone || '—'}</td>
-                            <td className="py-3 text-[#FAEDCD]/70">{c.joinedAt || '2025-01-01'}</td>
-                            <td className="py-3 font-extrabold text-[#D4A373]">{c.totalOrdersCount || 1} طلبات</td>
-                          </tr>
-                        ))
-                      )}
-                    </tbody>
-                  </table>
-                </div>
-              ) : (
-                /* VIEW 2: UNREGISTERED / GUEST CUSTOMERS */
-                <div className="overflow-x-auto bg-[#221C17] rounded-2xl border border-[#2D2721] p-4 shadow-md">
-                  {(() => {
-                    const guestCustsMap = new Map<string, any>();
-                    
-                    // From customers array
-                    customers.filter(c => c.isRegistered === false || c.uid.startsWith('guest-')).forEach(c => {
-                      const key = c.phone || c.name;
-                      if (key) guestCustsMap.set(key, c);
-                    });
+                const guestCustsFromStore = safeCustomers.filter(c => {
+                  if (!c) return false;
+                  const uidStr = c.uid ? String(c.uid) : '';
+                  return c.isRegistered === false || uidStr.startsWith('guest-');
+                });
 
-                    // From orders
-                    orders.forEach(o => {
-                      if (!o.customerEmail || o.customerEmail === 'guest') {
-                        const key = o.customerPhone || o.customerName;
-                        if (key && !guestCustsMap.has(key)) {
-                          guestCustsMap.set(key, {
-                            uid: `guest-ord-${o.id}`,
-                            name: o.customerName,
-                            phone: o.customerPhone,
-                            email: o.customerEmail || 'طلب كزائر بدون بريد',
-                            joinedAt: o.createdAt ? o.createdAt.split('T')[0] : 'اليوم',
-                            totalOrdersCount: orders.filter(x => x.customerPhone === o.customerPhone || x.customerName === o.customerName).length,
-                            totalSpent: orders.filter(x => x.customerPhone === o.customerPhone || x.customerName === o.customerName).reduce((a, b) => a + (b.total || 0), 0)
-                          });
-                        }
-                      }
-                    });
+                return (
+                  <>
+                    <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 bg-[#26201B] p-4 rounded-2xl border border-[#3D332A]">
+                      <div>
+                        <h3 className="font-bold text-base text-[#FAEDCD] flex items-center gap-2">
+                          <User className="w-5 h-5 text-[#00A859]" />
+                          <span>قائمة العملاء وإدارة الزوار</span>
+                        </h3>
+                        <p className="text-xs text-[#FAEDCD]/60 mt-0.5">
+                          جميع بيانات العملاء المسجلين والزوار الذين طلبوا بدون تسجيل دخول محفوظة ومزامنة.
+                        </p>
+                      </div>
 
-                    const guestList = Array.from(guestCustsMap.values());
+                      {/* SUB TAB TOGGLE BUTTONS */}
+                      <div className="flex items-center gap-2 bg-[#181512] p-1 rounded-xl border border-[#3D332A] w-full sm:w-auto">
+                        <button
+                          type="button"
+                          onClick={() => setCustomerSubTab('registered')}
+                          className={`px-4 py-2 rounded-lg font-bold text-xs transition-all cursor-pointer flex-1 sm:flex-none ${
+                            customerSubTab === 'registered'
+                              ? 'bg-[#00A859] text-white shadow-xs'
+                              : 'text-[#FAEDCD]/70 hover:text-white hover:bg-white/5'
+                          }`}
+                        >
+                          <span>العملاء المسجلين ({registeredCusts.length})</span>
+                        </button>
+                        <button
+                          type="button"
+                          onClick={() => setCustomerSubTab('guests')}
+                          className={`px-4 py-2 rounded-lg font-bold text-xs transition-all cursor-pointer flex-1 sm:flex-none ${
+                            customerSubTab === 'guests'
+                              ? 'bg-[#00A859] text-white shadow-xs'
+                              : 'text-[#FAEDCD]/70 hover:text-white hover:bg-white/5'
+                          }`}
+                        >
+                          <span>العملاء غير المسجلين (الزوار 🛍️)</span>
+                        </button>
+                      </div>
+                    </div>
 
-                    return (
-                      <table className="w-full text-right text-xs">
-                        <thead>
-                          <tr className="border-b border-[#2D2721] text-[#D4A373]">
-                            <th className="pb-3 font-bold">اسم العميل (الزائر)</th>
-                            <th className="pb-3 font-bold">رقم الجوال</th>
-                            <th className="pb-3 font-bold">حالة البريد</th>
-                            <th className="pb-3 font-bold">عدد الطلبات</th>
-                            <th className="pb-3 font-bold">إجمالي المشتريات</th>
-                            <th className="pb-3 font-bold">تواصل مباشر</th>
-                          </tr>
-                        </thead>
-                        <tbody className="divide-y divide-[#2D2721]">
-                          {guestList.length === 0 ? (
-                            <tr>
-                              <td colSpan={6} className="py-8 text-center text-[#FAEDCD]/50 font-medium">
-                                لا يوجد عملاء غير مسجلين (زوار) طلبوا بدون حساب حتى الآن
-                              </td>
+                    {/* VIEW 1: REGISTERED CUSTOMERS */}
+                    {customerSubTab === 'registered' ? (
+                      <div className="overflow-x-auto bg-[#221C17] rounded-2xl border border-[#2D2721] p-4 shadow-md">
+                        <table className="w-full text-right text-xs">
+                          <thead>
+                            <tr className="border-b border-[#2D2721] text-[#D4A373]">
+                              <th className="pb-3 font-bold">العميل المسجل</th>
+                              <th className="pb-3 font-bold">البريد الإلكتروني</th>
+                              <th className="pb-3 font-bold">رقم الجوال</th>
+                              <th className="pb-3 font-bold">تاريخ الانضمام</th>
+                              <th className="pb-3 font-bold">عدد الطلبات</th>
                             </tr>
-                          ) : (
-                            guestList.map((g, idx) => (
-                              <tr key={idx} className="hover:bg-white/5 transition-colors">
-                                <td className="py-3 flex items-center gap-2">
-                                  <div className="w-7 h-7 rounded-full bg-[#00A859]/20 text-[#00A859] border border-[#00A859]/30 flex items-center justify-center font-extrabold text-xs">
-                                    🛍️
-                                  </div>
-                                  <span className="font-bold text-white">{g.name}</span>
-                                </td>
-                                <td className="py-3 font-mono text-[#00A859] font-bold dir-ltr text-right">
-                                  {g.phone || '—'}
-                                </td>
-                                <td className="py-3 text-[#FAEDCD]/70 font-mono text-[11px]">
-                                  {g.email && g.email.includes('@') ? g.email : 'طلب كزائر (بدون حساب)'}
-                                </td>
-                                <td className="py-3 font-extrabold text-[#D4A373]">{g.totalOrdersCount || 1} طلبات</td>
-                                <td className="py-3 font-extrabold font-mono text-[#00A859]">
-                                  {g.totalSpent ? g.totalSpent.toFixed(2) : '—'} ل.س
-                                </td>
-                                <td className="py-3">
-                                  {g.phone ? (
-                                    <a
-                                      href={`https://wa.me/${g.phone.replace(/[^0-9]/g, '')}`}
-                                      target="_blank"
-                                      rel="noreferrer"
-                                      className="inline-flex items-center gap-1 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-emerald-500/30 transition-all"
-                                    >
-                                      <span>واتساب 📱</span>
-                                    </a>
-                                  ) : '—'}
+                          </thead>
+                          <tbody className="divide-y divide-[#2D2721]">
+                            {registeredCusts.length === 0 ? (
+                              <tr>
+                                <td colSpan={5} className="py-8 text-center text-[#FAEDCD]/50 font-medium">
+                                  لا يوجد عملاء مسجلين بحسابات حتى الآن
                                 </td>
                               </tr>
-                            ))
-                          )}
-                        </tbody>
-                      </table>
-                    );
-                  })()}
-                </div>
-              )}
+                            ) : (
+                              registeredCusts.map((c, idx) => {
+                                const cName = String(c.name || 'عميل كورتادو');
+                                return (
+                                  <tr key={c.uid || idx} className="hover:bg-white/5 transition-colors">
+                                    <td className="py-3 flex items-center gap-2">
+                                      {c.photoURL ? (
+                                        <img src={c.photoURL} alt={cName} className="w-7 h-7 rounded-full object-cover" />
+                                      ) : (
+                                        <div className="w-7 h-7 rounded-full bg-[#D4A373] text-[#181512] flex items-center justify-center font-extrabold text-xs">
+                                          {cName.charAt(0)}
+                                        </div>
+                                      )}
+                                      <span className="font-bold text-white">{cName}</span>
+                                    </td>
+                                    <td className="py-3 font-mono text-[#FAEDCD]/80">{c.email || '—'}</td>
+                                    <td className="py-3 font-mono text-[#00A859] font-bold">{c.phone || '—'}</td>
+                                    <td className="py-3 text-[#FAEDCD]/70">{c.joinedAt || '2025-01-01'}</td>
+                                    <td className="py-3 font-extrabold text-[#D4A373]">{c.totalOrdersCount || 1} طلبات</td>
+                                  </tr>
+                                );
+                              })
+                            )}
+                          </tbody>
+                        </table>
+                      </div>
+                    ) : (
+                      /* VIEW 2: UNREGISTERED / GUEST CUSTOMERS */
+                      <div className="overflow-x-auto bg-[#221C17] rounded-2xl border border-[#2D2721] p-4 shadow-md">
+                        {(() => {
+                          const guestCustsMap = new Map<string, any>();
+                          
+                          // From customers array
+                          guestCustsFromStore.forEach(c => {
+                            const key = (c.phone && String(c.phone).trim()) || (c.name && String(c.name).trim()) || String(c.uid || '');
+                            if (key) guestCustsMap.set(key, c);
+                          });
+
+                          // From orders
+                          safeOrders.forEach(o => {
+                            if (!o.customerEmail || o.customerEmail === 'guest') {
+                              const phone = o.customerPhone ? String(o.customerPhone).trim() : '';
+                              const name = o.customerName ? String(o.customerName).trim() : '';
+                              const key = phone || name;
+                              
+                              if (key && !guestCustsMap.has(key)) {
+                                const matchingOrders = safeOrders.filter(x => 
+                                  (phone && x.customerPhone && String(x.customerPhone).trim() === phone) ||
+                                  (!phone && name && x.customerName && String(x.customerName).trim() === name)
+                                );
+
+                                guestCustsMap.set(key, {
+                                  uid: `guest-ord-${o.id}`,
+                                  name: name || 'زائر المتجر',
+                                  phone: phone,
+                                  email: o.customerEmail || 'طلب كزائر بدون بريد',
+                                  joinedAt: o.createdAt ? String(o.createdAt).split('T')[0] : 'اليوم',
+                                  totalOrdersCount: matchingOrders.length,
+                                  totalSpent: matchingOrders.reduce((a, b) => a + (Number(b.total) || 0), 0)
+                                });
+                              }
+                            }
+                          });
+
+                          const guestList = Array.from(guestCustsMap.values());
+
+                          return (
+                            <table className="w-full text-right text-xs">
+                              <thead>
+                                <tr className="border-b border-[#2D2721] text-[#D4A373]">
+                                  <th className="pb-3 font-bold">اسم العميل (الزائر)</th>
+                                  <th className="pb-3 font-bold">رقم الجوال</th>
+                                  <th className="pb-3 font-bold">حالة البريد</th>
+                                  <th className="pb-3 font-bold">عدد الطلبات</th>
+                                  <th className="pb-3 font-bold">إجمالي المشتريات</th>
+                                  <th className="pb-3 font-bold">تواصل مباشر</th>
+                                </tr>
+                              </thead>
+                              <tbody className="divide-y divide-[#2D2721]">
+                                {guestList.length === 0 ? (
+                                  <tr>
+                                    <td colSpan={6} className="py-8 text-center text-[#FAEDCD]/50 font-medium">
+                                      لا يوجد عملاء غير مسجلين (زوار) طلبوا بدون حساب حتى الآن
+                                    </td>
+                                  </tr>
+                                ) : (
+                                  guestList.map((g, idx) => {
+                                    const gPhone = g.phone ? String(g.phone).trim() : '';
+                                    const cleanPhone = gPhone.replace(/[^0-9]/g, '');
+
+                                    return (
+                                      <tr key={idx} className="hover:bg-white/5 transition-colors">
+                                        <td className="py-3 flex items-center gap-2">
+                                          <div className="w-7 h-7 rounded-full bg-[#00A859]/20 text-[#00A859] border border-[#00A859]/30 flex items-center justify-center font-extrabold text-xs">
+                                            🛍️
+                                          </div>
+                                          <span className="font-bold text-white">{g.name || 'زائر'}</span>
+                                        </td>
+                                        <td className="py-3 font-mono text-[#00A859] font-bold dir-ltr text-right">
+                                          {gPhone || '—'}
+                                        </td>
+                                        <td className="py-3 text-[#FAEDCD]/70 font-mono text-[11px]">
+                                          {g.email && String(g.email).includes('@') ? g.email : 'طلب كزائر (بدون حساب)'}
+                                        </td>
+                                        <td className="py-3 font-extrabold text-[#D4A373]">{g.totalOrdersCount || 1} طلبات</td>
+                                        <td className="py-3 font-extrabold font-mono text-[#00A859]">
+                                          {typeof g.totalSpent === 'number' ? g.totalSpent.toFixed(2) : '—'} ل.س
+                                        </td>
+                                        <td className="py-3">
+                                          {cleanPhone ? (
+                                            <a
+                                              href={`https://wa.me/${cleanPhone}`}
+                                              target="_blank"
+                                              rel="noreferrer"
+                                              className="inline-flex items-center gap-1 bg-emerald-600/20 hover:bg-emerald-600/40 text-emerald-400 text-[11px] font-bold px-2.5 py-1 rounded-lg border border-emerald-500/30 transition-all"
+                                            >
+                                              <span>واتساب 📱</span>
+                                            </a>
+                                          ) : '—'}
+                                        </td>
+                                      </tr>
+                                    );
+                                  })
+                                )}
+                              </tbody>
+                            </table>
+                          );
+                        })()}
+                      </div>
+                    )}
+                  </>
+                );
+              })()}
             </div>
           )}
 

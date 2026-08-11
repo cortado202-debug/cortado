@@ -140,12 +140,15 @@ async function startServer() {
       products = sanitizeProductPrices(products);
 
       // 4. PromoCodes (smart non-destructive merge by code or id)
-      let promoCodes = inMemoryStore.promoCodes || [];
+      let promoCodes = inMemoryStore.promoCodes && inMemoryStore.promoCodes.length > 0 ? inMemoryStore.promoCodes : INITIAL_PROMO_CODES;
       if (Array.isArray(incoming.promoCodes)) {
-        if (incoming.isExplicitDelete) {
+        if (incoming.isExplicitDelete && incoming.promoCodes.length > 0) {
           promoCodes = incoming.promoCodes;
         } else {
           const map = new Map<string, any>();
+          INITIAL_PROMO_CODES.forEach((p: any) => {
+            if (p && (p.code || p.id)) map.set((p.code || p.id).toUpperCase().trim(), p);
+          });
           promoCodes.forEach((p: any) => {
             if (p && (p.code || p.id)) {
               const key = (p.code || p.id).toUpperCase().trim();

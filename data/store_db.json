@@ -1,20 +1,103 @@
 {
   "settings": {
+    "logoUrl": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 500 500\"><circle cx=\"250\" cy=\"250\" r=\"240\" fill=\"%2300A859\"/><g transform=\"rotate(-5 250 240)\"><path d=\"M125 110 C125 100, 150 90, 250 90 C350 90, 375 100, 375 110 L395 135 C400 142, 395 152, 375 152 L125 152 C105 152, 100 142, 105 135 Z\" fill=\"white\"/><path d=\"M140 162 L360 162 L335 370 L165 370 Z\" fill=\"white\"/><path d=\"M135 200 L365 210 L350 310 L150 300 Z\" fill=\"none\" stroke=\"%2300A859\" stroke-width=\"12\"/><text x=\"250\" y=\"278\" text-anchor=\"middle\" fill=\"%2300A859\" font-family=\"'Brush Script MT', 'Dancing Script', cursive, sans-serif\" font-size=\"78\" font-weight=\"bold\" transform=\"rotate(-4 250 278)\">Cortado</text><text x=\"250\" y=\"352\" text-anchor=\"middle\" fill=\"%2300A859\" font-family=\"'Cairo', sans-serif\" font-size=\"36\" font-weight=\"900\" letter-spacing=\"4\">CAFÉ</text><path d=\"M220 370 L245 415 L270 370 Z\" fill=\"white\"/></g></svg>",
     "siteTitle": "كورتادو كافيه",
     "siteSubtitle": "Cortado CAFÉ",
-    "logoUrl": "data:image/svg+xml;utf8,<svg xmlns=\"http://www.w3.org/2000/svg\" viewBox=\"0 0 500 500\"><circle cx=\"250\" cy=\"250\" r=\"240\" fill=\"%2300A859\"/><g transform=\"rotate(-5 250 240)\"><path d=\"M125 110 C125 100, 150 90, 250 90 C350 90, 375 100, 375 110 L395 135 C400 142, 395 152, 375 152 L125 152 C105 152, 100 142, 105 135 Z\" fill=\"white\"/><path d=\"M140 162 L360 162 L335 370 L165 370 Z\" fill=\"white\"/><path d=\"M135 200 L365 210 L350 310 L150 300 Z\" fill=\"none\" stroke=\"%2300A859\" stroke-width=\"12\"/><text x=\"250\" y=\"278\" text-anchor=\"middle\" fill=\"%2300A859\" font-family=\"'Brush Script MT', 'Dancing Script', cursive, sans-serif\" font-size=\"78\" font-weight=\"bold\" transform=\"rotate(-4 250 278)\">Cortado</text><text x=\"250\" y=\"352\" text-anchor=\"middle\" fill=\"%2300A859\" font-family=\"'Cairo', sans-serif\" font-size=\"36\" font-weight=\"900\" letter-spacing=\"4\">CAFÉ</text><path d=\"M220 370 L245 415 L270 370 Z\" fill=\"white\"/></g></svg>",
     "phone": "0132224300",
     "address": "سوريا - حماة - الشريعة",
     "openingHours": "يومياً: من 9:00 صباحاً حتى 02:00 منتصف الليل",
-    "isStoreOpen": true,
-    "deliveryFee": 15,
-    "adminEmail": "cortado202@gmail.com",
+    "branches": [
+      {
+        "id": "b-1",
+        "name": "فرع حماة الشريعة",
+        "address": "سوريا - حماة - الشريعة",
+        "phone": "0132224300",
+        "isMain": true
+      },
+      {
+        "id": "b-2",
+        "name": "فرع حماة ابي الفداء",
+        "address": "سوريا - حماة - ابي الفداء",
+        "phone": "0132270778",
+        "isMain": false
+      }
+    ],
     "socials": {
       "instagram": "https://instagram.com/cortado_cafe",
       "facebook": "https://facebook.com/cortadocafe",
       "whatsapp": "https://wa.me/963933123456",
       "locationMap": "https://maps.google.com"
     },
+    "adminEmail": "cortado202@gmail.com",
+    "deliveryFee": 15,
+    "quickLinks": [
+      {
+        "id": "about",
+        "titleAr": "تعريف Cortado Café",
+        "badge": "الرئيسية",
+        "isHidden": false,
+        "contentAr": "Cortado Café هو مقهى مختص ومخبز فاخر يقدم تجربة إيطالية وعالمية فريدة لعشاق القهوة الأصيلة والحلويات المبتكرة. نتميز بتقديم أجود أنواع البن المختص المحمص بحرفية."
+      },
+      {
+        "id": "who-we-are",
+        "titleAr": "من نحن (Who We Are)",
+        "badge": "هويتنا",
+        "isHidden": false,
+        "contentAr": "بدأ مقهى كورتادو كافيه بشغف حقيقي تجاه القهوة المختصة. انطلقنا من رؤية واضحة لإنشاء مساحة تجمع بين دقة تحضير القهوة وحرارة الضيافة أصالة."
+      },
+      {
+        "id": "services",
+        "titleAr": "خدماتنا (Our Services)",
+        "badge": "خدماتنا",
+        "isHidden": false,
+        "contentAr": "نقدم مشروبات القهوة المختصة، المخبوزات والحلويات الطازجة يومياً، خدمة التوصيل السريع، والطلبات الخاصة والفعاليات."
+      },
+      {
+        "id": "faq",
+        "titleAr": "الأسئلة الشائعة (FAQ)",
+        "badge": "أسئلة وأجوبة",
+        "isHidden": false,
+        "contentAr": "إجابات على أكثر الأسئلة شيوعاً حول مقهى كورتادو كافيه، ساعات العمل، الموقع الرسمي، والتوصيل."
+      },
+      {
+        "id": "contact",
+        "titleAr": "اتصل بنا (Contact Us)",
+        "badge": "تواصل معنا",
+        "isHidden": false,
+        "contentAr": "معلومات التواصل المباشر مع إدارة كورتادو كافيه عبر البريد الإلكتروني والهاتف والموقع الرسمي."
+      },
+      {
+        "id": "general-info",
+        "titleAr": "معلومات عامة (General Info)",
+        "badge": "دليل النشاط",
+        "isHidden": false,
+        "contentAr": "بيانات النشاط: Hillsboro, Oregon, USA. نوع النشاط: Coffee Shop & Specialty Bakery. الموقع الرسمي: https://www.cortadocafe.online"
+      },
+      {
+        "id": "story",
+        "titleAr": "قصتنا (Brand Story)",
+        "badge": "القصة والرؤية",
+        "isHidden": false,
+        "contentAr": "قصة انطلاق كورتادو كافيه برؤية ملهمة لتقديم كوب قهوة لا يُنسى واختيار أجود محاصيل البن من المزارع العالمية."
+      },
+      {
+        "id": "privacy",
+        "titleAr": "سياسة الخصوصية (Privacy Policy)",
+        "badge": "الأمان والخصوصية",
+        "isHidden": false,
+        "contentAr": "التزامنا الكامل بحماية وتشفير بيانات زوارنا وعملائنا الكرام وعدم مشاركتها مع أي طرف ثالث."
+      },
+      {
+        "id": "sitemap",
+        "titleAr": "خريطة الموقع (Site Map)",
+        "badge": "فهرس الصفحات",
+        "isHidden": false,
+        "contentAr": "دليل شامل لجميع أركان وصفحات متجر كورتادو كافيه الإلكتروني."
+      }
+    ],
+    "isStoreOpen": true,
+    "isAnimatedBackgroundEnabled": true,
+    "closedStoreNotice": "المتجر مغلق حالياً، لا نتلقى طلبات جديدة في الوقت الحالي. نعتذر منك ونسعد بخدمتك فور إعادة فتح المتجر! ☕",
     "paymentMethods": [
       {
         "id": "pm-1",
@@ -34,25 +117,73 @@
         "details": "دفع نقدي مباشر عند استلام الطلب أو عند الطاولة",
         "isActive": true
       }
-    ],
-    "branches": [
-      {
-        "id": "b-1",
-        "name": "فرع حماة الشريعة",
-        "address": "سوريا - حماة - الشريعة",
-        "phone": "0132224300",
-        "isMain": true
-      },
-      {
-        "id": "b-2",
-        "name": "فرع حماة ابي الفداء",
-        "address": "سوريا - حماة - ابي الفداء",
-        "phone": "0132270778",
-        "isMain": false
-      }
     ]
   },
-  "categories": [],
+  "categories": [
+    {
+      "id": "cat-1",
+      "nameAr": "مشروبات ساخنة",
+      "nameEn": "Hot Drinks",
+      "iconName": "Coffee",
+      "descriptionAr": "من قائمة مشروبات ساخنة الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-2",
+      "nameAr": "حلويات ساخنة",
+      "nameEn": "Hot Desserts",
+      "iconName": "Flame",
+      "descriptionAr": "من قائمة حلويات ساخنة الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-3",
+      "nameAr": "كوكتيل",
+      "nameEn": "Cocktails",
+      "iconName": "GlassWater",
+      "descriptionAr": "من قائمة كوكتيل الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-4",
+      "nameAr": "حلويات باردة",
+      "nameEn": "Cold Desserts",
+      "iconName": "Cake",
+      "descriptionAr": "من قائمة حلويات باردة الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-5",
+      "nameAr": "ميلك شيك",
+      "nameEn": "Milkshakes",
+      "iconName": "Milk",
+      "descriptionAr": "من قائمة ميلك شيك الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-6",
+      "nameAr": "مشروبات بالقهوة الباردة",
+      "nameEn": "Cold Coffee Drinks",
+      "iconName": "Snowflake",
+      "descriptionAr": "من قائمة مشروبات بالقهوة الباردة الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-7",
+      "nameAr": "مشروبات غازية",
+      "nameEn": "Soft Drinks",
+      "iconName": "CupSoda",
+      "descriptionAr": "من قائمة مشروبات غازية الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-8",
+      "nameAr": "أيس كريم",
+      "nameEn": "Ice Cream",
+      "iconName": "IceCream",
+      "descriptionAr": "من قائمة أيس كريم الطازجة والشهية في كورتادو كافيه"
+    },
+    {
+      "id": "cat-9",
+      "nameAr": "فطائر و كروسان",
+      "nameEn": "Pastries & Croissants",
+      "iconName": "Utensils",
+      "descriptionAr": "من قائمة فطائر و كروسان الطازجة والشهية في كورتادو كافيه"
+    }
+  ],
   "products": [
     {
       "id": "prod-1",
@@ -3086,8 +3217,49 @@
       "isPopular": false
     }
   ],
-  "promoCodes": [],
+  "promoCodes": [
+    {
+      "id": "promo-cortado20",
+      "code": "CORTADO20",
+      "discountType": "percentage",
+      "discountValue": 20,
+      "isActive": true,
+      "minOrderValue": 0,
+      "usedCount": 0,
+      "usedByUsers": []
+    },
+    {
+      "id": "promo-welcome10",
+      "code": "WELCOME10",
+      "discountType": "percentage",
+      "discountValue": 10,
+      "isActive": true,
+      "minOrderValue": 0,
+      "usedCount": 0,
+      "usedByUsers": []
+    },
+    {
+      "id": "promo-cortado50",
+      "code": "CORTADO50",
+      "discountType": "fixed",
+      "discountValue": 50,
+      "isActive": true,
+      "minOrderValue": 0,
+      "usedCount": 0,
+      "usedByUsers": []
+    },
+    {
+      "id": "promo-vip100",
+      "code": "VIP100",
+      "discountType": "fixed",
+      "discountValue": 100,
+      "isActive": true,
+      "minOrderValue": 0,
+      "usedCount": 0,
+      "usedByUsers": []
+    }
+  ],
   "orders": [],
   "customers": [],
-  "updatedAt": "2026-08-10T18:24:18.722Z"
+  "updatedAt": "2026-08-11T18:29:11.538Z"
 }

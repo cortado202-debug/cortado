@@ -3100,7 +3100,48 @@ export const INITIAL_PRODUCTS: Product[] = [
   }
 ];
 
-export const INITIAL_PROMO_CODES: PromoCode[] = [];
+export const INITIAL_PROMO_CODES: PromoCode[] = [
+  {
+    id: 'promo-cortado20',
+    code: 'CORTADO20',
+    discountType: 'percentage',
+    discountValue: 20,
+    isActive: true,
+    minOrderValue: 0,
+    usedCount: 0,
+    usedByUsers: []
+  },
+  {
+    id: 'promo-welcome10',
+    code: 'WELCOME10',
+    discountType: 'percentage',
+    discountValue: 10,
+    isActive: true,
+    minOrderValue: 0,
+    usedCount: 0,
+    usedByUsers: []
+  },
+  {
+    id: 'promo-cortado50',
+    code: 'CORTADO50',
+    discountType: 'fixed',
+    discountValue: 50,
+    isActive: true,
+    minOrderValue: 0,
+    usedCount: 0,
+    usedByUsers: []
+  },
+  {
+    id: 'promo-vip100',
+    code: 'VIP100',
+    discountType: 'fixed',
+    discountValue: 100,
+    isActive: true,
+    minOrderValue: 0,
+    usedCount: 0,
+    usedByUsers: []
+  }
+];
 
 export const DEFAULT_QUICK_LINKS: QuickLinkItem[] = [
   {

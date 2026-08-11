@@ -142,7 +142,7 @@ export const useStore = create<StoreState>()(
   isCartOpen: false,
   isCheckoutOpen: false,
   appliedPromo: null,
-  promoCodes: [],
+  promoCodes: INITIAL_PROMO_CODES,
   orders: [],
   customers: [],
   settings: INITIAL_SETTINGS,
@@ -555,15 +555,16 @@ export const useStore = create<StoreState>()(
   },
 
   resetToInitialData: () => {
+    const currentPromos = get().promoCodes && get().promoCodes.length > 0 ? get().promoCodes : INITIAL_PROMO_CODES;
     set({
       products: INITIAL_PRODUCTS,
       categories: INITIAL_CATEGORIES,
-      promoCodes: INITIAL_PROMO_CODES,
+      promoCodes: currentPromos,
       settings: INITIAL_SETTINGS
     });
     pushProductsToCloud(INITIAL_PRODUCTS);
     pushCategoriesToCloud(INITIAL_CATEGORIES);
-    pushPromoCodesToCloud(INITIAL_PROMO_CODES);
+    pushPromoCodesToCloud(currentPromos);
     pushSettingsToCloud(INITIAL_SETTINGS);
   },
 
@@ -667,7 +668,7 @@ export const useStore = create<StoreState>()(
           if (!state.settings) {
             state.settings = INITIAL_SETTINGS;
           }
-          if (!state.promoCodes) {
+          if (!state.promoCodes || !Array.isArray(state.promoCodes) || state.promoCodes.length === 0) {
             state.promoCodes = INITIAL_PROMO_CODES;
           }
         }

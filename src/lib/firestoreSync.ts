@@ -2,6 +2,7 @@ import { doc, setDoc, getDoc, onSnapshot } from 'firebase/firestore';
 import { db } from './firebase';
 import { useStore, setCloudSyncCallback } from './store';
 import { SiteSettings, Category, Product, PromoCode, Order, Customer } from '../types';
+import { INITIAL_PROMO_CODES } from '../data/initialData';
 
 let isListening = false;
 let lastServerTimestamp = '';
@@ -38,49 +39,59 @@ function loadPromoCodesFromLocalStorage(): PromoCode[] {
 
 // Smart non-destructive merger for Promo Codes to preserve created and burned/used states across devices
 export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCode[], isExplicitDelete = false): PromoCode[] {
-  if (isExplicitDelete) return incomingList || [];
-  if (!Array.isArray(incomingList)) return existingList || [];
-  if (!Array.isArray(existingList) || existingList.length === 0) return incomingList;
+  if (isExplicitDelete && Array.isArray(incomingList) && incomingList.length > 0) return incomingList;
 
   const map = new Map<string, PromoCode>();
 
-  // 1. Existing list
-  existingList.forEach(p => {
+  // 0. Base initial codes
+  INITIAL_PROMO_CODES.forEach(p => {
     if (p && (p.code || p.id)) {
-      const key = (p.code || p.id).toUpperCase().trim();
-      map.set(key, { ...p });
+      map.set((p.code || p.id).toUpperCase().trim(), { ...p });
     }
   });
+
+  // 1. Existing list
+  if (Array.isArray(existingList)) {
+    existingList.forEach(p => {
+      if (p && (p.code || p.id)) {
+        const key = (p.code || p.id).toUpperCase().trim();
+        const existing = map.get(key);
+        map.set(key, existing ? { ...existing, ...p } : { ...p });
+      }
+    });
+  }
 
   // 2. Incoming list with smart attribute merging
-  incomingList.forEach(p => {
-    if (p && (p.code || p.id)) {
-      const key = (p.code || p.id).toUpperCase().trim();
-      const existing = map.get(key);
-      if (!existing) {
-        map.set(key, { ...p });
-      } else {
-        const isUsedCombined = Boolean(existing.isUsed || p.isUsed);
-        const maxUsedCount = Math.max(existing.usedCount || 0, p.usedCount || 0);
-        const usedAtCombined = p.usedAt || existing.usedAt;
-        const usedByUsersCombined = Array.from(new Set([...(existing.usedByUsers || []), ...(p.usedByUsers || [])]));
+  if (Array.isArray(incomingList)) {
+    incomingList.forEach(p => {
+      if (p && (p.code || p.id)) {
+        const key = (p.code || p.id).toUpperCase().trim();
+        const existing = map.get(key);
+        if (!existing) {
+          map.set(key, { ...p });
+        } else {
+          const isUsedCombined = Boolean(existing.isUsed || p.isUsed);
+          const maxUsedCount = Math.max(existing.usedCount || 0, p.usedCount || 0);
+          const usedAtCombined = p.usedAt || existing.usedAt;
+          const usedByUsersCombined = Array.from(new Set([...(existing.usedByUsers || []), ...(p.usedByUsers || [])]));
 
-        map.set(key, {
-          ...existing,
-          ...p,
-          isActive: typeof p.isActive === 'boolean' ? p.isActive : existing.isActive,
-          discountType: p.discountType || existing.discountType,
-          discountValue: p.discountValue ?? existing.discountValue,
-          minOrderValue: p.minOrderValue ?? existing.minOrderValue,
-          maxDiscountAmount: p.maxDiscountAmount ?? existing.maxDiscountAmount,
-          isUsed: isUsedCombined,
-          usedCount: maxUsedCount,
-          usedAt: usedAtCombined,
-          usedByUsers: usedByUsersCombined
-        });
+          map.set(key, {
+            ...existing,
+            ...p,
+            isActive: typeof p.isActive === 'boolean' ? p.isActive : existing.isActive,
+            discountType: p.discountType || existing.discountType,
+            discountValue: p.discountValue ?? existing.discountValue,
+            minOrderValue: p.minOrderValue ?? existing.minOrderValue,
+            maxDiscountAmount: p.maxDiscountAmount ?? existing.maxDiscountAmount,
+            isUsed: isUsedCombined,
+            usedCount: maxUsedCount,
+            usedAt: usedAtCombined,
+            usedByUsers: usedByUsersCombined
+          });
+        }
       }
-    }
-  });
+    });
+  }
 
   return Array.from(map.values());
 }
