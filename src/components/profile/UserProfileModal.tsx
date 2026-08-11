@@ -41,7 +41,8 @@ export const UserProfileModal: React.FC = () => {
   const [expandedOrderId, setExpandedOrderId] = useState<string | null>(null);
 
   // Filter orders strictly related to this user session or created on this device
-  const userIdentifier = userSession?.email?.toLowerCase();
+  const userEmail = userSession?.email?.toLowerCase();
+  const userPhone = userSession?.phone?.trim();
 
   const getLocalOrderIds = (): string[] => {
     if (typeof window === 'undefined') return [];
@@ -55,40 +56,23 @@ export const UserProfileModal: React.FC = () => {
   const localOrderIds = getLocalOrderIds();
 
   // STRICT ORDER PRIVACY FILTERING:
-  // A customer MUST ONLY see their OWN orders. Never leak other customers' orders.
+  // A customer MUST ONLY see their OWN orders.
   let filteredOrders = orders.filter(ord => {
-    const isMyEmail = Boolean(userIdentifier && ord.customerEmail?.toLowerCase() === userIdentifier);
+    const isMyEmail = Boolean(userEmail && ord.customerEmail?.toLowerCase() === userEmail);
+    const isMyPhone = Boolean(userPhone && ord.customerPhone?.trim() === userPhone);
     const isMyLocalOrder = localOrderIds.includes(ord.id);
+    const isOwner = isMyEmail || isMyPhone || isMyLocalOrder;
 
-    // If user is NOT logged in and order was not created on this device
-    if (!userIdentifier && !isMyLocalOrder) {
-      if (searchQuery.trim()) {
-        const query = searchQuery.trim().toLowerCase();
-        if (ord.id.toLowerCase() === query || ord.customerPhone === query) {
-          return true;
-        }
-      }
-      return false;
-    }
-
-    // If user IS logged in, order must match their email or local order ID
-    if (userIdentifier && !isMyEmail && !isMyLocalOrder) {
-      if (searchQuery.trim()) {
-        const query = searchQuery.trim().toLowerCase();
-        if (ord.id.toLowerCase() === query || ord.customerPhone === query) {
-          return true;
-        }
-      }
-      return false;
-    }
-
+    // Search query match check
     if (searchQuery.trim()) {
       const query = searchQuery.trim().toLowerCase();
       const matchId = ord.id.toLowerCase().includes(query);
-      const matchPhone = ord.customerPhone.includes(query);
-      const matchName = ord.customerName.toLowerCase().includes(query);
-      if (!matchId && !matchPhone && !matchName) return false;
+      const matchPhone = ord.customerPhone?.includes(query);
+      const matchName = ord.customerName?.toLowerCase().includes(query);
+      if (matchId || matchPhone || matchName) return true;
     }
+
+    if (!isOwner) return false;
 
     if (activeTab === 'active') {
       return ord.status === 'pending' || ord.status === 'preparing';

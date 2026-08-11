@@ -20,6 +20,9 @@ export const CheckoutModal: React.FC = () => {
   const activePaymentMethods = (settings.paymentMethods || []).filter(pm => pm.isActive);
 
   const [deliveryType, setDeliveryType] = useState<'table' | 'takeaway' | 'delivery'>('takeaway');
+  const [deliveryLocation, setDeliveryLocation] = useState('');
+  const [isGettingGps, setIsGettingGps] = useState(false);
+  const [gpsSuccess, setGpsSuccess] = useState(false);
   const [selectedBranchId, setSelectedBranchId] = useState<string>(
     settings.branches && settings.branches.length > 0 ? settings.branches[0].id : ''
   );
@@ -35,7 +38,34 @@ export const CheckoutModal: React.FC = () => {
   const [promoInput, setPromoInput] = useState('');
   const [promoMsg, setPromoMsg] = useState<{ isSuccess: boolean; text: string } | null>(null);
 
-  const isFormValid = customerName.trim().length >= 2 && customerPhone.trim().length >= 5;
+  const isFormValid = customerName.trim().length >= 2 && 
+    customerPhone.trim().length >= 5 && 
+    (deliveryType !== 'delivery' || deliveryLocation.trim().length >= 3);
+
+  const handleGetGpsLocation = () => {
+    if (!navigator.geolocation) {
+      alert('تحديد الموقع عبر GPS غير مدعوم في متصفحك.');
+      return;
+    }
+    setIsGettingGps(true);
+    setGpsSuccess(false);
+    navigator.geolocation.getCurrentPosition(
+      (pos) => {
+        setIsGettingGps(false);
+        const lat = pos.coords.latitude.toFixed(5);
+        const lng = pos.coords.longitude.toFixed(5);
+        const mapsUrl = `https://maps.google.com/?q=${lat},${lng}`;
+        const locationText = `موقع جغرافي GPS (Lat: ${lat}, Lng: ${lng}) - ${mapsUrl}`;
+        setDeliveryLocation(prev => prev ? `${prev} | ${locationText}` : locationText);
+        setGpsSuccess(true);
+      },
+      (err) => {
+        setIsGettingGps(false);
+        alert('تعذر تحديد الموقع تلقائياً، يرجى كتابة عنوانك والموقع التفصيلي يدوياً في الخانة.');
+      },
+      { enableHighAccuracy: true, timeout: 10000 }
+    );
+  };
 
   const handleClose = () => {
     setCompletedOrder(null);
@@ -78,10 +108,15 @@ export const CheckoutModal: React.FC = () => {
       return;
     }
     if (!customerName.trim() || !customerPhone.trim()) return;
+    if (deliveryType === 'delivery' && !deliveryLocation.trim()) {
+      alert('⚠️ يرجى تحديد كتابة أو استخراج موقع التوصيل الزامي قبل متابعة الطلب.');
+      return;
+    }
 
-    const selectedBranch = settings.branches?.find(b => b.id === selectedBranchId);
+    const deliveryNote = deliveryType === 'delivery' ? `[موقع التوصيل: ${deliveryLocation.trim()}]` : '';
+    const selectedBranch = deliveryType !== 'delivery' ? settings.branches?.find(b => b.id === selectedBranchId) : undefined;
     const branchNote = selectedBranch ? `[الفرع: ${selectedBranch.name}]` : '';
-    const finalNotes = [branchNote, notes].filter(Boolean).join(' - ');
+    const finalNotes = [deliveryNote, branchNote, notes].filter(Boolean).join(' - ');
 
     const newOrder = createOrder({
       name: customerName,
@@ -291,8 +326,46 @@ export const CheckoutModal: React.FC = () => {
                 </div>
               </div>
 
-              {/* Branch Picker if multiple branches exist */}
-              {settings.branches && settings.branches.length > 0 && (
+              {/* DELIVERY LOCATION INPUT WITH GPS BUTTON (For Delivery Orders) */}
+              {deliveryType === 'delivery' ? (
+                <div className="bg-[#E6F6ED]/60 p-3.5 rounded-2xl border border-[#00A859]/30 space-y-2">
+                  <label className="block text-xs font-extrabold text-[#2A2118] flex items-center justify-between">
+                    <span className="flex items-center gap-1.5">
+                      <MapPin className="w-4 h-4 text-[#00A859]" />
+                      <span>موقع التوصيل التفصيلي <span className="text-rose-500">* (إجباري)</span>:</span>
+                    </span>
+                    <span className="text-[10px] text-[#00A859] font-bold">تحديد الموقع</span>
+                  </label>
+
+                  <div className="flex flex-col sm:flex-row gap-2">
+                    <input
+                      type="text"
+                      required
+                      value={deliveryLocation}
+                      onChange={(e) => setDeliveryLocation(e.target.value)}
+                      placeholder="أدخل اسم المنطقة / الشارع / المعلم أو اضغط تحديد موقعي"
+                      className="flex-1 bg-white border border-[#E8E2D8] focus:border-[#00A859] rounded-xl px-3 py-2.5 text-xs text-[#2A2118] outline-none text-right font-medium"
+                    />
+                    <button
+                      type="button"
+                      onClick={handleGetGpsLocation}
+                      disabled={isGettingGps}
+                      className="bg-[#00A859] hover:bg-[#008A48] text-white text-xs font-extrabold px-3.5 py-2.5 rounded-xl transition-all cursor-pointer flex items-center justify-center gap-1.5 shrink-0 shadow-xs active:scale-95"
+                    >
+                      <MapPin className={`w-4 h-4 ${isGettingGps ? 'animate-bounce text-amber-300' : ''}`} />
+                      <span>{isGettingGps ? 'جاري التحديد...' : '📍 تحديد موقعي عبر GPS'}</span>
+                    </button>
+                  </div>
+
+                  {gpsSuccess && (
+                    <p className="text-[11px] font-bold text-[#00A859] flex items-center gap-1 bg-white/80 p-2 rounded-lg border border-[#00A859]/30">
+                      <CheckCircle2 className="w-3.5 h-3.5" />
+                      <span>تم تحديد الموقع الجغرافي واستخراج إحداثياتك بنجاح!</span>
+                    </p>
+                  )}
+                </div>
+              ) : settings.branches && settings.branches.length > 0 ? (
+                /* Branch Picker for Pickup / Dine-in */
                 <div>
                   <label className="block text-xs font-bold text-[#2A2118] mb-1.5 flex items-center gap-1.5">
                     <MapPin className="w-3.5 h-3.5 text-[#00A859]" />
@@ -321,7 +394,7 @@ export const CheckoutModal: React.FC = () => {
                     ))}
                   </div>
                 </div>
-              )}
+              ) : null}
 
               {/* Customer Contact Details */}
               <div className="space-y-3 pt-1">
@@ -501,27 +574,62 @@ export const CheckoutModal: React.FC = () => {
                 </div>
               )}
 
-              {/* Total Summary */}
-              <div className="bg-[#FAF8F5] p-3.5 rounded-2xl border border-[#E8E2D8] space-y-1.5 text-xs">
-                <div className="flex justify-between text-[#523621]">
-                  <span>المجموع الفرعي:</span>
-                  <span className="font-mono font-bold">{subtotal.toFixed(2)} ل.س</span>
+              {/* DETAILED INVOICE & BREAKDOWN (فاتورة تفصيلية للأصناف والمجموع) */}
+              <div className="bg-[#FAF8F5] p-3.5 sm:p-4 rounded-2xl border border-[#E8E2D8] space-y-3">
+                <div className="flex items-center justify-between border-b border-[#E8E2D8] pb-2">
+                  <h4 className="font-['Cairo'] font-extrabold text-xs sm:text-sm text-[#2A2118] flex items-center gap-1.5">
+                    <span>🧾 الفاتورة التفصيلية للطلب ({cart.reduce((a, b) => a + b.quantity, 0)} قطعة):</span>
+                  </h4>
+                  <span className="text-[10px] text-[#00A859] font-extrabold bg-[#E6F6ED] px-2 py-0.5 rounded-md border border-[#00A859]/20">
+                    مراجعة الفاتورة
+                  </span>
                 </div>
-                {deliveryType === 'delivery' && settings.deliveryFee ? (
-                  <div className="flex justify-between text-[#00A859] font-bold">
-                    <span>رسوم خدمة التوصيل:</span>
-                    <span className="font-mono">+{settings.deliveryFee.toFixed(2)} ل.س</span>
+
+                {/* ITEMIZED PRODUCTS LIST */}
+                <div className="space-y-1.5 max-h-36 overflow-y-auto pr-1">
+                  {cart.map((item, idx) => {
+                    const unitPrice = item.selectedSize ? item.selectedSize.price : item.product.price;
+                    const itemTotal = unitPrice * item.quantity;
+                    return (
+                      <div key={idx} className="flex justify-between items-center text-xs bg-white p-2 sm:p-2.5 rounded-xl border border-[#E8E2D8]/80 text-[#2A2118] shadow-2xs">
+                        <div className="flex flex-col min-w-0 pr-1">
+                          <span className="font-bold text-[#2A2118] truncate">
+                            {item.product.nameAr} {item.selectedSize ? `(${item.selectedSize.name})` : ''}
+                          </span>
+                          <span className="text-[10px] text-[#523621] font-mono mt-0.5">
+                            العدد: {item.quantity} × {unitPrice.toFixed(2)} ل.س
+                          </span>
+                        </div>
+                        <span className="font-mono font-extrabold text-[#00A859] shrink-0 text-xs">
+                          {itemTotal.toFixed(2)} ل.س
+                        </span>
+                      </div>
+                    );
+                  })}
+                </div>
+
+                {/* TOTAL CALCULATIONS */}
+                <div className="space-y-1 pt-2 border-t border-[#E8E2D8] text-xs">
+                  <div className="flex justify-between text-[#523621]">
+                    <span>المجموع الفرعي للأصناف:</span>
+                    <span className="font-mono font-bold">{subtotal.toFixed(2)} ل.س</span>
                   </div>
-                ) : null}
-                {discount > 0 && (
-                  <div className="flex justify-between text-[#00A859] font-bold">
-                    <span>خصم كود الخصم:</span>
-                    <span className="font-mono">-{discount.toFixed(2)} ل.س</span>
+                  {deliveryType === 'delivery' && settings.deliveryFee ? (
+                    <div className="flex justify-between text-[#00A859] font-bold">
+                      <span>رسوم خدمة التوصيل:</span>
+                      <span className="font-mono">+{settings.deliveryFee.toFixed(2)} ل.س</span>
+                    </div>
+                  ) : null}
+                  {discount > 0 && (
+                    <div className="flex justify-between text-[#00A859] font-bold">
+                      <span>خصم كود الخصم:</span>
+                      <span className="font-mono">-{discount.toFixed(2)} ل.س</span>
+                    </div>
+                  )}
+                  <div className="flex justify-between items-center pt-2.5 border-t border-[#00A859]/30 mt-1">
+                    <span className="font-black text-sm text-[#2A2118]">الإجمالي النهائي المستحق دَفعه:</span>
+                    <span className="font-black text-xl text-[#00A859] font-['Cairo']">{total.toFixed(2)} ل.س</span>
                   </div>
-                )}
-                <div className="flex justify-between items-center pt-2 border-t border-[#E8E2D8]">
-                  <span className="font-bold text-[#2A2118]">الإجمالي النهائي للطلب:</span>
-                  <span className="font-black text-xl text-[#00A859] font-['Cairo']">{total.toFixed(2)} ل.س</span>
                 </div>
               </div>
 

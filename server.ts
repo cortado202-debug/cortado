@@ -180,15 +180,22 @@ async function startServer() {
         const orderMap = new Map<string, any>();
         orders.forEach((o: any) => { if (o && o.id) orderMap.set(o.id, o); });
         incoming.orders.forEach((o: any) => { if (o && o.id) orderMap.set(o.id, { ...(orderMap.get(o.id) || {}), ...o }); });
-        orders = Array.from(orderMap.values());
+        orders = Array.from(orderMap.values()).sort((a: any, b: any) => 
+          new Date(b.createdAt || 0).getTime() - new Date(a.createdAt || 0).getTime()
+        );
       }
 
-      // 6. Customers (non-destructive merge by id)
+      // 6. Customers (non-destructive merge by uid or id or phone)
       let customers = inMemoryStore.customers || [];
       if (Array.isArray(incoming.customers)) {
         const custMap = new Map<string, any>();
-        customers.forEach((c: any) => { if (c && c.id) custMap.set(c.id, c); });
-        incoming.customers.forEach((c: any) => { if (c && c.id) custMap.set(c.id, { ...(custMap.get(c.id) || {}), ...c }); });
+        const getKey = (c: any) => c.uid || c.id || c.phone || c.email;
+        customers.forEach((c: any) => { if (c && getKey(c)) custMap.set(getKey(c), c); });
+        incoming.customers.forEach((c: any) => { 
+          if (c && getKey(c)) {
+            custMap.set(getKey(c), { ...(custMap.get(getKey(c)) || {}), ...c });
+          }
+        });
         customers = Array.from(custMap.values());
       }
 

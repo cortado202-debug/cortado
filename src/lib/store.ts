@@ -399,24 +399,44 @@ export const useStore = create<StoreState>()(
       pushPromoCodesToCloud(updatedPromos);
     }
 
-    // Record customer if new
-    const existingCust = get().customers.find(c => c.email === email || (userSession && c.email === userSession.email));
-    if (!existingCust && (email || userSession?.email)) {
+    // Record or update customer (works for both logged in users AND guest customers with phone/name)
+    const existingCust = get().customers.find(c => 
+      (userSession?.uid && c.uid === userSession.uid) ||
+      (email && c.email && c.email.toLowerCase() === email.toLowerCase()) ||
+      (phone && c.phone && c.phone === phone)
+    );
+
+    let updatedCustomers = [...get().customers];
+    if (existingCust) {
+      updatedCustomers = updatedCustomers.map(c => {
+        if (c.uid === existingCust.uid || (phone && c.phone === phone)) {
+          return {
+            ...c,
+            name: name || c.name,
+            phone: phone || c.phone,
+            email: email || c.email || userSession?.email || '',
+            totalOrdersCount: (c.totalOrdersCount || 0) + 1,
+            totalSpent: (c.totalSpent || 0) + total,
+            lastOrderAt: new Date().toISOString(),
+            isRegistered: Boolean(userSession || c.isRegistered)
+          };
+        }
+        return c;
+      });
+    } else {
       const newCust: Customer = {
-        uid: `cust-${Date.now()}`,
+        uid: userSession?.uid || `guest-${Date.now()}-${Math.floor(Math.random()*1000)}`,
         name: name,
+        phone: phone,
         email: email || userSession?.email || '',
         photoURL: userSession?.photoURL,
         joinedAt: new Date().toISOString().split('T')[0],
-        totalOrdersCount: 1
+        totalOrdersCount: 1,
+        totalSpent: total,
+        isRegistered: Boolean(userSession),
+        lastOrderAt: new Date().toISOString()
       };
-      set({ customers: [newCust, ...get().customers] });
-    } else if (existingCust) {
-      set({
-        customers: get().customers.map(c => 
-          c.uid === existingCust.uid ? { ...c, totalOrdersCount: (c.totalOrdersCount || 0) + 1 } : c
-        )
-      });
+      updatedCustomers = [newCust, ...updatedCustomers];
     }
 
     if (typeof window !== 'undefined') {
@@ -428,16 +448,19 @@ export const useStore = create<StoreState>()(
       } catch (e) {}
     }
 
+    const updatedOrders = [newOrder, ...get().orders.filter(o => o.id !== newOrder.id)];
+
     set({ 
-      orders: [newOrder, ...get().orders],
+      orders: updatedOrders,
+      customers: updatedCustomers,
       cart: [],
       appliedPromo: null,
       isCheckoutOpen: false,
       isCartOpen: false
     });
 
-    pushOrdersToCloud(get().orders);
-    pushCustomersToCloud(get().customers);
+    pushOrdersToCloud(updatedOrders);
+    pushCustomersToCloud(updatedCustomers);
 
     return newOrder;
   },

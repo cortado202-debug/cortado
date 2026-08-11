@@ -326,10 +326,14 @@ async function fetchServerStoreData() {
       savePromoCodesToLocalStorage(merged);
     }
     if (Array.isArray(data.orders)) {
-      useStore.setState({ orders: data.orders });
+      const currentOrders = useStore.getState().orders || [];
+      const merged = mergeOrdersHelper(currentOrders, data.orders);
+      useStore.setState({ orders: merged });
     }
     if (Array.isArray(data.customers)) {
-      useStore.setState({ customers: data.customers });
+      const currentCusts = useStore.getState().customers || [];
+      const merged = mergeCustomersHelper(currentCusts, data.customers);
+      useStore.setState({ customers: merged });
     }
   } catch (e) {
     console.warn('Failed to fetch store data from server:', e);
@@ -582,7 +586,9 @@ export function initFirestoreSync() {
       if (snapshot.exists()) {
         const data = snapshot.data();
         if (data && Array.isArray(data.items)) {
-          useStore.setState({ orders: data.items });
+          const currentOrders = useStore.getState().orders || [];
+          const merged = mergeOrdersHelper(currentOrders, data.items);
+          useStore.setState({ orders: merged });
         }
       }
     }, (err) => {
@@ -597,7 +603,9 @@ export function initFirestoreSync() {
       if (snapshot.exists()) {
         const data = snapshot.data();
         if (data && Array.isArray(data.items)) {
-          useStore.setState({ customers: data.items });
+          const currentCusts = useStore.getState().customers || [];
+          const merged = mergeCustomersHelper(currentCusts, data.items);
+          useStore.setState({ customers: merged });
         }
       }
     }, (err) => {

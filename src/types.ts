@@ -83,9 +83,13 @@ export interface Customer {
   uid: string;
   name: string;
   email: string;
+  phone?: string;
   photoURL?: string;
   joinedAt: string;
   totalOrdersCount?: number;
+  totalSpent?: number;
+  isRegistered?: boolean;
+  lastOrderAt?: string;
 }
 
 export interface SocialLinks {
