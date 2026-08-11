@@ -57,10 +57,26 @@ export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCo
 
   const map = new Map<string, PromoCode>();
 
+  // Helper to extract numeric timestamp
+  const extractTime = (p: Partial<PromoCode>): number => {
+    if (p.createdAt) {
+      const t = new Date(p.createdAt).getTime();
+      if (!isNaN(t) && t > 0) return t;
+    }
+    if (p.id) {
+      const match = p.id.match(/(\d{10,13})/);
+      if (match) {
+        const t = parseInt(match[1], 10);
+        if (!isNaN(t) && t > 0) return t;
+      }
+    }
+    return 0;
+  };
+
   // 0. Base initial codes
   INITIAL_PROMO_CODES.forEach(p => {
     if (p && (p.code || p.id)) {
-      map.set((p.code || p.id).toUpperCase().trim(), { ...p });
+      map.set((p.code || p.id).toUpperCase().trim(), { ...p, createdAt: p.createdAt || '2025-01-01T00:00:00.000Z' });
     }
   });
 
@@ -70,7 +86,8 @@ export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCo
       if (p && (p.code || p.id)) {
         const key = (p.code || p.id).toUpperCase().trim();
         const existing = map.get(key);
-        map.set(key, existing ? { ...existing, ...p } : { ...p });
+        const createdAt = p.createdAt || existing?.createdAt || (extractTime(p) > 0 ? new Date(extractTime(p)).toISOString() : new Date().toISOString());
+        map.set(key, existing ? { ...existing, ...p, createdAt } : { ...p, createdAt });
       }
     });
   }
@@ -81,8 +98,9 @@ export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCo
       if (p && (p.code || p.id)) {
         const key = (p.code || p.id).toUpperCase().trim();
         const existing = map.get(key);
+        const createdAt = p.createdAt || existing?.createdAt || (extractTime(p) > 0 ? new Date(extractTime(p)).toISOString() : new Date().toISOString());
         if (!existing) {
-          map.set(key, { ...p });
+          map.set(key, { ...p, createdAt });
         } else {
           const isUsedCombined = Boolean(existing.isUsed || p.isUsed);
           const maxUsedCount = Math.max(existing.usedCount || 0, p.usedCount || 0);
@@ -92,6 +110,7 @@ export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCo
           map.set(key, {
             ...existing,
             ...p,
+            createdAt,
             isActive: typeof p.isActive === 'boolean' ? p.isActive : existing.isActive,
             discountType: p.discountType || existing.discountType,
             discountValue: p.discountValue ?? existing.discountValue,
@@ -107,7 +126,8 @@ export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCo
     });
   }
 
-  return Array.from(map.values());
+  const result = Array.from(map.values());
+  return result.sort((a, b) => extractTime(b) - extractTime(a));
 }
 
 // Setup BroadcastChannel for zero-latency sync across tabs on same device

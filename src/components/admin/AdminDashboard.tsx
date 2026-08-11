@@ -104,6 +104,22 @@ export const AdminDashboard: React.FC = () => {
   const [adminTheme, setAdminTheme] = useState<'dark' | 'light'>('light');
   const [copiedCodeId, setCopiedCodeId] = useState<string | null>(null);
   const [customerSubTab, setCustomerSubTab] = useState<'registered' | 'guests'>('registered');
+  const [promoSortOrder, setPromoSortOrder] = useState<'newest' | 'oldest' | 'discount' | 'code'>('newest');
+
+  const getPromoTimestamp = (p: PromoCode): number => {
+    if (p.createdAt) {
+      const t = new Date(p.createdAt).getTime();
+      if (!isNaN(t) && t > 0) return t;
+    }
+    if (p.id) {
+      const match = p.id.match(/(\d{10,13})/);
+      if (match) {
+        const t = parseInt(match[1], 10);
+        if (!isNaN(t) && t > 0) return t;
+      }
+    }
+    return 0;
+  };
 
   const handleCopyCode = (id: string, code: string) => {
     navigator.clipboard.writeText(code);
@@ -720,7 +736,7 @@ export const AdminDashboard: React.FC = () => {
     ];
 
     // Show newest first in CSV as well
-    const sortedForExport = [...promoCodes].reverse();
+    const sortedForExport = [...promoCodes].sort((a, b) => getPromoTimestamp(b) - getPromoTimestamp(a));
 
     const rows = sortedForExport.map((p, idx) => {
       const isBurned = p.isUsed || p.usedCount >= p.maxUses;
@@ -2553,6 +2569,21 @@ export const AdminDashboard: React.FC = () => {
                   </p>
                 </div>
                 <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+                  {/* Promo Sort Order Selector */}
+                  <div className="flex items-center gap-1.5 bg-[#1C1814] border border-[#3D332A] px-2.5 py-1.5 rounded-lg sm:rounded-xl">
+                    <span className="text-[11px] font-bold text-[#D4A373] shrink-0">ترتيب الأكواد:</span>
+                    <select
+                      value={promoSortOrder}
+                      onChange={(e) => setPromoSortOrder(e.target.value as any)}
+                      className="bg-transparent text-xs font-black text-[#00A859] outline-none cursor-pointer"
+                    >
+                      <option value="newest" className="bg-[#1C1814] text-[#FAEDCD]">✨ الأحدث إنشاءً أولاً</option>
+                      <option value="oldest" className="bg-[#1C1814] text-[#FAEDCD]">⌛ الأقدم أولاً</option>
+                      <option value="discount" className="bg-[#1C1814] text-[#FAEDCD]">💰 الأعلى خصماً</option>
+                      <option value="code" className="bg-[#1C1814] text-[#FAEDCD]">🔤 حسب الرمز (أبجدي)</option>
+                    </select>
+                  </div>
+
                   {/* Cloud Sync & Refresh Button */}
                   <button
                     onClick={async () => {
@@ -2657,7 +2688,7 @@ export const AdminDashboard: React.FC = () => {
                 </div>
               </div>
 
-              {/* Responsive Promo Table (Newest codes at top) */}
+              {/* Responsive Promo Table (Newest codes at top by default) */}
               <div className="overflow-x-auto rounded-2xl border border-[#3D332A] bg-[#221C17]">
                 <table className="w-full text-right text-xs text-[#FAEDCD]">
                   <thead className="bg-[#1C1814] text-[#D4A373] border-b border-[#3D332A] font-bold">
@@ -2681,9 +2712,28 @@ export const AdminDashboard: React.FC = () => {
                     ) : (
                       [...promoCodes]
                         .sort((a, b) => {
-                          const timeA = a.createdAt ? new Date(a.createdAt).getTime() : (a.id ? parseInt(a.id.replace(/\D/g, '')) || 0 : 0);
-                          const timeB = b.createdAt ? new Date(b.createdAt).getTime() : (b.id ? parseInt(b.id.replace(/\D/g, '')) || 0 : 0);
-                          return timeB - timeA;
+                          if (promoSortOrder === 'newest') {
+                            const tA = getPromoTimestamp(a);
+                            const tB = getPromoTimestamp(b);
+                            if (tB !== tA) return tB - tA;
+                            return (b.id || '').localeCompare(a.id || '');
+                          }
+                          if (promoSortOrder === 'oldest') {
+                            const tA = getPromoTimestamp(a);
+                            const tB = getPromoTimestamp(b);
+                            if (tA !== tB) return tA - tB;
+                            return (a.id || '').localeCompare(b.id || '');
+                          }
+                          if (promoSortOrder === 'discount') {
+                            const valA = a.value ?? a.discountValue ?? 0;
+                            const valB = b.value ?? b.discountValue ?? 0;
+                            if (valB !== valA) return valB - valA;
+                            return getPromoTimestamp(b) - getPromoTimestamp(a);
+                          }
+                          if (promoSortOrder === 'code') {
+                            return (a.code || '').localeCompare(b.code || '');
+                          }
+                          return 0;
                         })
                         .map((p, idx) => {
                         const isBurned = p.isUsed || p.usedCount >= p.maxUses;

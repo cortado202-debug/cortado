@@ -146,25 +146,44 @@ async function startServer() {
           promoCodes = incoming.promoCodes;
         } else {
           const map = new Map<string, any>();
+          const getPTime = (p: any): number => {
+            if (p.createdAt) {
+              const t = new Date(p.createdAt).getTime();
+              if (!isNaN(t) && t > 0) return t;
+            }
+            if (p.id) {
+              const m = p.id.match(/(\d{10,13})/);
+              if (m) {
+                const t = parseInt(m[1], 10);
+                if (!isNaN(t) && t > 0) return t;
+              }
+            }
+            return 0;
+          };
+
           INITIAL_PROMO_CODES.forEach((p: any) => {
-            if (p && (p.code || p.id)) map.set((p.code || p.id).toUpperCase().trim(), p);
+            if (p && (p.code || p.id)) map.set((p.code || p.id).toUpperCase().trim(), { ...p, createdAt: p.createdAt || '2025-01-01T00:00:00.000Z' });
           });
           promoCodes.forEach((p: any) => {
             if (p && (p.code || p.id)) {
               const key = (p.code || p.id).toUpperCase().trim();
-              map.set(key, p);
+              const existing = map.get(key);
+              const createdAt = p.createdAt || existing?.createdAt || (getPTime(p) > 0 ? new Date(getPTime(p)).toISOString() : new Date().toISOString());
+              map.set(key, existing ? { ...existing, ...p, createdAt } : { ...p, createdAt });
             }
           });
           incoming.promoCodes.forEach((p: any) => {
             if (p && (p.code || p.id)) {
               const key = (p.code || p.id).toUpperCase().trim();
               const existing = map.get(key);
+              const createdAt = p.createdAt || existing?.createdAt || (getPTime(p) > 0 ? new Date(getPTime(p)).toISOString() : new Date().toISOString());
               if (!existing) {
-                map.set(key, p);
+                map.set(key, { ...p, createdAt });
               } else {
                 map.set(key, {
                   ...existing,
                   ...p,
+                  createdAt,
                   isUsed: Boolean(existing.isUsed || p.isUsed),
                   usedCount: Math.max(existing.usedCount || 0, p.usedCount || 0),
                   usedAt: p.usedAt || existing.usedAt,
@@ -173,7 +192,8 @@ async function startServer() {
               }
             }
           });
-          promoCodes = Array.from(map.values());
+          const list = Array.from(map.values());
+          promoCodes = list.sort((a, b) => getPTime(b) - getPTime(a));
         }
       }
 

@@ -3113,7 +3113,8 @@ export const INITIAL_PROMO_CODES: PromoCode[] = [
     isActive: true,
     minOrderValue: 0,
     usedCount: 0,
-    usedByUsers: []
+    usedByUsers: [],
+    createdAt: '2025-01-01T00:00:00.000Z'
   },
   {
     id: 'promo-welcome10',
@@ -3127,7 +3128,8 @@ export const INITIAL_PROMO_CODES: PromoCode[] = [
     isActive: true,
     minOrderValue: 0,
     usedCount: 0,
-    usedByUsers: []
+    usedByUsers: [],
+    createdAt: '2025-01-01T00:00:00.000Z'
   },
   {
     id: 'promo-cortado50',
@@ -3141,7 +3143,8 @@ export const INITIAL_PROMO_CODES: PromoCode[] = [
     isActive: true,
     minOrderValue: 0,
     usedCount: 0,
-    usedByUsers: []
+    usedByUsers: [],
+    createdAt: '2025-01-01T00:00:00.000Z'
   },
   {
     id: 'promo-vip100',
@@ -3155,7 +3158,8 @@ export const INITIAL_PROMO_CODES: PromoCode[] = [
     isActive: true,
     minOrderValue: 0,
     usedCount: 0,
-    usedByUsers: []
+    usedByUsers: [],
+    createdAt: '2025-01-01T00:00:00.000Z'
   }
 ];
 
