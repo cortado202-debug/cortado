@@ -756,13 +756,19 @@ export const AdminDashboard: React.FC = () => {
   const getStatusBadge = (status: OrderStatus) => {
     switch (status) {
       case 'pending':
-        return <span className="bg-amber-950/80 border border-amber-500/40 text-amber-300 px-2.5 py-1 rounded-full text-xs font-bold">قيد الانتظار</span>;
+        return <span className="bg-amber-950/80 border border-amber-500/40 text-amber-300 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">قيد الانتظار ⏳</span>;
       case 'preparing':
-        return <span className="bg-blue-950/80 border border-blue-500/40 text-blue-300 px-2.5 py-1 rounded-full text-xs font-bold">جاري التحضير</span>;
+        return <span className="bg-blue-950/80 border border-blue-500/40 text-blue-300 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">جاري التحضير 🍳</span>;
+      case 'delivering':
+        return <span className="bg-purple-950/80 border border-purple-500/40 text-purple-300 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">جاري التوصيل 🚚</span>;
+      case 'delivered':
+        return <span className="bg-teal-950/80 border border-teal-500/40 text-teal-300 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">تم التسليم 🟢</span>;
       case 'completed':
-        return <span className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 px-2.5 py-1 rounded-full text-xs font-bold">مكتمل</span>;
+        return <span className="bg-emerald-950/80 border border-emerald-500/40 text-emerald-300 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">مكتمل 🏆</span>;
       case 'cancelled':
-        return <span className="bg-rose-950/80 border border-rose-500/40 text-rose-300 px-2.5 py-1 rounded-full text-xs font-bold">ملغي</span>;
+        return <span className="bg-rose-950/80 border border-rose-500/40 text-rose-300 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">ملغي ❌</span>;
+      default:
+        return <span className="bg-slate-800 text-slate-200 px-2.5 py-1 rounded-full text-xs font-bold whitespace-nowrap">{status}</span>;
     }
   };
 
@@ -808,7 +814,7 @@ export const AdminDashboard: React.FC = () => {
       }`}>
         
         {/* HEADER BAR */}
-        <div className={`p-2.5 sm:p-5 border-b flex items-center justify-between gap-2 transition-colors duration-300 ${
+        <div className={`p-2 sm:p-4 border-b flex items-center justify-between gap-1.5 sm:gap-3 transition-colors duration-300 sticky top-0 z-30 ${
           isLightAdmin 
             ? 'bg-white border-slate-200' 
             : 'bg-[#2D2926] border-[#00A859]/30'
@@ -879,13 +885,14 @@ export const AdminDashboard: React.FC = () => {
               )}
             </button>
 
+            {/* HIGH VISIBILITY CLOSE BUTTON FOR MOBILE & DESKTOP */}
             <button
               onClick={() => toggleAdminModal(false)}
-              className={`p-1.5 sm:p-2 rounded-lg sm:rounded-xl cursor-pointer transition-colors ${
-                isLightAdmin ? 'text-slate-500 hover:text-slate-900 hover:bg-slate-100' : 'text-[#FAEDCD]/60 hover:text-[#FAEDCD] hover:bg-[#1E1B18]'
-              }`}
+              className="p-2 sm:p-2.5 rounded-xl cursor-pointer transition-all bg-rose-500/10 hover:bg-rose-600 text-rose-500 hover:text-white border border-rose-500/30 shrink-0 active:scale-95 shadow-2xs flex items-center gap-1 font-bold text-xs"
+              title="إغلاق لوحة التحكم"
             >
               <X className="w-5 h-5 sm:w-6 sm:h-6" />
+              <span className="hidden sm:inline">إغلاق</span>
             </button>
           </div>
         </div>
@@ -2193,19 +2200,25 @@ export const AdminDashboard: React.FC = () => {
                       }`}
                     >
                       {/* TOP BAR: ORDER ID, CUSTOMER INFO & STATUS */}
-                      <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3 border-slate-200/60 dark:border-white/10">
+                      <div className="flex flex-wrap items-center justify-between gap-3 border-b pb-3 border-slate-200/80 dark:border-white/10">
                         <div className="flex items-center gap-3">
                           <span className="font-mono font-black text-lg text-[#00A859] bg-[#E6F6ED] dark:bg-[#00A859]/20 px-3 py-1 rounded-xl border border-[#00A859]/30">
                             #{ord.id}
                           </span>
                           <div className="flex flex-col">
-                            <span className="font-extrabold text-base text-slate-900 dark:text-white flex items-center gap-2">
+                            <span className={`font-black text-base sm:text-lg flex items-center gap-2 ${
+                              isLightAdmin ? 'text-black' : 'text-white'
+                            }`}>
                               <span>{ord.customerName}</span>
-                              <span className="text-xs bg-slate-100 dark:bg-white/10 px-2 py-0.5 rounded-md font-normal text-slate-600 dark:text-slate-300">
+                              <span className={`text-xs px-2.5 py-0.5 rounded-md font-bold ${
+                                isLightAdmin 
+                                  ? 'bg-slate-200 text-slate-900 border border-slate-300' 
+                                  : 'bg-white/10 text-slate-200 border border-white/10'
+                              }`}>
                                 {ord.deliveryType === 'table' ? 'طاولة 🍽️' : ord.deliveryType === 'takeaway' ? 'سفري 🛍️' : 'توصيل للموقع 🚚'}
                               </span>
                             </span>
-                            <span className="text-xs font-mono font-bold text-[#00A859] mt-0.5 dir-ltr text-right">
+                            <span className="text-xs font-mono font-black text-[#00A859] mt-0.5 dir-ltr text-right">
                               📱 {ord.customerPhone}
                             </span>
                           </div>
@@ -2217,26 +2230,50 @@ export const AdminDashboard: React.FC = () => {
                           <select
                             value={ord.status}
                             onChange={(e) => updateOrderStatus(ord.id, e.target.value as OrderStatus)}
-                            className="bg-slate-100 dark:bg-[#181512] text-xs font-bold text-slate-800 dark:text-amber-100 border border-slate-300 dark:border-amber-500/30 rounded-xl px-3 py-1.5 outline-none cursor-pointer focus:ring-2 focus:ring-[#00A859]"
+                            className={`text-xs font-black border rounded-xl px-3 py-1.5 outline-none cursor-pointer focus:ring-2 focus:ring-[#00A859] ${
+                              isLightAdmin
+                                ? 'bg-slate-100 text-black border-slate-300'
+                                : 'bg-[#181512] text-amber-100 border-amber-500/30'
+                            }`}
                           >
                             <option value="pending">قيد الانتظار ⏳</option>
                             <option value="preparing">جاري التحضير 🍳</option>
-                            <option value="completed">مكتمل وجاهز ✅</option>
+                            <option value="delivering">جاري التوصيل 🚚</option>
+                            <option value="delivered">تم التسليم 🟢</option>
+                            <option value="completed">مكتمل وجاهز 🏆</option>
                             <option value="cancelled">ملغي ❌</option>
                           </select>
                         </div>
                       </div>
 
                       {/* ORDER ITEMS LIST */}
-                      <div className="bg-slate-50 dark:bg-black/20 p-3.5 rounded-xl border border-slate-200/80 dark:border-white/5 space-y-2">
-                        <p className="text-xs font-extrabold text-slate-700 dark:text-slate-300 mb-1">
-                          📋 الأصناف المطلوبة ({ord.items.reduce((acc, i) => acc + i.quantity, 0)} قطعة):
+                      <div className={`p-3.5 rounded-xl border space-y-2.5 ${
+                        isLightAdmin
+                          ? 'bg-slate-100/90 border-slate-300'
+                          : 'bg-black/25 border-white/10'
+                      }`}>
+                        <p className={`text-xs sm:text-sm font-black mb-1.5 flex items-center gap-1 ${
+                          isLightAdmin ? 'text-black' : 'text-slate-100'
+                        }`}>
+                          <span>📋 الأصناف المطلوبة</span>
+                          <span className="text-xs font-bold text-[#00A859]">({ord.items.reduce((acc, i) => acc + i.quantity, 0)} قطعة):</span>
                         </p>
-                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2">
+                        <div className="grid grid-cols-1 sm:grid-cols-2 gap-2.5">
                           {ord.items.map((item, idx) => (
-                            <div key={idx} className="flex justify-between items-center text-xs font-bold bg-white dark:bg-white/5 p-2 rounded-lg border border-slate-200 dark:border-white/5">
-                              <span className="text-slate-900 dark:text-slate-100">{item.nameAr}</span>
-                              <span className="bg-[#00A859]/10 text-[#00A859] font-black px-2 py-0.5 rounded-md font-mono">
+                            <div 
+                              key={idx} 
+                              className={`flex justify-between items-center p-3 rounded-xl border shadow-2xs transition-all ${
+                                isLightAdmin
+                                  ? 'bg-white border-slate-300 text-black'
+                                  : 'bg-white/5 border-white/10 text-white'
+                              }`}
+                            >
+                              <span className={`font-black text-sm sm:text-base ${
+                                isLightAdmin ? 'text-black' : 'text-white'
+                              }`}>
+                                {item.nameAr}
+                              </span>
+                              <span className="bg-[#00A859]/15 text-[#007A40] dark:text-[#00C868] font-black text-xs sm:text-sm px-2.5 py-1 rounded-lg font-mono shrink-0 mr-2">
                                 ×{item.quantity} ({item.price * item.quantity} ل.س)
                               </span>
                             </div>
@@ -2247,24 +2284,36 @@ export const AdminDashboard: React.FC = () => {
                       {/* PAYMENT & NOTES */}
                       <div className="space-y-2 text-xs">
                         {ord.paymentMethodName && (
-                          <div className="flex items-center gap-2 text-emerald-700 dark:text-emerald-400 font-bold bg-emerald-50 dark:bg-emerald-950/40 p-2.5 rounded-xl border border-emerald-200 dark:border-emerald-800/40">
+                          <div className={`flex items-center gap-2 p-2.5 rounded-xl border font-black ${
+                            isLightAdmin
+                              ? 'bg-emerald-100/90 text-emerald-950 border-emerald-300'
+                              : 'bg-emerald-950/40 text-emerald-300 border-emerald-800/40'
+                          }`}>
                             <span>💳 طريقة الدفع المختارة:</span>
                             <span className="font-extrabold">{ord.paymentMethodName}</span>
                           </div>
                         )}
 
                         {ord.notes && (
-                          <div className="bg-amber-50 dark:bg-amber-950/40 border border-amber-200 dark:border-amber-800/40 text-amber-900 dark:text-amber-200 font-bold p-2.5 rounded-xl text-xs">
+                          <div className={`p-3 rounded-xl border text-xs font-bold ${
+                            isLightAdmin
+                              ? 'bg-amber-100/90 text-amber-950 border-amber-300'
+                              : 'bg-amber-950/40 text-amber-100 border-amber-800/40'
+                          }`}>
                             <span>📝 ملاحظات وتفاصيل إضافية:</span>
-                            <p className="font-normal mt-0.5 text-slate-800 dark:text-amber-100">{ord.notes}</p>
+                            <p className={`font-black mt-1 text-sm ${
+                              isLightAdmin ? 'text-black' : 'text-amber-100'
+                            }`}>{ord.notes}</p>
                           </div>
                         )}
                       </div>
 
                       {/* TOTAL SUMMARY */}
-                      <div className="flex items-center justify-between pt-2 border-t border-slate-200/60 dark:border-white/10 text-sm">
-                        <span className="font-extrabold text-slate-700 dark:text-slate-300">المبلغ الإجمالي المستحق:</span>
-                        <span className="font-black text-xl text-[#00A859] font-['Cairo']">
+                      <div className="flex items-center justify-between pt-2 border-t border-slate-200/80 dark:border-white/10 text-sm">
+                        <span className={`font-black ${isLightAdmin ? 'text-black' : 'text-slate-200'}`}>
+                          المبلغ الإجمالي المستحق:
+                        </span>
+                        <span className="font-black text-xl sm:text-2xl text-[#00A859] font-['Cairo']">
                           {ord.total ? ord.total.toFixed(2) : ord.subtotal.toFixed(2)} ل.س
                         </span>
                       </div>
@@ -2630,7 +2679,13 @@ export const AdminDashboard: React.FC = () => {
                         </td>
                       </tr>
                     ) : (
-                      promoCodes.map((p, idx) => {
+                      [...promoCodes]
+                        .sort((a, b) => {
+                          const timeA = a.createdAt ? new Date(a.createdAt).getTime() : (a.id ? parseInt(a.id.replace(/\D/g, '')) || 0 : 0);
+                          const timeB = b.createdAt ? new Date(b.createdAt).getTime() : (b.id ? parseInt(b.id.replace(/\D/g, '')) || 0 : 0);
+                          return timeB - timeA;
+                        })
+                        .map((p, idx) => {
                         const isBurned = p.isUsed || p.usedCount >= p.maxUses;
                         const isCopied = copiedCodeId === p.id;
                         return (

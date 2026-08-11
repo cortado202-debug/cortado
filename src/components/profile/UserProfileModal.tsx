@@ -75,17 +75,17 @@ export const UserProfileModal: React.FC = () => {
     if (!isOwner) return false;
 
     if (activeTab === 'active') {
-      return ord.status === 'pending' || ord.status === 'preparing';
+      return ord.status === 'pending' || ord.status === 'preparing' || ord.status === 'delivering';
     }
     if (activeTab === 'completed') {
-      return ord.status === 'completed';
+      return ord.status === 'delivered' || ord.status === 'completed';
     }
 
     return true;
   });
 
   const totalOrdersCount = filteredOrders.length;
-  const activeOrdersCount = filteredOrders.filter(o => o.status === 'pending' || o.status === 'preparing').length;
+  const activeOrdersCount = filteredOrders.filter(o => o.status === 'pending' || o.status === 'preparing' || o.status === 'delivering').length;
   const totalSpent = filteredOrders.reduce((acc, o) => acc + (o.total || 0), 0);
 
   const handleCopyOrderId = (id: string) => {
@@ -99,26 +99,44 @@ export const UserProfileModal: React.FC = () => {
       case 'pending':
         return {
           label: 'قيد الانتظار ⏳',
-          bg: 'bg-amber-500/10 border-amber-500/30 text-amber-700',
+          bg: 'bg-amber-500/10 border-amber-500/30 text-amber-700 dark:text-amber-300',
           dot: 'bg-amber-500 animate-pulse'
         };
       case 'preparing':
         return {
           label: 'جاري التحضير والطهي 🍳',
-          bg: 'bg-blue-500/10 border-blue-500/30 text-blue-700',
+          bg: 'bg-blue-500/10 border-blue-500/30 text-blue-700 dark:text-blue-300',
           dot: 'bg-blue-500 animate-ping'
+        };
+      case 'delivering':
+        return {
+          label: 'جاري التوصيل 🚚',
+          bg: 'bg-purple-500/10 border-purple-500/30 text-purple-700 dark:text-purple-300',
+          dot: 'bg-purple-500 animate-pulse'
+        };
+      case 'delivered':
+        return {
+          label: 'تم التسليم 🟢',
+          bg: 'bg-teal-500/10 border-teal-500/30 text-teal-700 dark:text-teal-300',
+          dot: 'bg-teal-500'
         };
       case 'completed':
         return {
-          label: 'مكتمل وجاهز للتسليم ✅',
-          bg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700',
+          label: 'مكتمل وجاهز 🏆',
+          bg: 'bg-emerald-500/10 border-emerald-500/30 text-emerald-700 dark:text-emerald-300',
           dot: 'bg-emerald-500'
         };
       case 'cancelled':
         return {
           label: 'ملغى ❌',
-          bg: 'bg-rose-500/10 border-rose-500/30 text-rose-700',
+          bg: 'bg-rose-500/10 border-rose-500/30 text-rose-700 dark:text-rose-300',
           dot: 'bg-rose-500'
+        };
+      default:
+        return {
+          label: status,
+          bg: 'bg-gray-500/10 border-gray-500/30 text-gray-700 dark:text-gray-300',
+          dot: 'bg-gray-500'
         };
     }
   };

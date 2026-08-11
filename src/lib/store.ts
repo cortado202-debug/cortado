@@ -572,6 +572,7 @@ export const useStore = create<StoreState>()(
     const newPromo: PromoCode = {
       ...promoData,
       id: `promo-${Date.now()}`,
+      createdAt: new Date().toISOString(),
       usedCount: 0,
       usedByUsers: []
     };
@@ -581,9 +582,11 @@ export const useStore = create<StoreState>()(
   },
 
   addPromoCodesBulk: (promosData) => {
+    const now = new Date().toISOString();
     const newPromos: PromoCode[] = promosData.map((promoData, idx) => ({
       ...promoData,
       id: `promo-${Date.now()}-${idx}-${Math.floor(Math.random() * 1000)}`,
+      createdAt: now,
       usedCount: 0,
       usedByUsers: []
     }));

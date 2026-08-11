@@ -38,6 +38,20 @@ function loadPromoCodesFromLocalStorage(): PromoCode[] {
 }
 
 // Smart non-destructive merger for Promo Codes to preserve created and burned/used states across devices
+export function mergeOrdersHelper(existingList: Order[], incomingList: Order[]): Order[] {
+  const map = new Map<string, Order>();
+  (existingList || []).forEach(o => { if (o && o.id) map.set(o.id, o); });
+  (incomingList || []).forEach(o => { if (o && o.id) map.set(o.id, o); });
+  return Array.from(map.values());
+}
+
+export function mergeCustomersHelper(existingList: Customer[], incomingList: Customer[]): Customer[] {
+  const map = new Map<string, Customer>();
+  (existingList || []).forEach(c => { if (c && c.uid) map.set(c.uid, c); });
+  (incomingList || []).forEach(c => { if (c && c.uid) map.set(c.uid, c); });
+  return Array.from(map.values());
+}
+
 export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCode[], isExplicitDelete = false): PromoCode[] {
   if (isExplicitDelete && Array.isArray(incomingList) && incomingList.length > 0) return incomingList;
 

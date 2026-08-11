@@ -38,7 +38,7 @@ export interface CartItem {
   selectedOptions?: string[];
 }
 
-export type OrderStatus = 'pending' | 'preparing' | 'completed' | 'cancelled';
+export type OrderStatus = 'pending' | 'preparing' | 'delivering' | 'delivered' | 'completed' | 'cancelled';
 
 export interface Order {
   id: string;
@@ -77,6 +77,11 @@ export interface PromoCode {
   usedAt?: string;
   usedByUsers?: string[]; // user emails or IDs
   groupName?: string; // e.g. 'جامعة دمشق', 'مدرسة السلام'
+  createdAt?: string;
+  discountType?: 'percentage' | 'fixed';
+  discountValue?: number;
+  minOrderValue?: number;
+  maxDiscountAmount?: number;
 }
 
 export interface Customer {
@@ -148,6 +153,7 @@ export interface UserSession {
   uid: string;
   name: string;
   email: string;
+  phone?: string;
   photoURL?: string;
   isAdmin: boolean;
 }
