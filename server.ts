@@ -224,6 +224,37 @@ async function startServer() {
     res.json(inMemoryStore);
   });
 
+  // Dedicated endpoint to get/update store settings
+  app.get('/api/settings', (_req, res) => {
+    res.json({
+      success: true,
+      settings: inMemoryStore.settings || INITIAL_SETTINGS,
+      updatedAt: inMemoryStore.settings?.updatedAt || inMemoryStore.updatedAt
+    });
+  });
+
+  app.post('/api/settings', (req, res) => {
+    try {
+      const incoming = req.body || {};
+      const now = new Date().toISOString();
+      const updatedSettings = {
+        ...inMemoryStore.settings,
+        ...incoming,
+        updatedAt: incoming.updatedAt || now
+      };
+      inMemoryStore.settings = updatedSettings;
+      inMemoryStore.updatedAt = now;
+      inMemoryStore = saveStoreDb(inMemoryStore);
+      res.json({
+        success: true,
+        settings: updatedSettings,
+        updatedAt: now
+      });
+    } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
   // Dedicated endpoint to get all permanent promo codes
   app.get('/api/promo-codes', (_req, res) => {
     try {

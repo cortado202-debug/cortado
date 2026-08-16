@@ -608,7 +608,8 @@ export const useStore = create<StoreState>()(
   },
 
   updateSettings: (newSettings) => {
-    const updatedSettings = { ...get().settings, ...newSettings };
+    const now = new Date().toISOString();
+    const updatedSettings = { ...get().settings, ...newSettings, updatedAt: now };
     set({ settings: updatedSettings });
     pushSettingsToCloud(updatedSettings);
   },

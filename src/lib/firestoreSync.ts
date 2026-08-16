@@ -219,16 +219,24 @@ function saveSettingsToLocalStorage(settings: SiteSettings) {
 
 // Helpers to push state changes (called when Admin makes updates)
 export async function pushSettingsToCloud(settings: SiteSettings) {
+  const now = new Date().toISOString();
   const payload: SiteSettings = {
     ...settings,
-    updatedAt: new Date().toISOString()
+    updatedAt: settings.updatedAt || now
   };
 
   // 1. Immediately save locally for zero delay
   saveSettingsToLocalStorage(payload);
 
-  // 2. Sync with server memory/disk
-  syncWithServer({ settings: payload });
+  // 2. Sync with server memory/disk via dedicated /api/settings and /api/store-data
+  try {
+    fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch {}
+  syncWithServer({ settings: payload }).catch(() => {});
 
   // 3. Broadcast to other tabs on same browser
   if (broadcastChannel) {
@@ -252,13 +260,7 @@ export async function pushSettingsToCloud(settings: SiteSettings) {
     setDoc(doc(db, 'site_data', 'settings'), sanitized, { merge: true }),
     setDoc(doc(db, 'siteSettings', 'main'), sanitized, { merge: true }),
     setDoc(doc(db, 'settings', 'store_config'), sanitized, { merge: true })
-  ]).then((results) => {
-    results.forEach((res, idx) => {
-      if (res.status === 'rejected') {
-        console.warn(`Firestore settings doc ${idx} sync notice:`, res.reason);
-      }
-    });
-  });
+  ]).catch(() => {});
 }
 
 export async function pushCategoriesToCloud(categories: Category[], isExplicitDelete = false) {
@@ -462,15 +464,15 @@ export async function pushCustomersToCloud(customers: Customer[]) {
   }
 }
 
-export const applySettings = (cloudSettings: Partial<SiteSettings>, persistToLocal = true, isFromFirestore = false) => {
+export const applySettings = (cloudSettings: Partial<SiteSettings>, persistToLocal = true) => {
   if (!cloudSettings) return;
   useStore.setState((state) => {
-    // Timestamp conflict protection:
-    // If not from Firestore, check timestamps. If from live Firestore, honor it as authoritative cloud truth.
+    // Strict timestamp conflict protection:
+    // Ensure we NEVER overwrite a newer local state with an older incoming state.
     const currentTs = state.settings?.updatedAt ? new Date(state.settings.updatedAt).getTime() : 0;
     const incomingTs = cloudSettings?.updatedAt ? new Date(cloudSettings.updatedAt).getTime() : 0;
 
-    if (!isFromFirestore && currentTs > 0 && incomingTs > 0 && incomingTs < currentTs) {
+    if (currentTs > 0 && incomingTs > 0 && incomingTs < currentTs) {
       return state;
     }
 
@@ -663,28 +665,13 @@ export function initFirestoreSync() {
 
   // 3. Direct fetch from Firestore on startup
   if (db) {
+    // 3. Direct fetch from Firestore on startup
     getDoc(doc(db, 'site_data', 'settings')).then((snap) => {
       if (snap.exists()) {
-        applySettings(snap.data() as SiteSettings, true, true);
+        applySettings(snap.data() as SiteSettings, true);
       }
     }).catch((e) => {
       console.warn('Initial Firestore settings fetch error:', e);
-    });
-
-    getDoc(doc(db, 'siteSettings', 'main')).then((snap) => {
-      if (snap.exists()) {
-        applySettings(snap.data() as SiteSettings, true, true);
-      }
-    }).catch((e) => {
-      console.warn('Initial Firestore main settings fetch error:', e);
-    });
-
-    getDoc(doc(db, 'settings', 'store_config')).then((snap) => {
-      if (snap.exists()) {
-        applySettings(snap.data() as SiteSettings, true, true);
-      }
-    }).catch((e) => {
-      console.warn('Initial Firestore store_config fetch error:', e);
     });
 
     getDoc(doc(db, 'site_data', 'promoCodes')).then((snap) => {
@@ -772,37 +759,13 @@ export function initFirestoreSync() {
   try {
     onSnapshot(doc(db, 'site_data', 'settings'), (snapshot) => {
       if (snapshot.exists()) {
-        applySettings(snapshot.data() as SiteSettings, true, true);
+        applySettings(snapshot.data() as SiteSettings, true);
       }
     }, (err) => {
       console.warn('Firestore settings listener error:', err.message);
     });
   } catch (e) {
     console.warn('Could not setup settings listener:', e);
-  }
-
-  try {
-    onSnapshot(doc(db, 'siteSettings', 'main'), (snapshot) => {
-      if (snapshot.exists()) {
-        applySettings(snapshot.data() as SiteSettings, true, true);
-      }
-    }, (err) => {
-      console.warn('Firestore backup settings listener error:', err.message);
-    });
-  } catch (e) {
-    console.warn('Could not setup backup settings listener:', e);
-  }
-
-  try {
-    onSnapshot(doc(db, 'settings', 'store_config'), (snapshot) => {
-      if (snapshot.exists()) {
-        applySettings(snapshot.data() as SiteSettings, true, true);
-      }
-    }, (err) => {
-      console.warn('Firestore store_config listener error:', err.message);
-    });
-  } catch (e) {
-    console.warn('Could not setup store_config listener:', e);
   }
 
   try {
