@@ -182,6 +182,28 @@ export async function syncWithServer(data: Partial<{
   }
 }
 
+// Helper to recursively strip undefined properties and values for Firestore safety
+export function sanitizeForFirestore<T>(data: T): T {
+  if (data === null || data === undefined) {
+    return null as unknown as T;
+  }
+  if (Array.isArray(data)) {
+    return data
+      .filter((item) => item !== undefined)
+      .map((item) => sanitizeForFirestore(item)) as unknown as T;
+  }
+  if (typeof data === 'object') {
+    const cleaned: Record<string, any> = {};
+    for (const [key, value] of Object.entries(data as Record<string, any>)) {
+      if (value !== undefined) {
+        cleaned[key] = sanitizeForFirestore(value);
+      }
+    }
+    return cleaned as T;
+  }
+  return data;
+}
+
 // Helper to save settings locally to localStorage for instant load on refresh
 function saveSettingsToLocalStorage(settings: SiteSettings) {
   if (typeof window === 'undefined' || !window.localStorage) return;
@@ -225,10 +247,11 @@ export async function pushSettingsToCloud(settings: SiteSettings) {
 
   // 5. Write to Firestore as global cloud single source of truth concurrently in background
   if (!db) return;
+  const sanitized = sanitizeForFirestore(payload);
   Promise.allSettled([
-    setDoc(doc(db, 'site_data', 'settings'), payload, { merge: true }),
-    setDoc(doc(db, 'siteSettings', 'main'), payload, { merge: true }),
-    setDoc(doc(db, 'settings', 'store_config'), payload, { merge: true })
+    setDoc(doc(db, 'site_data', 'settings'), sanitized, { merge: true }),
+    setDoc(doc(db, 'siteSettings', 'main'), sanitized, { merge: true }),
+    setDoc(doc(db, 'settings', 'store_config'), sanitized, { merge: true })
   ]).then((results) => {
     results.forEach((res, idx) => {
       if (res.status === 'rejected') {
@@ -243,7 +266,8 @@ export async function pushCategoriesToCloud(categories: Category[], isExplicitDe
   if (broadcastChannel) broadcastChannel.postMessage({ type: 'categories', payload: categories });
   if (!db) return;
   try {
-    await setDoc(doc(db, 'site_data', 'categories'), { items: categories, updatedAt: new Date().toISOString() });
+    const sanitized = sanitizeForFirestore(categories || []);
+    await setDoc(doc(db, 'site_data', 'categories'), { items: sanitized, updatedAt: new Date().toISOString() });
   } catch (error) {
     console.error('Failed to push categories to Firestore:', error);
   }
@@ -254,7 +278,8 @@ export async function pushProductsToCloud(products: Product[], isExplicitDelete 
   if (broadcastChannel) broadcastChannel.postMessage({ type: 'products', payload: products });
   if (!db) return;
   try {
-    await setDoc(doc(db, 'site_data', 'products'), { items: products, updatedAt: new Date().toISOString() });
+    const sanitized = sanitizeForFirestore(products || []);
+    await setDoc(doc(db, 'site_data', 'products'), { items: sanitized, updatedAt: new Date().toISOString() });
   } catch (error) {
     console.error('Failed to push products to Firestore:', error);
   }
@@ -263,7 +288,7 @@ export async function pushProductsToCloud(products: Product[], isExplicitDelete 
 export async function pushPromoCodesToCloud(promoCodes: PromoCode[], isExplicitDelete = false) {
   savePromoCodesToLocalStorage(promoCodes);
   
-  // 1. Send to server dedicated archive endpoint
+  // 1. Send to server dedicated archive endpoint immediately
   try {
     fetch('/api/promo-codes', {
       method: 'POST',
@@ -280,23 +305,27 @@ export async function pushPromoCodesToCloud(promoCodes: PromoCode[], isExplicitD
   // 3. Post to local tabs
   if (broadcastChannel) broadcastChannel.postMessage({ type: 'promoCodes', payload: promoCodes });
   
-  // 4. Send to Firestore doc & individual collection docs
+  // 4. Send to Firestore doc & individual collection docs in batched chunks
   if (!db) return;
   try {
-    await setDoc(doc(db, 'site_data', 'promoCodes'), { items: promoCodes, updatedAt: new Date().toISOString() });
+    const sanitizedList = sanitizeForFirestore(promoCodes || []);
+    await setDoc(doc(db, 'site_data', 'promoCodes'), { items: sanitizedList, updatedAt: new Date().toISOString() });
     
-    // Also save to separate collection for ultimate redundancy
-    if (Array.isArray(promoCodes) && promoCodes.length > 0) {
+    // Also save to separate collection for instant item-level cloud sync
+    if (Array.isArray(sanitizedList) && sanitizedList.length > 0) {
       try {
-        const batch = writeBatch(db);
-        // Write top 300 codes to collection
-        promoCodes.slice(0, 300).forEach(p => {
-          if (p && (p.code || p.id)) {
-            const safeCode = (p.code || p.id).toUpperCase().trim().replace(/[\/\s#?]/g, '_');
-            batch.set(doc(db, 'promoCodes', safeCode), p, { merge: true });
-          }
-        });
-        batch.commit().catch(e => console.warn('Firestore promoCodes batch commit notice:', e));
+        const chunkSize = 400;
+        for (let i = 0; i < sanitizedList.length; i += chunkSize) {
+          const chunk = sanitizedList.slice(i, i + chunkSize);
+          const batch = writeBatch(db);
+          chunk.forEach(p => {
+            if (p && (p.code || p.id)) {
+              const safeCode = (p.code || p.id).toUpperCase().trim().replace(/[\/\s#?]/g, '_');
+              batch.set(doc(db, 'promoCodes', safeCode), sanitizeForFirestore(p), { merge: true });
+            }
+          });
+          await batch.commit().catch(e => console.warn('Firestore promoCodes batch chunk notice:', e));
+        }
       } catch (be) {
         console.warn('Batch write error:', be);
       }
@@ -326,7 +355,9 @@ export async function syncAllPromoCodesAcrossCloud(): Promise<{
 
   // 3. Gather from dedicated Server endpoint
   try {
-    const res = await fetch('/api/promo-codes');
+    const res = await fetch('/api/promo-codes', {
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+    });
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.promoCodes)) {
@@ -339,7 +370,9 @@ export async function syncAllPromoCodesAcrossCloud(): Promise<{
 
   // 4. Gather from general Server store data
   try {
-    const res = await fetch('/api/store-data');
+    const res = await fetch('/api/store-data', {
+      headers: { 'Cache-Control': 'no-cache, no-store, must-revalidate' }
+    });
     if (res.ok) {
       const data = await res.json();
       if (data && Array.isArray(data.promoCodes)) {
@@ -380,14 +413,19 @@ export async function syncAllPromoCodesAcrossCloud(): Promise<{
   // 7. Non-destructively merge everything
   const merged = mergePromoCodes([], collected);
 
-  // 8. Update in-memory store
-  useStore.setState({ promoCodes: merged });
+  if (merged.length > 0) {
+    // 8. Update in-memory store if changed
+    const currentList = useStore.getState().promoCodes || [];
+    if (merged.length !== currentList.length || merged.some((m, idx) => m.isUsed !== currentList[idx]?.isUsed)) {
+      useStore.setState({ promoCodes: merged });
+    }
 
-  // 9. Persist to localStorage
-  savePromoCodesToLocalStorage(merged);
+    // 9. Persist to localStorage
+    savePromoCodesToLocalStorage(merged);
 
-  // 10. Push to Server & Firestore
-  await pushPromoCodesToCloud(merged);
+    // 10. Push to Server & Firestore
+    pushPromoCodesToCloud(merged).catch(() => {});
+  }
 
   const burnedCount = merged.filter(p => p.isUsed || (p.usedCount && p.maxUses && p.usedCount >= p.maxUses)).length;
 
@@ -405,7 +443,8 @@ export async function pushOrdersToCloud(orders: Order[]) {
   if (broadcastChannel) broadcastChannel.postMessage({ type: 'orders', payload: orders });
   if (!db) return;
   try {
-    await setDoc(doc(db, 'site_data', 'orders'), { items: orders, updatedAt: new Date().toISOString() });
+    const sanitized = sanitizeForFirestore(orders || []);
+    await setDoc(doc(db, 'site_data', 'orders'), { items: sanitized, updatedAt: new Date().toISOString() });
   } catch (error) {
     console.error('Failed to push orders to Firestore:', error);
   }
@@ -416,7 +455,8 @@ export async function pushCustomersToCloud(customers: Customer[]) {
   if (broadcastChannel) broadcastChannel.postMessage({ type: 'customers', payload: customers });
   if (!db) return;
   try {
-    await setDoc(doc(db, 'site_data', 'customers'), { items: customers, updatedAt: new Date().toISOString() });
+    const sanitized = sanitizeForFirestore(customers || []);
+    await setDoc(doc(db, 'site_data', 'customers'), { items: sanitized, updatedAt: new Date().toISOString() });
   } catch (error) {
     console.error('Failed to push customers to Firestore:', error);
   }
@@ -598,10 +638,28 @@ export function initFirestoreSync() {
     window.addEventListener('cortado_local_settings_sync', (e: any) => {
       if (e.detail) applySettings(e.detail, true);
     });
+
+    // Auto sync on tab focus, returning to mobile browser, or network recovery
+    const triggerInstantCloudSync = () => {
+      syncAllPromoCodesAcrossCloud().catch(() => {});
+      fetchServerStoreData();
+    };
+
+    window.addEventListener('focus', triggerInstantCloudSync);
+    window.addEventListener('online', triggerInstantCloudSync);
+    document.addEventListener('visibilitychange', () => {
+      if (document.visibilityState === 'visible') {
+        triggerInstantCloudSync();
+      }
+    });
   }
 
-  // 2. Fetch immediately from central server API
+  // 2. Fetch immediately from central server API & run deep sync
   fetchServerStoreData();
+  syncAllPromoCodesAcrossCloud().catch(() => {});
+  setTimeout(() => {
+    syncAllPromoCodesAcrossCloud().catch(() => {});
+  }, 1200);
 
   // 3. Direct fetch from Firestore on startup
   if (db) {
@@ -699,10 +757,14 @@ export function initFirestoreSync() {
     }).catch((e) => console.warn('Initial Firestore products fetch error:', e));
   }
 
-  // 4. Poll server every 2 seconds for updates
+  // 4. Poll server & auto-sync every 3 seconds for instant updates across devices
   setInterval(() => {
     fetchServerStoreData();
   }, 2000);
+
+  setInterval(() => {
+    syncAllPromoCodesAcrossCloud().catch(() => {});
+  }, 5000);
 
   if (!db) return;
 
@@ -797,6 +859,28 @@ export function initFirestoreSync() {
     });
   } catch (e) {
     console.warn('Could not setup promoCodes listener:', e);
+  }
+
+  // Live real-time listener for individual promo codes collection
+  try {
+    onSnapshot(collection(db, 'promoCodes'), (snapshot) => {
+      if (!snapshot.empty) {
+        const items: PromoCode[] = [];
+        snapshot.forEach((d) => {
+          if (d.exists()) items.push(d.data() as PromoCode);
+        });
+        if (items.length > 0) {
+          const currentPromos = useStore.getState().promoCodes || [];
+          const merged = mergePromoCodes(currentPromos, items);
+          useStore.setState({ promoCodes: merged });
+          savePromoCodesToLocalStorage(merged);
+        }
+      }
+    }, (err) => {
+      console.warn('Firestore promoCodes collection listener error:', err.message);
+    });
+  } catch (e) {
+    console.warn('Could not setup promoCodes collection listener:', e);
   }
 
   try {

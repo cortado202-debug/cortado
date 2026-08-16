@@ -1,5 +1,6 @@
 import React, { useState } from 'react';
 import { useStore } from '../../lib/store';
+import { syncAllPromoCodesAcrossCloud } from '../../lib/firestoreSync';
 import { 
   X, 
   Sparkles, 
@@ -101,6 +102,7 @@ export const BulkPromoModal: React.FC<BulkPromoModalProps> = ({ isOpen, onClose 
     }
 
     addPromoCodesBulk(newPromos);
+    syncAllPromoCodesAcrossCloud().catch(() => {});
     setGeneratedCount(newPromos.length);
     setIsDone(true);
   };

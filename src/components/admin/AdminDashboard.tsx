@@ -232,6 +232,17 @@ export const AdminDashboard: React.FC = () => {
     }
   }, [settings, isAdminModalOpen]);
 
+  // Auto-sync promo codes across all devices and branches when opening dashboard or promo tab
+  useEffect(() => {
+    if (isAdminModalOpen) {
+      syncAllPromoCodesAcrossCloud().catch(() => {});
+      const timer = setTimeout(() => {
+        syncAllPromoCodesAcrossCloud().catch(() => {});
+      }, 1500);
+      return () => clearTimeout(timer);
+    }
+  }, [isAdminModalOpen, activeAdminTab]);
+
   const handleToggleQuickLinkHidden = (id: string) => {
     const updated = quickLinksList.map((item) =>
       item.id === id ? { ...item, isHidden: !item.isHidden } : item
@@ -2574,6 +2585,10 @@ export const AdminDashboard: React.FC = () => {
                         <span>إدارة ومزامنة أكواد الخصم</span>
                         <span className="bg-[#00A859]/20 text-[#00A859] border border-[#00A859]/30 text-[10px] font-mono px-2 py-0.5 rounded-full font-bold">
                           {promoCodes.length} كود
+                        </span>
+                        <span className="inline-flex items-center gap-1 bg-emerald-500/10 text-emerald-400 border border-emerald-500/30 text-[10px] font-bold px-2 py-0.5 rounded-full">
+                          <span className="w-1.5 h-1.5 rounded-full bg-emerald-400 animate-ping" />
+                          <span>مزامنة فورية تلقائية</span>
                         </span>
                       </h3>
                       <p className="text-[11px] text-[#FAEDCD]/70 mt-0.5">
