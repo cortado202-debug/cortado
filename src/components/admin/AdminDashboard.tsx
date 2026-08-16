@@ -60,7 +60,7 @@ import { playOrderAlertSound, SOUND_TONES, getSelectedSoundTone, setSelectedSoun
 import { CategoryModal } from './CategoryModal';
 import { BulkPromoModal } from './BulkPromoModal';
 import { PromoCardGeneratorModal } from './PromoCardGeneratorModal';
-import { mergePromoCodes, pushPromoCodesToCloud } from '../../lib/firestoreSync';
+import { mergePromoCodes, pushPromoCodesToCloud, syncAllPromoCodesAcrossCloud } from '../../lib/firestoreSync';
 import { db } from '../../lib/firebase';
 import { doc, setDoc, onSnapshot } from 'firebase/firestore';
 
@@ -82,6 +82,7 @@ export const AdminDashboard: React.FC = () => {
     customers,
     promoCodes,
     addPromoCode,
+    addPromoCodesBulk,
     burnPromoCode,
     deletePromoCode,
     settings,
@@ -97,6 +98,10 @@ export const AdminDashboard: React.FC = () => {
   const [showCategoryModal, setShowCategoryModal] = useState(false);
   const [showBulkPromoModal, setShowBulkPromoModal] = useState(false);
   const [showPromoCardModal, setShowPromoCardModal] = useState(false);
+  const [showImportPromoModal, setShowImportPromoModal] = useState(false);
+  const [isSyncingPromos, setIsSyncingPromos] = useState(false);
+  const [importPromoText, setImportPromoText] = useState('');
+  const [importFeedback, setImportFeedback] = useState<{ type: 'success' | 'error'; message: string } | null>(null);
   const [showSoundSelectorModal, setShowSoundSelectorModal] = useState(false);
   const [currentSoundTone, setCurrentSoundTone] = useState(() => getSelectedSoundTone());
 
@@ -2555,23 +2560,33 @@ export const AdminDashboard: React.FC = () => {
             </div>
           )}
 
-          {/* TAB 6: PROMO CODE MANAGER TABLE & EXCEL EXPORT */}
+            {/* TAB 6: PROMO CODE MANAGER TABLE & EXCEL EXPORT */}
           {activeAdminTab === 'promos' && (
             <div className="space-y-3 sm:space-y-4">
-              <div className="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-2.5 bg-[#26201B] p-3 sm:p-4 rounded-xl sm:rounded-2xl border border-[#3D332A]">
+              <div className="flex flex-col xl:flex-row items-start xl:items-center justify-between gap-3 bg-[#26201B] p-3.5 sm:p-4 rounded-xl sm:rounded-2xl border border-[#3D332A] shadow-md">
                 <div>
-                  <h3 className="font-bold text-xs sm:text-base text-[#FAEDCD] flex items-center gap-1.5">
-                    <Ticket className="w-4 h-4 sm:w-5 sm:h-5 text-[#00A859]" />
-                    <span>جدول إدارة أكواد وقسائم الخصم</span>
-                  </h3>
-                  <p className="text-[10px] sm:text-xs text-[#FAEDCD]/60 mt-0.5">
-                    الأكواد تحفظ دائمياً وبشكل سحابي على السيرفر ومزامنة عبر جميع الأجهزة ومحفوظة للابد.
-                  </p>
+                  <div className="flex items-center gap-2">
+                    <div className="w-8 h-8 rounded-xl bg-[#00A859]/20 border border-[#00A859]/40 flex items-center justify-center text-[#00A859]">
+                      <Ticket className="w-4 h-4" />
+                    </div>
+                    <div>
+                      <h3 className="font-black text-sm sm:text-base text-[#FAEDCD] flex items-center gap-2">
+                        <span>إدارة ومزامنة أكواد الخصم</span>
+                        <span className="bg-[#00A859]/20 text-[#00A859] border border-[#00A859]/30 text-[10px] font-mono px-2 py-0.5 rounded-full font-bold">
+                          {promoCodes.length} كود
+                        </span>
+                      </h3>
+                      <p className="text-[11px] text-[#FAEDCD]/70 mt-0.5">
+                        الأكواد تُحفظ سحابياً وعلى السيرفر بشكل دائم ومتزامن عبر كافة الفروع والأجهزة للأبد.
+                      </p>
+                    </div>
+                  </div>
                 </div>
-                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full sm:w-auto">
+
+                <div className="flex flex-wrap items-center gap-1.5 sm:gap-2 w-full xl:w-auto">
                   {/* Promo Sort Order Selector */}
                   <div className="flex items-center gap-1.5 bg-[#1C1814] border border-[#3D332A] px-2.5 py-1.5 rounded-lg sm:rounded-xl">
-                    <span className="text-[11px] font-bold text-[#D4A373] shrink-0">ترتيب الأكواد:</span>
+                    <span className="text-[11px] font-bold text-[#D4A373] shrink-0">ترتيب:</span>
                     <select
                       value={promoSortOrder}
                       onChange={(e) => setPromoSortOrder(e.target.value as any)}
@@ -2588,43 +2603,60 @@ export const AdminDashboard: React.FC = () => {
                   <button
                     onClick={async () => {
                       try {
-                        const currentPromos = useStore.getState().promoCodes || [];
-                        // 1. Push current local promos first to cloud
-                        pushPromoCodesToCloud(currentPromos);
-
-                        let serverPromos: PromoCode[] = [];
-                        // 2. Fetch latest promos from server API
-                        try {
-                          const res = await fetch('/api/store-data');
-                          if (res.ok) {
-                            const data = await res.json();
-                            if (data && Array.isArray(data.promoCodes)) {
-                              serverPromos = data.promoCodes;
-                            }
-                          }
-                        } catch (err) {
-                          console.warn('Failed to fetch from /api/store-data during sync:', err);
-                        }
-
-                        // 3. Merge current local promos and server promos safely preserving burned/used statuses
-                        const merged = mergePromoCodes(currentPromos, serverPromos);
-
-                        // 4. Update store and push final merged array back to cloud & local storage
-                        useStore.setState({ promoCodes: merged });
-                        pushPromoCodesToCloud(merged);
-
-                        const burnedCount = merged.filter(p => p.isUsed).length;
-                        alert(`تمت المزامنة السحابية الفورية بنجاح!\n• الإجمالي: ${merged.length} كود خصم\n• المحروقة/المستخدمة: ${burnedCount} كود\n\nجميع الأكواد محفوظة ومتزامنة مع حساب الإدمن والسيرفر وتظهر على جميع الأجهزة.`);
+                        setIsSyncingPromos(true);
+                        const res = await syncAllPromoCodesAcrossCloud();
+                        alert(`✅ تمت المزامنة السحابية بنجاح عبر كافة الأجهزة والفروع!\n\n• إجمالي الأكواد المتوفرة: ${res.totalCount} كود خصم\n• الأكواد المستهلكة/المحروقة: ${res.burnedCount} كود\n• الأكواد الجاهزة والنشطة: ${res.totalCount - res.burnedCount} كود\n\nتم حفظ وتثبيت كافة الأكواد في الداتابيز السحابية والسيرفر بشكل دائم.`);
                       } catch (e: any) {
-                        alert('تم إجراء المزامنة السحابية الحية بنجاح.');
+                        alert(`حدث خطأ أثناء المزامنة: ${e.message || e}`);
+                      } finally {
+                        setIsSyncingPromos(false);
                       }
                     }}
-                    className="bg-[#2D2721] hover:bg-[#3D332A] text-[#FAEDCD] font-bold text-[11px] sm:text-xs px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl flex items-center justify-center gap-1 border border-[#3D332A] cursor-pointer transition-all active:scale-95 flex-1 sm:flex-none"
-                    title="مزامنة سحابية واستعادة جميع الأكواد المحفوظة والمحروقة من السيرفر والداتابيز"
+                    disabled={isSyncingPromos}
+                    className="bg-[#2D2721] hover:bg-[#3D332A] text-[#FAEDCD] font-bold text-[11px] sm:text-xs px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl flex items-center justify-center gap-1.5 border border-[#00A859]/40 cursor-pointer transition-all active:scale-95 flex-1 sm:flex-none disabled:opacity-50"
+                    title="مزامنة سحابية واسترجاع جميع الأكواد المحفوظة والمحروقة من السيرفر وفروع المقهى"
                   >
-                    <RefreshCw className="w-3.5 h-3.5 text-[#00A859]" />
-                    <span>مزامنة سحابية</span>
+                    <RefreshCw className={`w-3.5 h-3.5 text-[#00A859] ${isSyncingPromos ? 'animate-spin' : ''}`} />
+                    <span>{isSyncingPromos ? 'جاري المزامنة...' : 'مزامنة سحابية 🔄'}</span>
                   </button>
+
+                  {/* Backup JSON Download Button */}
+                  <button
+                    onClick={() => {
+                      try {
+                        const current = useStore.getState().promoCodes || [];
+                        const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(current, null, 2));
+                        const downloadAnchor = document.createElement('a');
+                        downloadAnchor.setAttribute("href", dataStr);
+                        downloadAnchor.setAttribute("download", `cortado_promo_codes_backup_${new Date().toISOString().split('T')[0]}.json`);
+                        document.body.appendChild(downloadAnchor);
+                        downloadAnchor.click();
+                        downloadAnchor.remove();
+                      } catch (err) {
+                        alert('فشل تصدير ملف النسخة الاحتياطية.');
+                      }
+                    }}
+                    className="bg-[#1F2937] hover:bg-[#374151] text-amber-300 font-bold text-[11px] sm:text-xs px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl flex items-center justify-center gap-1 border border-amber-500/30 cursor-pointer transition-all active:scale-95 flex-1 sm:flex-none"
+                    title="تحميل نسخة احتياطية من جميع الأكواد كملف JSON لضمان حفظها للأبد"
+                  >
+                    <Download className="w-3.5 h-3.5 text-amber-400" />
+                    <span>نسخة JSON 💾</span>
+                  </button>
+
+                  {/* Restore / Import JSON Button */}
+                  <button
+                    onClick={() => {
+                      setImportPromoText('');
+                      setImportFeedback(null);
+                      setShowImportPromoModal(true);
+                    }}
+                    className="bg-[#1F2937] hover:bg-[#374151] text-emerald-300 font-bold text-[11px] sm:text-xs px-2.5 py-1.5 sm:px-3 sm:py-2.5 rounded-lg sm:rounded-xl flex items-center justify-center gap-1 border border-emerald-500/30 cursor-pointer transition-all active:scale-95 flex-1 sm:flex-none"
+                    title="استيراد واسترجاع أكواد من ملف JSON أو نص منسوخ"
+                  >
+                    <Upload className="w-3.5 h-3.5 text-emerald-400" />
+                    <span>استيراد 📥</span>
+                  </button>
+
                   {/* Create Discount Image Card Button */}
                   <button
                     onClick={() => setShowPromoCardModal(true)}
@@ -3535,6 +3567,153 @@ export const AdminDashboard: React.FC = () => {
         isOpen={showPromoCardModal}
         onClose={() => setShowPromoCardModal(false)}
       />
+
+      {/* --- PROMO CODES RESTORE / IMPORT JSON MODAL --- */}
+      {showImportPromoModal && (
+        <div className="fixed inset-0 z-60 bg-black/80 backdrop-blur-md flex items-center justify-center p-4">
+          <div className="bg-[#1C1814] border border-[#00A859]/50 rounded-3xl p-6 max-w-xl w-full space-y-4 text-right shadow-2xl">
+            <div className="flex items-center justify-between border-b border-white/10 pb-3">
+              <div className="flex items-center gap-2 text-[#FAEDCD]">
+                <Upload className="w-5 h-5 text-[#00A859]" />
+                <h3 className="font-black text-sm sm:text-base">استيراد واسترجاع أكواد الخصم (JSON)</h3>
+              </div>
+              <button
+                onClick={() => {
+                  setShowImportPromoModal(false);
+                  setImportPromoText('');
+                  setImportFeedback(null);
+                }}
+                className="text-[#FAEDCD]/60 hover:text-white p-1 rounded-lg"
+              >
+                <X className="w-5 h-5" />
+              </button>
+            </div>
+
+            <p className="text-xs text-[#FAEDCD]/70 leading-relaxed">
+              يمكنك رفع ملف نسخة احتياطية <span className="font-mono text-amber-300">.json</span> أو لصق مصفوفة الأكواد هنا مباشرة. سيتم دمج الأكواد بشكل ذكي وتحديث السيرفر والسحابة فوراً بدون تكرار وبحفظ كامل للأكواد المحروقة.
+            </p>
+
+            {/* File Upload Input */}
+            <div>
+              <label className="block text-xs font-bold text-[#D4A373] mb-1.5">رفع ملف نسخة احتياطية (.json):</label>
+              <input
+                type="file"
+                accept=".json,application/json"
+                onChange={(e) => {
+                  const file = e.target.files?.[0];
+                  if (file) {
+                    const reader = new FileReader();
+                    reader.onload = (event) => {
+                      const content = event.target?.result as string;
+                      if (content) {
+                        setImportPromoText(content);
+                      }
+                    };
+                    reader.readAsText(file);
+                  }
+                }}
+                className="w-full text-xs text-[#FAEDCD]/80 file:mr-4 file:py-2 file:px-4 file:rounded-xl file:border-0 file:text-xs file:font-bold file:bg-[#00A859] file:text-white hover:file:bg-[#008A48] cursor-pointer bg-[#26201B] border border-white/10 rounded-xl p-2"
+              />
+            </div>
+
+            {/* Textarea for JSON */}
+            <div>
+              <label className="block text-xs font-bold text-[#D4A373] mb-1.5">أو الصق كود JSON مباشرة:</label>
+              <textarea
+                value={importPromoText}
+                onChange={(e) => setImportPromoText(e.target.value)}
+                placeholder='[ { "code": "CRT-500", "type": "percentage", "value": 15, "maxUses": 1, "isUsed": false } ]'
+                rows={6}
+                className="w-full bg-[#26201B] border border-white/10 rounded-xl p-3 text-xs font-mono text-emerald-300 outline-none focus:border-[#00A859] dir-ltr text-left"
+              />
+            </div>
+
+            {/* Feedback Message */}
+            {importFeedback && (
+              <div
+                className={`p-3 rounded-xl text-xs font-bold flex items-center gap-2 ${
+                  importFeedback.type === 'success'
+                    ? 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
+                    : 'bg-rose-500/20 text-rose-300 border border-rose-500/30'
+                }`}
+              >
+                {importFeedback.type === 'success' ? <CheckCircle2 className="w-4 h-4 shrink-0" /> : <AlertCircle className="w-4 h-4 shrink-0" />}
+                <span>{importFeedback.message}</span>
+              </div>
+            )}
+
+            {/* Actions */}
+            <div className="flex items-center justify-end gap-2 pt-2 border-t border-white/10">
+              <button
+                type="button"
+                onClick={() => {
+                  setShowImportPromoModal(false);
+                  setImportPromoText('');
+                  setImportFeedback(null);
+                }}
+                className="bg-[#2D2926] hover:bg-[#3D332A] text-[#FAEDCD] text-xs font-bold px-4 py-2.5 rounded-xl cursor-pointer"
+              >
+                إلغاء
+              </button>
+              <button
+                type="button"
+                onClick={async () => {
+                  if (!importPromoText.trim()) {
+                    setImportFeedback({ type: 'error', message: 'يرجى لصق بيانات الأكواد أو رفع ملف JSON' });
+                    return;
+                  }
+                  try {
+                    let parsed = JSON.parse(importPromoText.trim());
+                    if (!Array.isArray(parsed) && parsed.promoCodes && Array.isArray(parsed.promoCodes)) {
+                      parsed = parsed.promoCodes;
+                    }
+                    if (!Array.isArray(parsed) || parsed.length === 0) {
+                      setImportFeedback({ type: 'error', message: 'صيغة البيانات غير صحيحة. يجب أن تكون مصفوفة أكواد JSON' });
+                      return;
+                    }
+
+                    const sanitized: PromoCode[] = parsed.map((p: any, idx: number) => ({
+                      id: p.id || `imported-${Date.now()}-${idx}`,
+                      code: String(p.code || p.id || `IMP-${idx}`).toUpperCase().trim(),
+                      type: p.type || p.discountType || 'percentage',
+                      value: Number(p.value ?? p.discountValue ?? 10),
+                      minOrderValue: Number(p.minOrderValue || 0),
+                      maxDiscountAmount: p.maxDiscountAmount ? Number(p.maxDiscountAmount) : undefined,
+                      isActive: typeof p.isActive === 'boolean' ? p.isActive : true,
+                      isOneTime: typeof p.isOneTime === 'boolean' ? p.isOneTime : true,
+                      maxUses: Number(p.maxUses || 1),
+                      usedCount: Number(p.usedCount || 0),
+                      isUsed: Boolean(p.isUsed || (p.usedCount && p.maxUses && p.usedCount >= p.maxUses)),
+                      usedAt: p.usedAt,
+                      groupName: p.groupName || 'مستورد',
+                      expiryDate: p.expiryDate || '2027-12-31',
+                      createdAt: p.createdAt || new Date().toISOString()
+                    }));
+
+                    addPromoCodesBulk(sanitized);
+                    const syncRes = await syncAllPromoCodesAcrossCloud();
+                    setImportFeedback({ 
+                      type: 'success', 
+                      message: `تم استيراد وحفظ ${sanitized.length} كود بنجاح ومزامنتها سحابياً! الإجمالي في النظام: ${syncRes.totalCount} كود.` 
+                    });
+                    setTimeout(() => {
+                      setShowImportPromoModal(false);
+                      setImportPromoText('');
+                      setImportFeedback(null);
+                    }, 2000);
+                  } catch (err: any) {
+                    setImportFeedback({ type: 'error', message: `خطأ في قراءة ملف JSON: ${err.message}` });
+                  }
+                }}
+                className="bg-[#00A859] hover:bg-[#008A48] text-white text-xs font-black px-6 py-2.5 rounded-xl cursor-pointer shadow-lg active:scale-95 transition-all"
+              >
+                تأكيد الاستيراد والمزامنة السحابية 🚀
+              </button>
+            </div>
+
+          </div>
+        </div>
+      )}
 
     </div>
   );

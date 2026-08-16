@@ -1,4 +1,4 @@
-import { doc, setDoc, getDoc, onSnapshot } from 'firebase/firestore';
+import { doc, setDoc, getDoc, collection, getDocs, onSnapshot, writeBatch } from 'firebase/firestore';
 import { db } from './firebase';
 import { useStore, setCloudSyncCallback } from './store';
 import { SiteSettings, Category, Product, PromoCode, Order, Customer } from '../types';
@@ -9,6 +9,7 @@ let lastServerTimestamp = '';
 
 const SETTINGS_LOCAL_STORAGE_KEY = 'cortado_live_site_settings_v2';
 const PROMOS_LOCAL_STORAGE_KEY = 'cortado_live_promo_codes_backup_v1';
+const PROMOS_ARCHIVE_STORAGE_KEY = 'cortado_promo_codes_archive_v2';
 
 // Helper to save promo codes locally to localStorage as an extra persistent safeguard
 function savePromoCodesToLocalStorage(promoCodes: PromoCode[]) {
@@ -16,6 +17,11 @@ function savePromoCodesToLocalStorage(promoCodes: PromoCode[]) {
   try {
     if (Array.isArray(promoCodes) && promoCodes.length > 0) {
       window.localStorage.setItem(PROMOS_LOCAL_STORAGE_KEY, JSON.stringify(promoCodes));
+      
+      // Also merge into permanent browser archive
+      const existingArchive = loadPromoCodesFromLocalStorage();
+      const mergedArchive = mergePromoCodes(existingArchive, promoCodes);
+      window.localStorage.setItem(PROMOS_ARCHIVE_STORAGE_KEY, JSON.stringify(mergedArchive));
     }
   } catch (e) {
     console.warn('Failed to save promo codes to localStorage:', e);
@@ -25,16 +31,22 @@ function savePromoCodesToLocalStorage(promoCodes: PromoCode[]) {
 // Helper to load promo codes from localStorage
 function loadPromoCodesFromLocalStorage(): PromoCode[] {
   if (typeof window === 'undefined' || !window.localStorage) return [];
+  const list: PromoCode[] = [];
   try {
+    const rawArchive = window.localStorage.getItem(PROMOS_ARCHIVE_STORAGE_KEY);
+    if (rawArchive) {
+      const parsed = JSON.parse(rawArchive);
+      if (Array.isArray(parsed)) list.push(...parsed);
+    }
     const raw = window.localStorage.getItem(PROMOS_LOCAL_STORAGE_KEY);
     if (raw) {
       const parsed = JSON.parse(raw);
-      if (Array.isArray(parsed)) return parsed;
+      if (Array.isArray(parsed)) list.push(...parsed);
     }
   } catch (e) {
     console.warn('Failed to load promo codes from localStorage:', e);
   }
-  return [];
+  return list;
 }
 
 // Smart non-destructive merger for Promo Codes to preserve created and burned/used states across devices
@@ -112,10 +124,13 @@ export function mergePromoCodes(existingList: PromoCode[], incomingList: PromoCo
             ...p,
             createdAt,
             isActive: typeof p.isActive === 'boolean' ? p.isActive : existing.isActive,
-            discountType: p.discountType || existing.discountType,
-            discountValue: p.discountValue ?? existing.discountValue,
-            minOrderValue: p.minOrderValue ?? existing.minOrderValue,
+            discountType: p.discountType || (p as any).type || existing.discountType,
+            discountValue: p.discountValue ?? (p as any).value ?? existing.discountValue,
+            minOrderValue: p.minOrderValue ?? existing.minOrderValue ?? 0,
             maxDiscountAmount: p.maxDiscountAmount ?? existing.maxDiscountAmount,
+            maxUses: p.maxUses ?? existing.maxUses ?? 1000,
+            expiryDate: p.expiryDate || existing.expiryDate || '2027-12-31',
+            groupName: p.groupName || existing.groupName,
             isUsed: isUsedCombined,
             usedCount: maxUsedCount,
             usedAt: usedAtCombined,
@@ -247,14 +262,142 @@ export async function pushProductsToCloud(products: Product[], isExplicitDelete 
 
 export async function pushPromoCodesToCloud(promoCodes: PromoCode[], isExplicitDelete = false) {
   savePromoCodesToLocalStorage(promoCodes);
+  
+  // 1. Send to server dedicated archive endpoint
+  try {
+    fetch('/api/promo-codes', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ promoCodes, isExplicitDelete })
+    }).catch(e => console.warn('POST /api/promo-codes notice:', e));
+  } catch (err) {
+    console.warn('Network error pushing to /api/promo-codes:', err);
+  }
+
+  // 2. Also send to general store data
   syncWithServer({ promoCodes, isExplicitDelete });
+  
+  // 3. Post to local tabs
   if (broadcastChannel) broadcastChannel.postMessage({ type: 'promoCodes', payload: promoCodes });
+  
+  // 4. Send to Firestore doc & individual collection docs
   if (!db) return;
   try {
     await setDoc(doc(db, 'site_data', 'promoCodes'), { items: promoCodes, updatedAt: new Date().toISOString() });
+    
+    // Also save to separate collection for ultimate redundancy
+    if (Array.isArray(promoCodes) && promoCodes.length > 0) {
+      try {
+        const batch = writeBatch(db);
+        // Write top 300 codes to collection
+        promoCodes.slice(0, 300).forEach(p => {
+          if (p && (p.code || p.id)) {
+            const safeCode = (p.code || p.id).toUpperCase().trim().replace(/[\/\s#?]/g, '_');
+            batch.set(doc(db, 'promoCodes', safeCode), p, { merge: true });
+          }
+        });
+        batch.commit().catch(e => console.warn('Firestore promoCodes batch commit notice:', e));
+      } catch (be) {
+        console.warn('Batch write error:', be);
+      }
+    }
   } catch (error) {
     console.error('Failed to push promo codes to Firestore:', error);
   }
+}
+
+// Master bidirectional Cloud Synchronization function for Promo Codes across all devices and branches
+export async function syncAllPromoCodesAcrossCloud(): Promise<{
+  success: boolean;
+  totalCount: number;
+  burnedCount: number;
+  promoCodes: PromoCode[];
+  message: string;
+}> {
+  const collected: PromoCode[] = [];
+
+  // 1. Gather from current Zustand store
+  const storePromos = useStore.getState().promoCodes || [];
+  collected.push(...storePromos);
+
+  // 2. Gather from LocalStorage backups (both current and archive)
+  const localPromos = loadPromoCodesFromLocalStorage();
+  collected.push(...localPromos);
+
+  // 3. Gather from dedicated Server endpoint
+  try {
+    const res = await fetch('/api/promo-codes');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.promoCodes)) {
+        collected.push(...data.promoCodes);
+      }
+    }
+  } catch (e) {
+    console.warn('Sync notice: server /api/promo-codes:', e);
+  }
+
+  // 4. Gather from general Server store data
+  try {
+    const res = await fetch('/api/store-data');
+    if (res.ok) {
+      const data = await res.json();
+      if (data && Array.isArray(data.promoCodes)) {
+        collected.push(...data.promoCodes);
+      }
+    }
+  } catch (e) {
+    console.warn('Sync notice: server /api/store-data:', e);
+  }
+
+  // 5. Gather from Firestore Doc
+  if (db) {
+    try {
+      const docSnap = await getDoc(doc(db, 'site_data', 'promoCodes'));
+      if (docSnap.exists()) {
+        const data = docSnap.data();
+        if (data && Array.isArray(data.items)) {
+          collected.push(...data.items);
+        }
+      }
+    } catch (e) {
+      console.warn('Sync notice: firestore site_data/promoCodes:', e);
+    }
+
+    // 6. Gather from Firestore Collection
+    try {
+      const colSnap = await getDocs(collection(db, 'promoCodes'));
+      colSnap.forEach((item) => {
+        if (item.exists()) {
+          collected.push(item.data() as PromoCode);
+        }
+      });
+    } catch (e) {
+      console.warn('Sync notice: firestore collection promoCodes:', e);
+    }
+  }
+
+  // 7. Non-destructively merge everything
+  const merged = mergePromoCodes([], collected);
+
+  // 8. Update in-memory store
+  useStore.setState({ promoCodes: merged });
+
+  // 9. Persist to localStorage
+  savePromoCodesToLocalStorage(merged);
+
+  // 10. Push to Server & Firestore
+  await pushPromoCodesToCloud(merged);
+
+  const burnedCount = merged.filter(p => p.isUsed || (p.usedCount && p.maxUses && p.usedCount >= p.maxUses)).length;
+
+  return {
+    success: true,
+    totalCount: merged.length,
+    burnedCount,
+    promoCodes: merged,
+    message: `تمت المزامنة السحابية بنجاح! تم حفظ وتأكيد ${merged.length} كود خصم متزامن عبر كافة الفروع والأجهزة.`
+  };
 }
 
 export async function pushOrdersToCloud(orders: Order[]) {
@@ -333,52 +476,69 @@ export const applySettings = (cloudSettings: Partial<SiteSettings>, persistToLoc
 async function fetchServerStoreData() {
   try {
     const res = await fetch('/api/store-data');
-    if (!res.ok) return;
+    if (res.ok) {
+      const contentType = res.headers.get('content-type');
+      if (contentType && contentType.includes('application/json')) {
+        const data = await res.json();
+        if (data) {
+          if (!data.updatedAt || data.updatedAt !== lastServerTimestamp) {
+            lastServerTimestamp = data.updatedAt || '';
 
-    const contentType = res.headers.get('content-type');
-    if (!contentType || !contentType.includes('application/json')) return;
+            // Only apply server settings if it's updated
+            if (data.settings && data.updatedAt) {
+              applySettings({ ...data.settings, updatedAt: data.updatedAt }, true);
+            }
+            if (Array.isArray(data.categories) && data.categories.length > 0) {
+              useStore.setState({ categories: data.categories });
+            }
+            if (Array.isArray(data.products) && data.products.length > 0) {
+              const sanitizedProducts = data.products.map((p: Product) => ({
+                ...p,
+                price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+                sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
+                  ...s,
+                  price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+                })) : p.sizes
+              }));
+              useStore.setState({ products: sanitizedProducts });
+            }
+            if (Array.isArray(data.promoCodes)) {
+              const current = useStore.getState().promoCodes || [];
+              const merged = mergePromoCodes(current, data.promoCodes);
+              useStore.setState({ promoCodes: merged });
+              savePromoCodesToLocalStorage(merged);
+            }
+            if (Array.isArray(data.orders)) {
+              const currentOrders = useStore.getState().orders || [];
+              const merged = mergeOrdersHelper(currentOrders, data.orders);
+              useStore.setState({ orders: merged });
+            }
+            if (Array.isArray(data.customers)) {
+              const currentCusts = useStore.getState().customers || [];
+              const merged = mergeCustomersHelper(currentCusts, data.customers);
+              useStore.setState({ customers: merged });
+            }
+          }
+        }
+      }
+    }
 
-    const data = await res.json();
-    if (!data) return;
-
-    if (data.updatedAt && data.updatedAt === lastServerTimestamp) {
-      return; // No new changes
-    }
-    lastServerTimestamp = data.updatedAt || '';
-
-    // Only apply server settings if it's updated
-    if (data.settings && data.updatedAt) {
-      applySettings({ ...data.settings, updatedAt: data.updatedAt }, true);
-    }
-    if (Array.isArray(data.categories) && data.categories.length > 0) {
-      useStore.setState({ categories: data.categories });
-    }
-    if (Array.isArray(data.products) && data.products.length > 0) {
-      const sanitizedProducts = data.products.map((p: Product) => ({
-        ...p,
-        price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
-        sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
-          ...s,
-          price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
-        })) : p.sizes
-      }));
-      useStore.setState({ products: sanitizedProducts });
-    }
-    if (Array.isArray(data.promoCodes)) {
-      const current = useStore.getState().promoCodes || [];
-      const merged = mergePromoCodes(current, data.promoCodes);
-      useStore.setState({ promoCodes: merged });
-      savePromoCodesToLocalStorage(merged);
-    }
-    if (Array.isArray(data.orders)) {
-      const currentOrders = useStore.getState().orders || [];
-      const merged = mergeOrdersHelper(currentOrders, data.orders);
-      useStore.setState({ orders: merged });
-    }
-    if (Array.isArray(data.customers)) {
-      const currentCusts = useStore.getState().customers || [];
-      const merged = mergeCustomersHelper(currentCusts, data.customers);
-      useStore.setState({ customers: merged });
+    // Also fetch dedicated promo codes endpoint for 100% guarantee
+    try {
+      const pRes = await fetch('/api/promo-codes');
+      if (pRes.ok) {
+        const pData = await pRes.json();
+        if (pData && Array.isArray(pData.promoCodes) && pData.promoCodes.length > 0) {
+          const current = useStore.getState().promoCodes || [];
+          if (pData.promoCodes.length > current.length || pData.promoCodes.some((p: any) => p.isUsed)) {
+            const merged = mergePromoCodes(current, pData.promoCodes);
+            useStore.setState({ promoCodes: merged });
+            savePromoCodesToLocalStorage(merged);
+          }
+        }
+      }
+    } catch (pe) {
+      // Ignore background promo fetch error
     }
   } catch (e) {
     console.warn('Failed to fetch store data from server:', e);
@@ -480,6 +640,19 @@ export function initFirestoreSync() {
         }
       }
     }).catch((e) => console.warn('Initial Firestore promoCodes fetch error:', e));
+
+    getDocs(collection(db, 'promoCodes')).then((snap) => {
+      const collItems: PromoCode[] = [];
+      snap.forEach((d) => {
+        if (d.exists()) collItems.push(d.data() as PromoCode);
+      });
+      if (collItems.length > 0) {
+        const currentPromos = useStore.getState().promoCodes || [];
+        const merged = mergePromoCodes(currentPromos, collItems);
+        useStore.setState({ promoCodes: merged });
+        savePromoCodesToLocalStorage(merged);
+      }
+    }).catch((e) => console.warn('Initial Firestore collection promoCodes fetch error:', e));
 
     getDoc(doc(db, 'site_data', 'orders')).then((snap) => {
       if (snap.exists()) {
