@@ -261,10 +261,7 @@ export function sanitizeForFirestore<T>(data: T): T {
 function saveSettingsToLocalStorage(settings: SiteSettings) {
   if (typeof window === 'undefined' || !window.localStorage) return;
   try {
-    window.localStorage.setItem(SETTINGS_LOCAL_STORAGE_KEY, JSON.stringify({
-      ...settings,
-      updatedAt: new Date().toISOString()
-    }));
+    window.localStorage.setItem(SETTINGS_LOCAL_STORAGE_KEY, JSON.stringify(settings));
   } catch (e) {
     console.warn('Failed to save settings to localStorage:', e);
   }
@@ -281,17 +278,7 @@ export async function pushSettingsToCloud(settings: SiteSettings) {
   // 1. Immediately save locally for zero delay
   saveSettingsToLocalStorage(payload);
 
-  // 2. Sync with server memory/disk via dedicated /api/settings and /api/store-data
-  try {
-    fetch('/api/settings', {
-      method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify(payload)
-    }).catch(() => {});
-  } catch {}
-  syncWithServer({ settings: payload }).catch(() => {});
-
-  // 3. Broadcast to other tabs on same browser
+  // 2. Broadcast to other tabs on same browser
   if (broadcastChannel) {
     try {
       broadcastChannel.postMessage({ type: 'settings', payload });
@@ -303,8 +290,18 @@ export async function pushSettingsToCloud(settings: SiteSettings) {
     window.dispatchEvent(new CustomEvent('cortado_local_settings_sync', { detail: payload }));
   }
 
-  // 4. Update local store state with the new timestamped payload
+  // 3. Update local store state with the new timestamped payload
   useStore.setState({ settings: payload });
+
+  // 4. Sync with server memory/disk via dedicated /api/settings and /api/store-data
+  try {
+    fetch('/api/settings', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(payload)
+    }).catch(() => {});
+  } catch {}
+  syncWithServer({ settings: payload }).catch(() => {});
 
   // 5. Write to Firestore as global cloud single source of truth concurrently in background
   if (!db) return;
@@ -621,9 +618,9 @@ async function fetchServerStoreData() {
           if (!data.updatedAt || data.updatedAt !== lastServerTimestamp) {
             lastServerTimestamp = data.updatedAt || '';
 
-            // Only apply server settings if it's updated
-            if (data.settings && data.updatedAt) {
-              applySettings({ ...data.settings, updatedAt: data.updatedAt }, true);
+            // Only apply server settings if it's explicitly present
+            if (data.settings) {
+              applySettings(data.settings, true);
             }
             if (Array.isArray(data.categories) && data.categories.length > 0) {
               useStore.setState({ categories: data.categories });

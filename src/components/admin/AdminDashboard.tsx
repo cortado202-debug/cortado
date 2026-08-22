@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useStore } from '../../lib/store';
-import { Product, PromoCode, OrderStatus, CategoryId, BranchLocation, PaymentMethod, QuickLinkItem } from '../../types';
+import { Product, PromoCode, OrderStatus, CategoryId, BranchLocation, PaymentMethod, QuickLinkItem, SiteSettings } from '../../types';
 import { DEFAULT_QUICK_LINKS } from '../../data/initialData';
 import { 
   X, 
@@ -582,9 +582,11 @@ export const AdminDashboard: React.FC = () => {
 
   const handleToggleStoreStatus = () => {
     const newStatus = settings.isStoreOpen === false ? true : false;
-    const newSettingsObj = {
+    const now = new Date().toISOString();
+    const newSettingsObj: SiteSettings = {
       ...settings,
-      isStoreOpen: newStatus
+      isStoreOpen: newStatus,
+      updatedAt: now
     };
     updateSettings(newSettingsObj);
   };

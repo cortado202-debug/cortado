@@ -304,7 +304,7 @@ async function startServer() {
       res.json({
         success: true,
         settings: updatedSettings,
-        updatedAt: now
+        updatedAt: updatedSettings.updatedAt
       });
     } catch (err: any) {
       res.status(500).json({ success: false, error: err.message });
@@ -470,10 +470,16 @@ async function startServer() {
     try {
       const incoming = req.body || {};
       
-      // 1. Settings (merge so no settings field is lost)
-      const settings = incoming.settings 
-        ? { ...inMemoryStore.settings, ...incoming.settings } 
-        : inMemoryStore.settings;
+      // 1. Settings (only update if incoming.settings is explicitly provided)
+      let settings = inMemoryStore.settings;
+      if (incoming.settings && typeof incoming.settings === 'object' && Object.keys(incoming.settings).length > 0) {
+        const now = new Date().toISOString();
+        settings = {
+          ...inMemoryStore.settings,
+          ...incoming.settings,
+          updatedAt: incoming.settings.updatedAt || inMemoryStore.settings?.updatedAt || now
+        };
+      }
 
       // 2. Categories (non-destructive merge by id)
       let categories = inMemoryStore.categories;
