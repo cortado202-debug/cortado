@@ -1206,8 +1206,8 @@
     {
       "id": "prod-37",
       "categoryId": "cat-3",
-      "nameAr": "عصير قريز",
-      "nameEn": "عصير قريز",
+      "nameAr": "عصير فريز",
+      "nameEn": "عصير فريز",
       "price": 180,
       "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
       "ingredients": [
@@ -3221,45 +3221,69 @@
     {
       "id": "promo-cortado20",
       "code": "CORTADO20",
+      "type": "percentage",
+      "value": 20,
       "discountType": "percentage",
       "discountValue": 20,
+      "maxUses": 1000,
+      "expiryDate": "2027-12-31",
       "isActive": true,
       "minOrderValue": 0,
       "usedCount": 0,
-      "usedByUsers": []
+      "usedByUsers": [],
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "isUsed": false
     },
     {
       "id": "promo-welcome10",
       "code": "WELCOME10",
+      "type": "percentage",
+      "value": 10,
       "discountType": "percentage",
       "discountValue": 10,
+      "maxUses": 1000,
+      "expiryDate": "2027-12-31",
       "isActive": true,
       "minOrderValue": 0,
       "usedCount": 0,
-      "usedByUsers": []
+      "usedByUsers": [],
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "isUsed": false
     },
     {
       "id": "promo-cortado50",
       "code": "CORTADO50",
+      "type": "fixed",
+      "value": 50,
       "discountType": "fixed",
       "discountValue": 50,
+      "maxUses": 1000,
+      "expiryDate": "2027-12-31",
       "isActive": true,
       "minOrderValue": 0,
       "usedCount": 0,
-      "usedByUsers": []
+      "usedByUsers": [],
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "isUsed": false
     },
     {
       "id": "promo-vip100",
       "code": "VIP100",
+      "type": "fixed",
+      "value": 100,
       "discountType": "fixed",
       "discountValue": 100,
+      "maxUses": 1000,
+      "expiryDate": "2027-12-31",
       "isActive": true,
       "minOrderValue": 0,
       "usedCount": 0,
-      "usedByUsers": []
+      "usedByUsers": [],
+      "createdAt": "2025-01-01T00:00:00.000Z",
+      "isUsed": false
     }
   ],
   "orders": [],
   "customers": [],
-  "updatedAt": "2026-08-11T18:29:11.538Z"
+  "updatedAt": "2026-08-22T09:28:09.055Z"
 }

@@ -1088,8 +1088,8 @@ export const INITIAL_PRODUCTS: Product[] = [
   {
     "id": "prod-37",
     "categoryId": "cat-3",
-    "nameAr": "عصير قريز",
-    "nameEn": "عصير قريز",
+    "nameAr": "عصير فريز",
+    "nameEn": "عصير فريز",
     "price": 180,
     "descriptionAr": "مشروب فاخر محضر بعناية وحرفية عالية من أفضل المكونات في كورتادو كافيه.",
     "ingredients": [

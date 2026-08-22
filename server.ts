@@ -11,6 +11,7 @@ const __dirname = path.dirname(__filename);
 const DATA_DIR = path.join(process.cwd(), 'data');
 const DB_FILE = path.join(DATA_DIR, 'store_db.json');
 const PROMO_ARCHIVE_FILE = path.join(DATA_DIR, 'promo_codes_archive.json');
+const PRODUCTS_ARCHIVE_FILE = path.join(DATA_DIR, 'products_archive.json');
 
 // Ensure data directory exists if possible
 try {
@@ -21,17 +22,57 @@ try {
   console.warn('Read-only filesystem detected, using in-memory store:', err);
 }
 
-// Helper to sanitize prices (remove two zeroes if legacy price >= 1000)
+// Helper to sanitize prices & correct legacy typo names
 function sanitizeProductPrices(products: any[]) {
   if (!Array.isArray(products)) return [];
-  return products.map((p: any) => ({
-    ...p,
-    price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
-    sizes: Array.isArray(p.sizes) ? p.sizes.map((s: any) => ({
-      ...s,
-      price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
-    })) : p.sizes
-  }));
+  return products.map((p: any) => {
+    let nameAr = p.nameAr;
+    let nameEn = p.nameEn;
+    if (p.id === 'prod-37' || nameAr === 'عصير قريز') {
+      nameAr = 'عصير فريز';
+      if (nameEn === 'عصير قريز') nameEn = 'عصير فريز';
+    }
+    return {
+      ...p,
+      nameAr,
+      nameEn,
+      price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+      sizes: Array.isArray(p.sizes) ? p.sizes.map((s: any) => ({
+        ...s,
+        price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+      })) : p.sizes
+    };
+  });
+}
+
+// Load products from archive file
+function loadProductsArchive(): any[] {
+  try {
+    if (fs.existsSync(PRODUCTS_ARCHIVE_FILE)) {
+      const raw = fs.readFileSync(PRODUCTS_ARCHIVE_FILE, 'utf-8');
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return sanitizeProductPrices(parsed);
+      }
+    }
+  } catch (err) {
+    console.warn('Error reading products_archive.json:', err);
+  }
+  return [];
+}
+
+// Save products to dedicated archive file
+function saveProductsArchive(products: any[]) {
+  try {
+    if (Array.isArray(products) && products.length > 0) {
+      if (!fs.existsSync(DATA_DIR)) {
+        fs.mkdirSync(DATA_DIR, { recursive: true });
+      }
+      fs.writeFileSync(PRODUCTS_ARCHIVE_FILE, JSON.stringify(products, null, 2), 'utf-8');
+    }
+  } catch (err) {
+    console.warn('Error writing products_archive.json:', err);
+  }
 }
 
 // Helper to extract timestamp from promo code
@@ -161,6 +202,7 @@ const defaultStoreData = {
 // Load store data from disk or fallback
 function loadStoreDb() {
   const archivePromos = loadPromoArchive();
+  const archiveProducts = loadProductsArchive();
   try {
     if (fs.existsSync(DB_FILE)) {
       const raw = fs.readFileSync(DB_FILE, 'utf-8');
@@ -169,10 +211,22 @@ function loadStoreDb() {
         Array.isArray(parsed.promoCodes) ? parsed.promoCodes : INITIAL_PROMO_CODES,
         archivePromos
       );
+      
+      let baseProducts = Array.isArray(parsed.products) && parsed.products.length > 0 
+        ? parsed.products 
+        : (archiveProducts.length > 0 ? archiveProducts : INITIAL_PRODUCTS);
+      
+      if (archiveProducts.length > 0) {
+        const pMap = new Map<string, any>();
+        baseProducts.forEach((p: any) => { if (p && p.id) pMap.set(p.id, p); });
+        archiveProducts.forEach((p: any) => { if (p && p.id) pMap.set(p.id, { ...(pMap.get(p.id) || {}), ...p }); });
+        baseProducts = Array.from(pMap.values());
+      }
+
       return {
         settings: parsed.settings ? { ...INITIAL_SETTINGS, ...parsed.settings } : INITIAL_SETTINGS,
         categories: Array.isArray(parsed.categories) && parsed.categories.length > 0 ? parsed.categories : INITIAL_CATEGORIES,
-        products: Array.isArray(parsed.products) && parsed.products.length > 0 ? sanitizeProductPrices(parsed.products) : sanitizeProductPrices(INITIAL_PRODUCTS),
+        products: sanitizeProductPrices(baseProducts),
         promoCodes: combinedPromos,
         orders: Array.isArray(parsed.orders) ? parsed.orders : [],
         customers: Array.isArray(parsed.customers) ? parsed.customers : [],
@@ -182,8 +236,10 @@ function loadStoreDb() {
   } catch (err) {
     console.error('Error reading store_db.json, using defaults:', err);
   }
+  const fallbackProds = archiveProducts.length > 0 ? archiveProducts : INITIAL_PRODUCTS;
   return {
     ...defaultStoreData,
+    products: sanitizeProductPrices(fallbackProds),
     promoCodes: mergePromoCodesServer(INITIAL_PROMO_CODES, archivePromos)
   };
 }
@@ -344,6 +400,67 @@ async function startServer() {
 
       res.json({ success: true, message: 'تم حرق الكود بنجاح في السيرفر السحابي', promoCodes: updated });
     } catch (err: any) {
+      res.status(500).json({ success: false, error: err.message });
+    }
+  });
+
+  // Dedicated endpoint to get current products
+  app.get('/api/products', (_req, res) => {
+    res.json({
+      success: true,
+      products: sanitizeProductPrices(inMemoryStore.products || INITIAL_PRODUCTS),
+      totalCount: (inMemoryStore.products || []).length,
+      updatedAt: inMemoryStore.updatedAt
+    });
+  });
+
+  // Dedicated endpoint to save/update/delete products with disk archival
+  app.post('/api/products', (req, res) => {
+    try {
+      const incoming = req.body || {};
+      const isExplicitDelete = Boolean(incoming.isExplicitDelete);
+      
+      let incomingList: any[] = [];
+      if (Array.isArray(incoming.products)) {
+        incomingList = incoming.products;
+      } else if (incoming.product) {
+        incomingList = [incoming.product];
+      } else if (Array.isArray(incoming)) {
+        incomingList = incoming;
+      }
+
+      let updatedProducts = inMemoryStore.products || INITIAL_PRODUCTS;
+
+      if (isExplicitDelete && incomingList.length > 0) {
+        updatedProducts = incomingList;
+      } else if (incomingList.length > 0) {
+        const map = new Map<string, any>();
+        updatedProducts.forEach((p: any) => { if (p && p.id) map.set(p.id, p); });
+        // Replace with incoming item directly so all edited fields (name, price, sizes, etc.) overwrite cleanly
+        incomingList.forEach((p: any) => {
+          if (p && p.id) {
+            const existing = map.get(p.id) || {};
+            map.set(p.id, { ...existing, ...p });
+          }
+        });
+        updatedProducts = Array.from(map.values());
+      }
+
+      updatedProducts = sanitizeProductPrices(updatedProducts);
+      inMemoryStore.products = updatedProducts;
+      inMemoryStore.updatedAt = new Date().toISOString();
+
+      saveProductsArchive(updatedProducts);
+      inMemoryStore = saveStoreDb(inMemoryStore);
+
+      res.json({
+        success: true,
+        products: updatedProducts,
+        totalCount: updatedProducts.length,
+        updatedAt: inMemoryStore.updatedAt
+      });
+    } catch (err: any) {
+      console.error('Failed in POST /api/products:', err);
       res.status(500).json({ success: false, error: err.message });
     }
   });

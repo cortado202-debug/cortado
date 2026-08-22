@@ -10,6 +10,59 @@ let lastServerTimestamp = '';
 const SETTINGS_LOCAL_STORAGE_KEY = 'cortado_live_site_settings_v2';
 const PROMOS_LOCAL_STORAGE_KEY = 'cortado_live_promo_codes_backup_v1';
 const PROMOS_ARCHIVE_STORAGE_KEY = 'cortado_promo_codes_archive_v2';
+const PRODUCTS_LOCAL_STORAGE_KEY = 'cortado_live_products_backup_v2';
+
+// Helper to sanitize prices & fix legacy typos
+export function sanitizeProductsHelper(products: Product[]): Product[] {
+  if (!Array.isArray(products)) return [];
+  return products.map((p: Product) => {
+    let nameAr = p.nameAr;
+    let nameEn = p.nameEn;
+    if (p.id === 'prod-37' || nameAr === 'عصير قريز') {
+      nameAr = 'عصير فريز';
+      if (nameEn === 'عصير قريز') nameEn = 'عصير فريز';
+    }
+    return {
+      ...p,
+      nameAr,
+      nameEn,
+      price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
+      sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
+        ...s,
+        price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
+      })) : p.sizes
+    };
+  });
+}
+
+// Helper to save products locally to localStorage
+export function saveProductsToLocalStorage(products: Product[]) {
+  if (typeof window === 'undefined' || !window.localStorage) return;
+  try {
+    if (Array.isArray(products) && products.length > 0) {
+      window.localStorage.setItem(PRODUCTS_LOCAL_STORAGE_KEY, JSON.stringify(sanitizeProductsHelper(products)));
+    }
+  } catch (e) {
+    console.warn('Failed to save products to localStorage:', e);
+  }
+}
+
+// Helper to load products from localStorage
+export function loadProductsFromLocalStorage(): Product[] {
+  if (typeof window === 'undefined' || !window.localStorage) return [];
+  try {
+    const raw = window.localStorage.getItem(PRODUCTS_LOCAL_STORAGE_KEY);
+    if (raw) {
+      const parsed = JSON.parse(raw);
+      if (Array.isArray(parsed) && parsed.length > 0) {
+        return sanitizeProductsHelper(parsed);
+      }
+    }
+  } catch (e) {
+    console.warn('Failed to load products from localStorage:', e);
+  }
+  return [];
+}
 
 // Helper to save promo codes locally to localStorage as an extra persistent safeguard
 function savePromoCodesToLocalStorage(promoCodes: PromoCode[]) {
@@ -276,12 +329,54 @@ export async function pushCategoriesToCloud(categories: Category[], isExplicitDe
 }
 
 export async function pushProductsToCloud(products: Product[], isExplicitDelete = false) {
-  syncWithServer({ products, isExplicitDelete });
-  if (broadcastChannel) broadcastChannel.postMessage({ type: 'products', payload: products });
+  const sanitizedList = sanitizeProductsHelper(products || []);
+  saveProductsToLocalStorage(sanitizedList);
+
+  // 1. Post to dedicated products endpoint immediately
+  try {
+    fetch('/api/products', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ products: sanitizedList, isExplicitDelete })
+    }).catch(e => console.warn('POST /api/products notice:', e));
+  } catch (err) {
+    console.warn('Network error pushing to /api/products:', err);
+  }
+
+  // 2. Also send to general store data
+  syncWithServer({ products: sanitizedList, isExplicitDelete });
+
+  // 3. Post to local tabs and window event
+  if (broadcastChannel) broadcastChannel.postMessage({ type: 'products', payload: sanitizedList });
+  if (typeof window !== 'undefined') {
+    window.dispatchEvent(new CustomEvent('cortado_local_products_sync', { detail: sanitizedList }));
+  }
+
+  // 4. Send to Firestore doc & individual collection docs
   if (!db) return;
   try {
-    const sanitized = sanitizeForFirestore(products || []);
-    await setDoc(doc(db, 'site_data', 'products'), { items: sanitized, updatedAt: new Date().toISOString() });
+    const firestoreSanitized = sanitizeForFirestore(sanitizedList);
+    await setDoc(doc(db, 'site_data', 'products'), { items: firestoreSanitized, updatedAt: new Date().toISOString() });
+
+    // Also write individual products to 'products' collection for instant item listeners
+    if (Array.isArray(firestoreSanitized) && firestoreSanitized.length > 0) {
+      try {
+        const chunkSize = 300;
+        for (let i = 0; i < firestoreSanitized.length; i += chunkSize) {
+          const chunk = firestoreSanitized.slice(i, i + chunkSize);
+          const batch = writeBatch(db);
+          chunk.forEach((p: any) => {
+            if (p && p.id) {
+              const safeId = String(p.id).replace(/[\/\s#?]/g, '_');
+              batch.set(doc(db, 'products', safeId), p, { merge: true });
+            }
+          });
+          await batch.commit().catch(e => console.warn('Firestore products batch chunk notice:', e));
+        }
+      } catch (be) {
+        console.warn('Firestore individual products batch notice:', be);
+      }
+    }
   } catch (error) {
     console.error('Failed to push products to Firestore:', error);
   }
@@ -534,15 +629,9 @@ async function fetchServerStoreData() {
               useStore.setState({ categories: data.categories });
             }
             if (Array.isArray(data.products) && data.products.length > 0) {
-              const sanitizedProducts = data.products.map((p: Product) => ({
-                ...p,
-                price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
-                sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
-                  ...s,
-                  price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
-                })) : p.sizes
-              }));
+              const sanitizedProducts = sanitizeProductsHelper(data.products);
               useStore.setState({ products: sanitizedProducts });
+              saveProductsToLocalStorage(sanitizedProducts);
             }
             if (Array.isArray(data.promoCodes)) {
               const current = useStore.getState().promoCodes || [];
@@ -563,6 +652,21 @@ async function fetchServerStoreData() {
           }
         }
       }
+    }
+
+    // Also fetch dedicated products endpoint for 100% guarantee
+    try {
+      const prodRes = await fetch('/api/products');
+      if (prodRes.ok) {
+        const prodData = await prodRes.json();
+        if (prodData && Array.isArray(prodData.products) && prodData.products.length > 0) {
+          const sanitized = sanitizeProductsHelper(prodData.products);
+          useStore.setState({ products: sanitized });
+          saveProductsToLocalStorage(sanitized);
+        }
+      }
+    } catch (prode) {
+      // Ignore background product fetch error
     }
 
     // Also fetch dedicated promo codes endpoint for 100% guarantee
@@ -605,8 +709,12 @@ export function initFirestoreSync() {
         const merged = mergePromoCodes(current, localPromos);
         useStore.setState({ promoCodes: merged });
       }
+      const localProducts = loadProductsFromLocalStorage();
+      if (localProducts && localProducts.length > 0) {
+        useStore.setState({ products: localProducts });
+      }
     } catch (e) {
-      console.warn('Error reading cached settings/promos from localStorage:', e);
+      console.warn('Error reading cached settings/promos/products from localStorage:', e);
     }
   }
 
@@ -629,7 +737,11 @@ export function initFirestoreSync() {
       const { type, payload } = event.data || {};
       if (type === 'settings' && payload) applySettings(payload, true);
       else if (type === 'categories' && Array.isArray(payload)) useStore.setState({ categories: payload });
-      else if (type === 'products' && Array.isArray(payload)) useStore.setState({ products: payload });
+      else if (type === 'products' && Array.isArray(payload)) {
+        const sanitized = sanitizeProductsHelper(payload);
+        useStore.setState({ products: sanitized });
+        saveProductsToLocalStorage(sanitized);
+      }
       else if (type === 'promoCodes' && Array.isArray(payload)) useStore.setState({ promoCodes: payload });
       else if (type === 'orders' && Array.isArray(payload)) useStore.setState({ orders: payload });
       else if (type === 'customers' && Array.isArray(payload)) useStore.setState({ customers: payload });
@@ -639,6 +751,14 @@ export function initFirestoreSync() {
   if (typeof window !== 'undefined') {
     window.addEventListener('cortado_local_settings_sync', (e: any) => {
       if (e.detail) applySettings(e.detail, true);
+    });
+
+    window.addEventListener('cortado_local_products_sync', (e: any) => {
+      if (e.detail && Array.isArray(e.detail)) {
+        const sanitized = sanitizeProductsHelper(e.detail);
+        useStore.setState({ products: sanitized });
+        saveProductsToLocalStorage(sanitized);
+      }
     });
 
     // Auto sync on tab focus, returning to mobile browser, or network recovery
@@ -788,15 +908,9 @@ export function initFirestoreSync() {
       if (snapshot.exists()) {
         const data = snapshot.data();
         if (data && Array.isArray(data.items)) {
-          const sanitizedProducts = data.items.map((p: Product) => ({
-            ...p,
-            price: typeof p.price === 'number' && p.price >= 1000 ? Math.round(p.price / 100) : p.price,
-            sizes: Array.isArray(p.sizes) ? p.sizes.map(s => ({
-              ...s,
-              price: typeof s.price === 'number' && s.price >= 1000 ? Math.round(s.price / 100) : s.price
-            })) : p.sizes
-          }));
+          const sanitizedProducts = sanitizeProductsHelper(data.items);
           useStore.setState({ products: sanitizedProducts });
+          saveProductsToLocalStorage(sanitizedProducts);
         }
       }
     }, (err) => {
@@ -804,6 +918,31 @@ export function initFirestoreSync() {
     });
   } catch (e) {
     console.warn('Could not setup products listener:', e);
+  }
+
+  // Live real-time listener for individual products collection
+  try {
+    onSnapshot(collection(db, 'products'), (snapshot) => {
+      if (!snapshot.empty) {
+        const items: Product[] = [];
+        snapshot.forEach((d) => {
+          if (d.exists()) items.push(d.data() as Product);
+        });
+        if (items.length > 0) {
+          const current = useStore.getState().products || [];
+          const map = new Map<string, Product>();
+          current.forEach(p => { if (p && p.id) map.set(p.id, p); });
+          items.forEach(p => { if (p && p.id) map.set(p.id, { ...(map.get(p.id) || {}), ...p }); });
+          const merged = sanitizeProductsHelper(Array.from(map.values()));
+          useStore.setState({ products: merged });
+          saveProductsToLocalStorage(merged);
+        }
+      }
+    }, (err) => {
+      console.warn('Firestore products collection listener error:', err.message);
+    });
+  } catch (e) {
+    console.warn('Could not setup products collection listener:', e);
   }
 
   try {
